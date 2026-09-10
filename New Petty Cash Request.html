@@ -1,0 +1,817 @@
+<div class="petty-cash-container"
+  style="max-width: 850px; margin: 40px auto; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: rgb(51, 51, 51); position: relative;">
+
+  <!-- Alert Banner Container for Feedback -->
+  <div id="pcAlertBox"
+    style="display: none; padding: 15px 20px; margin-bottom: 20px; border-radius: 8px; font-size: 0.95rem; font-weight: 500;">
+  </div>
+
+  <!-- Loading / Progress Overlay -->
+  <div id="pcLoadingOverlay"
+    style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px); z-index: 9999; justify-content: center; align-items: center; flex-direction: column;">
+    <div
+      style="background: white; padding: 30px 40px; border-radius: 12px; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1); text-align: center; max-width: 400px;">
+      <div class="pc-spinner"
+        style="border: 4px solid #e2e8f0; border-top: 4px solid #5a67d8; border-radius: 50%; width: 44px; height: 44px; animation: pcSpin 0.9s linear infinite; margin: 0 auto 15px;">
+      </div>
+      <div id="pcLoadingText" style="font-size: 1.05rem; font-weight: 600; color: #2d3748;">Submitting your request...
+      </div>
+      <div style="font-size: 0.85rem; color: #718096; margin-top: 6px;">Please wait while we connect to Dataverse.</div>
+    </div>
+  </div>
+
+  <style>
+    @keyframes pcSpin {
+      0% {
+        transform: rotate(0deg);
+      }
+
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
+    .form-control:focus {
+      outline: none;
+      border-color: #5a67d8 !important;
+      box-shadow: 0 0 0 3px rgba(90, 103, 216, 0.2);
+    }
+
+    .btn-primary:hover {
+      background-color: #4c51bf !important;
+    }
+
+    .btn-outline:hover {
+      background-color: #edf2f7 !important;
+    }
+  </style>
+
+  <div class="page-header" style="margin-bottom: 30px;">
+    <h2 style="font-weight: 700; color: rgb(26, 32, 44); margin-bottom: 8px;">Petty Cash Request</h2>
+    <p style="color: #718096; margin: 0;">Submit your petty cash request for review and manager approval.</p>
+  </div>
+
+  <!-- Section 1: General Info -->
+  <div class="section-card"
+    style="background-color: rgb(255, 255, 255); border-radius: 12px; padding: 25px; margin-bottom: 25px; box-shadow: rgba(0, 0, 0, 0.05) 0px 4px 6px; border: 1px solid rgb(226, 232, 240);">
+    <div class="section-title"
+      style="display: flex; align-items: center; font-size: 1.2rem; font-weight: 600; margin-bottom: 20px; color: rgb(45, 55, 72);">
+      <div class="circle-badge"
+        style="background-color: rgb(90, 103, 216); color: white; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 15px; font-size: 1rem;">
+        1</div>
+      General Info
+    </div>
+
+    <div class="form-group" style="margin-bottom: 15px;">
+      <label style="display: block; font-weight: 600; margin-bottom: 6px; color: #4a5568;">Transaction Date <span
+          style="color: red;">*</span></label>
+      <input type="date" id="txtDate" class="form-control"
+        style="width: 100%; padding: 10px; border: 1px solid rgb(203, 213, 224); border-radius: 6px; box-sizing: border-box;"
+        required />
+    </div>
+
+    <div class="form-group" style="margin-bottom: 15px;">
+      <label style="display: block; font-weight: 600; margin-bottom: 6px; color: #4a5568;">Payment Source <span
+          style="color: red;">*</span></label>
+      <select id="selPaymentSource" class="form-control"
+        style="width: 100%; padding: 10px; border: 1px solid rgb(203, 213, 224); border-radius: 6px; box-sizing: border-box;">
+        <option value="Company Cash">Company Cash Advance (My Balance)</option>
+        <option value="Own Pocket">Out of Pocket (My Own Money)</option>
+      </select>
+    </div>
+
+    <!-- PAYMENT METHOD DROPDOWN -->
+    <div class="form-group" style="margin-bottom: 15px;">
+      <label style="display: block; font-weight: 600; margin-bottom: 6px; color: #4a5568;">Payment Method <span
+          style="color: red;">*</span></label>
+      <select id="selPaymentMethod" class="form-control"
+        style="width: 100%; padding: 10px; border: 1px solid rgb(203, 213, 224); border-radius: 6px; box-sizing: border-box;">
+        <option value="Cash">Cash</option>
+        <option value="Card / Online">Card / Online</option>
+        <option value="Borrow">Borrow</option>
+      </select>
+    </div>
+
+    <div class="form-group" style="margin-bottom: 15px;">
+      <label style="display: block; font-weight: 600; margin-bottom: 6px; color: #4a5568;">Category <span
+          style="color: red;">*</span></label>
+      <select id="selCategory" onchange="toggleOtherCategory()" class="form-control"
+        style="width: 100%; padding: 10px; border: 1px solid rgb(203, 213, 224); border-radius: 6px; box-sizing: border-box;">
+        <option value="Travel">Travel</option>
+        <option value="Kitchen/Food">Kitchen/Food</option>
+        <option value="IT Equipments">IT Equipments</option>
+        <option value="Finance Things">Finance Things</option>
+        <option value="Technical Equipments">Technical Equipments</option>
+        <option value="Others">Others</option>
+      </select>
+    </div>
+
+    <div id="otherCategoryGroup" class="form-group" style="margin-bottom: 15px; display: none; margin-top: 10px;">
+      <label style="display: block; font-weight: 600; margin-bottom: 6px; color: #4a5568;">Specify Other Category <span
+          style="color: red;">*</span></label>
+      <input type="text" id="txtOtherCategory" placeholder="Please specify category details..." class="form-control"
+        style="width: 100%; padding: 10px; border: 1px solid rgb(203, 213, 224); border-radius: 6px; box-sizing: border-box;" />
+    </div>
+  </div>
+
+  <!-- Section 2: Itemized Details -->
+  <div class="section-card"
+    style="background-color: rgb(255, 255, 255); border-radius: 12px; padding: 25px; margin-bottom: 25px; box-shadow: rgba(0, 0, 0, 0.05) 0px 4px 6px; border: 1px solid rgb(226, 232, 240);">
+    <div class="section-title"
+      style="display: flex; align-items: center; font-size: 1.2rem; font-weight: 600; margin-bottom: 20px; color: rgb(45, 55, 72); justify-content: space-between;">
+      <div style="display: flex; align-items: center;">
+        <div class="circle-badge"
+          style="background-color: rgb(90, 103, 216); color: white; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 15px; font-size: 1rem;">
+          2</div>
+        Itemized Details
+      </div>
+      <button type="button" id="btnAddItem" class="btn-outline"
+        style="background-color: transparent; border: 1px solid rgb(203, 213, 224); color: rgb(74, 85, 104); padding: 8px 15px; border-radius: 6px; cursor: pointer; font-weight: 600;">+
+        Add Item</button>
+    </div>
+
+    <table id="productsTable" class="table-custom" style="width: 100%; border-collapse: collapse; margin-bottom: 15px;">
+      <thead>
+        <tr>
+          <th align="left"
+            style="text-align: left; padding: 10px; color: rgb(90, 103, 216); font-weight: 600; border-bottom: 2px solid rgb(226, 232, 240);">
+            Product Name</th>
+          <th align="left"
+            style="text-align: left; padding: 10px; color: rgb(90, 103, 216); font-weight: 600; border-bottom: 2px solid rgb(226, 232, 240); width: 15%;">
+            Quantity</th>
+          <th align="left"
+            style="text-align: left; padding: 10px; color: rgb(90, 103, 216); font-weight: 600; border-bottom: 2px solid rgb(226, 232, 240); width: 25%;">
+            Unit Price (PKR)</th>
+          <th align="left"
+            style="text-align: left; padding: 10px; color: rgb(90, 103, 216); font-weight: 600; border-bottom: 2px solid rgb(226, 232, 240); width: 22%;">
+            Total</th>
+        </tr>
+      </thead>
+      <tbody id="tableBody">
+        <tr>
+          <td valign="top" style="padding: 10px; vertical-align: top;"><input type="text"
+              placeholder="Enter product name" class="form-control name-input"
+              style="width: 100%; padding: 10px; border: 1px solid rgb(203, 213, 224); border-radius: 6px; box-sizing: border-box;" />
+          </td>
+          <td valign="top" style="padding: 10px; vertical-align: top;"><input type="number" value="1" min="1"
+              oninput="calculateTotals()" class="form-control qty-input"
+              style="width: 100%; padding: 10px; border: 1px solid rgb(203, 213, 224); border-radius: 6px; box-sizing: border-box;" />
+          </td>
+          <td valign="top" style="padding: 10px; vertical-align: top;"><input type="number" placeholder="0" min="0"
+              step="any" oninput="calculateTotals()" class="form-control price-input"
+              style="width: 100%; padding: 10px; border: 1px solid rgb(203, 213, 224); border-radius: 6px; box-sizing: border-box;" />
+          </td>
+          <td valign="top" style="padding: 18px 10px 10px; vertical-align: top; font-weight: bold;"><span
+              class="row-total">0.00</span></td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="grand-total"
+      style="text-align: right; font-size: 1.3rem; font-weight: bold; color: rgb(90, 103, 216); margin-top: 10px;">Grand
+      Total: <span id="lblGrandTotal">0.00</span> PKR</div>
+  </div>
+
+  <!-- Section 3: Receipt Attachment -->
+  <div class="section-card"
+    style="background-color: rgb(255, 255, 255); border-radius: 12px; padding: 25px; margin-bottom: 25px; box-shadow: rgba(0, 0, 0, 0.05) 0px 4px 6px; border: 1px solid rgb(226, 232, 240);">
+    <div class="section-title"
+      style="display: flex; align-items: center; font-size: 1.2rem; font-weight: 600; margin-bottom: 20px; color: rgb(45, 55, 72);">
+      <div class="circle-badge"
+        style="background-color: rgb(90, 103, 216); color: white; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 15px; font-size: 1rem;">
+        3</div>
+      Receipt Attachment
+    </div>
+    <div class="upload-zone"
+      style="border: 2px dashed rgb(160, 174, 192); border-radius: 8px; padding: 30px; text-align: center; color: rgb(113, 128, 150); background-color: rgb(247, 250, 252);">
+      <p style="margin: 0 0 10px;">Drag &amp; drop receipt file here or <b>click to browse</b></p>
+      <input type="file" id="fileReceipt" accept="image/*,.pdf" style="cursor: pointer;" />
+      <div id="filePreview" style="margin-top: 12px; font-size: 0.9rem; color: #4a5568;"></div>
+    </div>
+  </div>
+
+  <!-- Section 4: Business Justification -->
+  <div class="section-card"
+    style="background-color: rgb(255, 255, 255); border-radius: 12px; padding: 25px; margin-bottom: 25px; box-shadow: rgba(0, 0, 0, 0.05) 0px 4px 6px; border: 1px solid rgb(226, 232, 240);">
+    <div class="section-title"
+      style="display: flex; align-items: center; font-size: 1.2rem; font-weight: 600; margin-bottom: 20px; color: rgb(45, 55, 72);">
+      <div class="circle-badge"
+        style="background-color: rgb(90, 103, 216); color: white; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 15px; font-size: 1rem;">
+        4</div>
+      Business Justification
+    </div>
+    <textarea id="txtJustification" rows="4" placeholder="Provide a brief explanation for this expense request..."
+      class="form-control"
+      style="width: 100%; padding: 10px; border: 1px solid rgb(203, 213, 224); border-radius: 6px; box-sizing: border-box;"
+      required></textarea>
+  </div>
+
+  <!-- Submit Button -->
+  <button type="button" id="btnSubmit" class="btn-primary"
+    style="background-color: rgb(90, 103, 216); color: white; border: none; padding: 15px; width: 100%; font-size: 1.1rem; font-weight: bold; border-radius: 8px; cursor: pointer; margin-top: 10px; transition: background-color 0.2s ease;">Submit
+    for Approval</button>
+</div>
+
+<script>
+  // =========================================================================
+  // 1. CONFIGURATION & CHOICE VALUES MAPPING
+  // Customize choice integer values to match your Dataverse columns.
+  // =========================================================================
+  const DATAVERSE_CONFIG = {
+    choices: {
+      paymentMethod: {
+        "Cash": 100000000,
+        "Card / Online": 100000001,
+        "Borrow": 100000002
+      },
+      paymentSource: {
+        "Company Cash": 100000000,
+        "Own Pocket": 100000001
+      },
+      category: {
+        "Travel": 100000000,
+        "Kitchen/Food": 100000001,
+        "IT Equipments": 100000002,
+        "Finance Things": 100000003,
+        "Technical Equipments": 100000004,
+        "Others": 100000005
+      },
+      approvalStatus: {
+        "Pending": 100000000,
+        "Approved": 100000001,
+        "Rejected": 100000002
+      },
+      erpSyncStatus: {
+        "Not Synced": 100000000,
+        "Synced": 100000001,
+        "Failed": 100000002
+      }
+    },
+    entitySets: {
+      requests: "hr_pettycashrequests",
+      lineItems: "hr_pettycashlineitems",
+      contacts: "contacts",
+      departments: "hr_departments"
+    },
+    navigationProperties: {
+      submittedBy: "hr_submittedby",
+      department: "hr_department",
+      assignedManager: "hr_assignedmanager",
+      parentRequest: "hr_parentrequest"
+    },
+    settings: {
+      isReceiptMandatory: false, // Set to true if receipt is strictly required
+      autoSetTodayDate: true
+    }
+  };
+
+  // =========================================================================
+  // 2. LOGGED IN USER CONTEXT (POWER PAGES LIQUID)
+  // =========================================================================
+  const CURRENT_USER = {
+    id: ("{{ user.id }}" || "").replace(/[{}]/g, "").trim(),
+    name: "{{ user.fullname }}" || "",
+    email: "{{ user.emailaddress1 }}" || ""
+  };
+
+  let userContext = {
+    contactId: CURRENT_USER.id,
+    departmentId: null,
+    managerId: null
+  };
+
+  // =========================================================================
+  // 3. UI INTERACTION HELPERS
+  // =========================================================================
+
+  function toggleOtherCategory() {
+    const category = document.getElementById("selCategory").value;
+    const otherGroup = document.getElementById("otherCategoryGroup");
+    if (category === "Others") {
+      otherGroup.style.display = "block";
+    } else {
+      otherGroup.style.display = "none";
+    }
+  }
+
+  function calculateTotals() {
+    let grandTotal = 0;
+    const rows = document.querySelectorAll("#tableBody tr");
+
+    rows.forEach(row => {
+      const qtyInput = row.querySelector(".qty-input");
+      const priceInput = row.querySelector(".price-input");
+      const totalSpan = row.querySelector(".row-total");
+
+      const qty = parseFloat(qtyInput ? qtyInput.value : 0) || 0;
+      const price = parseFloat(priceInput ? priceInput.value : 0) || 0;
+      const total = qty * price;
+
+      if (totalSpan) totalSpan.innerText = total.toFixed(2);
+      grandTotal += total;
+    });
+
+    const lblGrandTotal = document.getElementById("lblGrandTotal");
+    if (lblGrandTotal) lblGrandTotal.innerText = grandTotal.toFixed(2);
+  }
+
+  document.getElementById("btnAddItem").addEventListener("click", function (e) {
+    e.preventDefault();
+    const tbody = document.getElementById("tableBody");
+    const newRow = document.createElement("tr");
+
+    newRow.innerHTML = `
+      <td valign="top" style="padding: 10px; vertical-align: top;"><input type="text" class="form-control name-input" placeholder="Enter product name" style="width: 100%; padding: 10px; border: 1px solid #cbd5e0; border-radius: 6px; box-sizing: border-box;"></td>
+      <td valign="top" style="padding: 10px; vertical-align: top;"><input type="number" class="form-control qty-input" value="1" min="1" oninput="calculateTotals()" style="width: 100%; padding: 10px; border: 1px solid #cbd5e0; border-radius: 6px; box-sizing: border-box;"></td>
+      <td valign="top" style="padding: 10px; vertical-align: top;"><input type="number" class="form-control price-input" placeholder="0" min="0" step="any" oninput="calculateTotals()" style="width: 100%; padding: 10px; border: 1px solid #cbd5e0; border-radius: 6px; box-sizing: border-box;"></td>
+      <td valign="top" style="padding: 18px 10px 10px; vertical-align: top; font-weight: bold;">
+        <span class="row-total">0.00</span>
+        <button type="button" class="btn-outline" style="color: #e53e3e; border: 1px solid #feb2b2; background: #fff5f5; border-radius: 4px; padding: 2px 8px; margin-left: 10px; cursor: pointer;" onclick="deleteRow(this)">✕</button>
+      </td>
+    `;
+    tbody.appendChild(newRow);
+  });
+
+  function deleteRow(button) {
+    const row = button.closest("tr");
+    if (row) {
+      row.remove();
+      calculateTotals();
+    }
+  }
+
+  function setLoadingState(isLoading, message) {
+    const btnSubmit = document.getElementById("btnSubmit");
+    const spinnerOverlay = document.getElementById("pcLoadingOverlay");
+    const loadingText = document.getElementById("pcLoadingText");
+
+    if (btnSubmit) {
+      btnSubmit.disabled = isLoading;
+      btnSubmit.style.opacity = isLoading ? "0.6" : "1";
+      btnSubmit.style.cursor = isLoading ? "not-allowed" : "pointer";
+    }
+
+    if (spinnerOverlay) {
+      spinnerOverlay.style.display = isLoading ? "flex" : "none";
+    }
+    if (loadingText && message) {
+      loadingText.innerText = message;
+    }
+  }
+
+  function showMessage(msg, type) {
+    const alertBox = document.getElementById("pcAlertBox");
+    if (!alertBox) return;
+
+    if (type === "success") {
+      alertBox.style.backgroundColor = "#def7ec";
+      alertBox.style.color = "#03543f";
+      alertBox.style.border = "1px solid #84e1bc";
+      alertBox.innerHTML = `<strong>Success!</strong> ${msg}`;
+    } else if (type === "warning") {
+      alertBox.style.backgroundColor = "#fdf6b2";
+      alertBox.style.color = "#723b13";
+      alertBox.style.border = "1px solid #faca15";
+      alertBox.innerHTML = `<strong>Notice:</strong> ${msg}`;
+    } else {
+      alertBox.style.backgroundColor = "#fde8e8";
+      alertBox.style.color = "#9b1c1c";
+      alertBox.style.border = "1px solid #f8b4b4";
+      alertBox.innerHTML = `<strong>Error:</strong> ${msg}`;
+    }
+
+    alertBox.style.display = "block";
+    alertBox.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
+  function resetForm() {
+    document.getElementById("txtJustification").value = "";
+    document.getElementById("fileReceipt").value = "";
+    const preview = document.getElementById("filePreview");
+    if (preview) preview.innerHTML = "";
+
+    const selCategory = document.getElementById("selCategory");
+    if (selCategory) {
+      selCategory.selectedIndex = 0;
+      toggleOtherCategory();
+    }
+    const txtOtherCategory = document.getElementById("txtOtherCategory");
+    if (txtOtherCategory) txtOtherCategory.value = "";
+
+    const tbody = document.getElementById("tableBody");
+    tbody.innerHTML = `
+      <tr>
+        <td valign="top" style="padding: 10px; vertical-align: top;"><input type="text" placeholder="Enter product name" class="form-control name-input" style="width: 100%; padding: 10px; border: 1px solid rgb(203, 213, 224); border-radius: 6px; box-sizing: border-box;" /></td>
+        <td valign="top" style="padding: 10px; vertical-align: top;"><input type="number" value="1" min="1" oninput="calculateTotals()" class="form-control qty-input" style="width: 100%; padding: 10px; border: 1px solid rgb(203, 213, 224); border-radius: 6px; box-sizing: border-box;" /></td>
+        <td valign="top" style="padding: 10px; vertical-align: top;"><input type="number" placeholder="0" min="0" step="any" oninput="calculateTotals()" class="form-control price-input" style="width: 100%; padding: 10px; border: 1px solid rgb(203, 213, 224); border-radius: 6px; box-sizing: border-box;" /></td>
+        <td valign="top" style="padding: 18px 10px 10px; vertical-align: top; font-weight: bold;"><span class="row-total">0.00</span></td>
+      </tr>
+    `;
+    calculateTotals();
+  }
+
+  // =========================================================================
+  // 4. POWER PAGES WEB API & SECURITY HELPERS
+  // =========================================================================
+
+  async function getVerificationToken() {
+    if (typeof shell !== "undefined" && typeof shell.getTokenDeferred === "function") {
+      try {
+        const token = await shell.getTokenDeferred();
+        if (token) return token;
+      } catch (e) {
+        console.warn("shell.getTokenDeferred:", e);
+      }
+    }
+    if (typeof window.parent !== "undefined" && typeof window.parent.shell !== "undefined" && typeof window.parent.shell.getTokenDeferred === "function") {
+      try {
+        const token = await window.parent.shell.getTokenDeferred();
+        if (token) return token;
+      } catch (e) {
+        console.warn("parent.shell.getTokenDeferred:", e);
+      }
+    }
+    const tokenInput = document.querySelector('input[name="__RequestVerificationToken"]');
+    if (tokenInput && tokenInput.value) return tokenInput.value;
+    if (window.ajaxToken) return window.ajaxToken;
+    return "";
+  }
+
+  async function callWebAPI(options) {
+    const token = await getVerificationToken();
+
+    return new Promise((resolve, reject) => {
+      const headers = options.headers || {};
+      if (token) headers["__RequestVerificationToken"] = token;
+      if (!headers["Accept"]) headers["Accept"] = "application/json";
+
+      const ajaxSettings = {
+        type: options.method || "GET",
+        url: options.url,
+        headers: headers,
+        success: function (data, textStatus, xhr) {
+          resolve({ data, textStatus, xhr });
+        },
+        error: function (xhr, textStatus, errorThrown) {
+          let errorMessage = "An unexpected error occurred.";
+          if (xhr.responseJSON && xhr.responseJSON.error && xhr.responseJSON.error.message) {
+            errorMessage = xhr.responseJSON.error.message;
+          } else if (xhr.responseText) {
+            try {
+              const parsed = JSON.parse(xhr.responseText);
+              if (parsed.error && parsed.error.message) errorMessage = parsed.error.message;
+              else errorMessage = xhr.responseText;
+            } catch {
+              errorMessage = xhr.responseText;
+            }
+          } else if (errorThrown) {
+            errorMessage = errorThrown;
+          }
+          reject(new Error(errorMessage));
+        }
+      };
+
+      if (options.data !== undefined) ajaxSettings.data = options.data;
+      if (options.contentType !== undefined) ajaxSettings.contentType = options.contentType;
+      if (options.processData !== undefined) ajaxSettings.processData = options.processData;
+
+      if (typeof $ !== "undefined" && $.ajax) {
+        $.ajax(ajaxSettings);
+      } else {
+        const fetchHeaders = new Headers(headers);
+        if (options.contentType) fetchHeaders.set("Content-Type", options.contentType);
+        fetch(options.url, {
+          method: options.method || "GET",
+          headers: fetchHeaders,
+          body: options.data
+        })
+          .then(async response => {
+            if (!response.ok) {
+              let errText = await response.text();
+              try {
+                const parsed = JSON.parse(errText);
+                if (parsed.error && parsed.error.message) errText = parsed.error.message;
+              } catch { }
+              throw new Error(errText || response.statusText);
+            }
+            const ct = response.headers.get("content-type");
+            if (ct && ct.includes("application/json")) {
+              return response.json().then(data => ({ data, xhr: response }));
+            }
+            return { data: null, xhr: response };
+          })
+          .then(resolve)
+          .catch(reject);
+      }
+    });
+  }
+
+  function extractEntityId(xhr) {
+    if (!xhr) return null;
+    let entityId = null;
+    if (typeof xhr.getResponseHeader === "function") {
+      entityId = xhr.getResponseHeader("entityid");
+      if (!entityId) {
+        const odataId = xhr.getResponseHeader("OData-EntityId");
+        if (odataId) {
+          const m = odataId.match(/\(([0-9a-fA-F\-]+)\)/);
+          if (m && m[1]) entityId = m[1];
+        }
+      }
+    } else if (xhr.headers && typeof xhr.headers.get === "function") {
+      entityId = xhr.headers.get("entityid");
+      if (!entityId) {
+        const odataId = xhr.headers.get("OData-EntityId");
+        if (odataId) {
+          const m = odataId.match(/\(([0-9a-fA-F\-]+)\)/);
+          if (m && m[1]) entityId = m[1];
+        }
+      }
+    }
+    return entityId ? entityId.replace(/[{}]/g, "").trim() : null;
+  }
+
+  async function loadCurrentUserContext() {
+    if (!userContext.contactId) {
+      console.info("Notice: No Contact GUID found from Liquid ({{ user.id }}). Page may be in preview or user is unauthenticated.");
+      return;
+    }
+    try {
+      const contactUrl = `/_api/${DATAVERSE_CONFIG.entitySets.contacts}(${userContext.contactId})?$select=_hr_department_value,_hr_reportstomanager_value`;
+      const res = await callWebAPI({ method: "GET", url: contactUrl });
+      if (res && res.data) {
+        userContext.departmentId = res.data._hr_department_value || null;
+        userContext.managerId = res.data._hr_reportstomanager_value || null;
+        console.log("Loaded Contact Profile:", userContext);
+      }
+    } catch (err) {
+      console.warn("Could not query contact lookup fields:", err.message);
+    }
+  }
+
+  async function uploadReceiptImage(recordId, file) {
+    if (!file) return;
+    const arrayBuffer = await file.arrayBuffer();
+    const uploadUrl = `/_api/${DATAVERSE_CONFIG.entitySets.requests}(${recordId})/hr_receiptimage?x-ms-file-name=${encodeURIComponent(file.name)}`;
+
+    await callWebAPI({
+      method: "PUT",
+      url: uploadUrl,
+      contentType: "application/octet-stream",
+      processData: false,
+      data: arrayBuffer,
+      headers: {
+        "x-ms-file-name": file.name
+      }
+    });
+  }
+
+  function generateRequestTitle() {
+    const today = new Date();
+    const yyyy = today.getFullYear();
+    const mm = String(today.getMonth() + 1).padStart(2, "0");
+    const dd = String(today.getDate()).padStart(2, "0");
+    const randomSuffix = Math.floor(1000 + Math.random() * 9000);
+    return `PCR-${yyyy}${mm}${dd}-${randomSuffix}`;
+  }
+
+  function getFormData() {
+    const txtDate = document.getElementById("txtDate").value;
+    const selPaymentSource = document.getElementById("selPaymentSource").value;
+    const selPaymentMethod = document.getElementById("selPaymentMethod").value;
+    const selCategory = document.getElementById("selCategory").value;
+    const txtOtherCategory = document.getElementById("txtOtherCategory") ? document.getElementById("txtOtherCategory").value.trim() : "";
+    const txtJustification = document.getElementById("txtJustification").value.trim();
+    const fileInput = document.getElementById("fileReceipt");
+    const receiptFile = fileInput && fileInput.files && fileInput.files.length > 0 ? fileInput.files[0] : null;
+
+    const lineItems = [];
+    const rows = document.querySelectorAll("#tableBody tr");
+    let grandTotal = 0;
+
+    rows.forEach((row, index) => {
+      const nameInput = row.querySelector(".name-input");
+      const qtyInput = row.querySelector(".qty-input");
+      const priceInput = row.querySelector(".price-input");
+
+      const itemName = nameInput ? nameInput.value.trim() : "";
+      const qty = qtyInput ? parseFloat(qtyInput.value) : 0;
+      const price = priceInput ? parseFloat(priceInput.value) : 0;
+      const total = qty * price;
+
+      if (itemName || qty > 0 || price > 0) {
+        lineItems.push({
+          index: index + 1,
+          name: itemName,
+          quantity: qty,
+          unitPrice: price,
+          total: total
+        });
+        grandTotal += total;
+      }
+    });
+
+    return {
+      date: txtDate,
+      paymentSource: selPaymentSource,
+      paymentMethod: selPaymentMethod,
+      category: selCategory,
+      otherCategory: txtOtherCategory,
+      justification: txtJustification,
+      receiptFile: receiptFile,
+      lineItems: lineItems,
+      grandTotal: grandTotal
+    };
+  }
+
+  function validateForm(formData) {
+    if (!formData.date) {
+      throw new Error("Please select a Transaction Date.");
+    }
+    if (formData.category === "Others" && !formData.otherCategory) {
+      throw new Error("Please specify the details for 'Other Category'.");
+    }
+    if (formData.lineItems.length === 0) {
+      throw new Error("Please add at least one item to the Itemized Details table.");
+    }
+    for (const item of formData.lineItems) {
+      if (!item.name) {
+        throw new Error(`Item row #${item.index} requires a Product Name.`);
+      }
+      if (isNaN(item.quantity) || item.quantity <= 0) {
+        throw new Error(`Item "${item.name}" must have a valid quantity greater than 0.`);
+      }
+      if (isNaN(item.unitPrice) || item.unitPrice < 0) {
+        throw new Error(`Item "${item.name}" must have a valid price.`);
+      }
+    }
+    if (formData.grandTotal <= 0) {
+      throw new Error("Grand total must be greater than 0.");
+    }
+    if (DATAVERSE_CONFIG.settings.isReceiptMandatory && !formData.receiptFile) {
+      throw new Error("Please attach a receipt file before submitting.");
+    }
+    if (!formData.justification) {
+      throw new Error("Please enter a Business Justification for this expense.");
+    }
+  }
+
+  async function submitPettyCashRequest() {
+    const btnSubmit = document.getElementById("btnSubmit");
+    const originalBtnText = btnSubmit.innerHTML;
+
+    try {
+      const formData = getFormData();
+      validateForm(formData);
+
+      setLoadingState(true, "Creating petty cash request...");
+
+      const paymentMethodChoice = DATAVERSE_CONFIG.choices.paymentMethod[formData.paymentMethod];
+      const paymentSourceChoice = DATAVERSE_CONFIG.choices.paymentSource[formData.paymentSource];
+      const categoryChoice = DATAVERSE_CONFIG.choices.category[formData.category];
+      const approvalStatusChoice = DATAVERSE_CONFIG.choices.approvalStatus["Pending"];
+      const erpSyncStatusChoice = DATAVERSE_CONFIG.choices.erpSyncStatus["Not Synced"];
+
+      const requestTitle = generateRequestTitle();
+
+      const headerPayload = {
+        "hr_requesttitle": requestTitle,
+        "hr_totalamount": parseFloat(formData.grandTotal.toFixed(2)),
+        "hr_purpose": formData.justification
+      };
+
+      if (formData.date) {
+        headerPayload["hr_transactiondate"] = new Date(formData.date + "T00:00:00Z").toISOString();
+      }
+
+      if (paymentMethodChoice !== undefined) {
+        headerPayload["hr_paymentmethod"] = paymentMethodChoice;
+      }
+      if (paymentSourceChoice !== undefined) {
+        headerPayload["hr_paymentsource"] = paymentSourceChoice;
+      }
+      if (approvalStatusChoice !== undefined) {
+        headerPayload["hr_approvalstatus"] = approvalStatusChoice;
+      }
+      if (erpSyncStatusChoice !== undefined) {
+        headerPayload["hr_erpsyncstatus"] = erpSyncStatusChoice;
+      }
+
+      if (formData.category === "Others" && formData.otherCategory) {
+        headerPayload["hr_othercategory"] = formData.otherCategory;
+      }
+
+      // Bind Lookups if available
+      if (userContext.contactId) {
+        headerPayload[`${DATAVERSE_CONFIG.navigationProperties.submittedBy}@odata.bind`] =
+          `/${DATAVERSE_CONFIG.entitySets.contacts}(${userContext.contactId})`;
+      }
+      if (userContext.departmentId) {
+        headerPayload[`${DATAVERSE_CONFIG.navigationProperties.department}@odata.bind`] =
+          `/${DATAVERSE_CONFIG.entitySets.departments}(${userContext.departmentId})`;
+      }
+      if (userContext.managerId) {
+        headerPayload[`${DATAVERSE_CONFIG.navigationProperties.assignedManager}@odata.bind`] =
+          `/${DATAVERSE_CONFIG.entitySets.contacts}(${userContext.managerId})`;
+      }
+
+      console.log("Submitting Header:", headerPayload);
+
+      // 1. Create header record
+      const headerRes = await callWebAPI({
+        method: "POST",
+        url: `/_api/${DATAVERSE_CONFIG.entitySets.requests}`,
+        contentType: "application/json; charset=utf-8",
+        data: JSON.stringify(headerPayload)
+      });
+
+      const newRequestId = extractEntityId(headerRes.xhr);
+      if (!newRequestId) {
+        throw new Error("Request record was created, but unable to retrieve its reference ID from server headers.");
+      }
+      console.log("Created Header GUID:", newRequestId);
+
+      // 2. Upload Receipt Image if attached
+      if (formData.receiptFile) {
+        setLoadingState(true, "Uploading receipt image...");
+        try {
+          await uploadReceiptImage(newRequestId, formData.receiptFile);
+          console.log("Receipt image uploaded.");
+        } catch (uploadErr) {
+          console.error("Receipt upload failed:", uploadErr);
+          showMessage("Request was created, but receipt failed to upload: " + uploadErr.message, "warning");
+        }
+      }
+
+      // 3. Create Child Line Items
+      setLoadingState(true, "Saving product line items...");
+      const lineItemPromises = formData.lineItems.map(item => {
+        const lineItemPayload = {
+          "hr_itemname": item.name,
+          "hr_quantity": item.quantity,
+          "hr_unitprice": item.unitPrice,
+          [`${DATAVERSE_CONFIG.navigationProperties.parentRequest}@odata.bind`]:
+            `/${DATAVERSE_CONFIG.entitySets.requests}(${newRequestId})`
+        };
+
+        if (categoryChoice !== undefined) {
+          lineItemPayload["hr_category"] = categoryChoice;
+        }
+
+        return callWebAPI({
+          method: "POST",
+          url: `/_api/${DATAVERSE_CONFIG.entitySets.lineItems}`,
+          contentType: "application/json; charset=utf-8",
+          data: JSON.stringify(lineItemPayload)
+        });
+      });
+
+      await Promise.all(lineItemPromises);
+      console.log("All line items created.");
+
+      // 4. Finished
+      setLoadingState(false);
+      showMessage(`Success! Petty Cash Request "${requestTitle}" has been submitted for approval.`, "success");
+      resetForm();
+
+    } catch (err) {
+      console.error("Submission Error:", err);
+      setLoadingState(false);
+      showMessage(err.message, "error");
+    } finally {
+      btnSubmit.innerHTML = originalBtnText;
+    }
+  }
+
+  // =========================================================================
+  // 5. INITIALIZE
+  // =========================================================================
+  document.addEventListener("DOMContentLoaded", function () {
+    const txtDate = document.getElementById("txtDate");
+    if (txtDate && !txtDate.value && DATAVERSE_CONFIG.settings.autoSetTodayDate) {
+      const today = new Date().toISOString().split("T")[0];
+      txtDate.value = today;
+    }
+
+    const btnSubmit = document.getElementById("btnSubmit");
+    if (btnSubmit) {
+      btnSubmit.addEventListener("click", function (e) {
+        e.preventDefault();
+        submitPettyCashRequest();
+      });
+    }
+
+    const fileReceipt = document.getElementById("fileReceipt");
+    if (fileReceipt) {
+      fileReceipt.addEventListener("change", function () {
+        const filePreview = document.getElementById("filePreview");
+        if (filePreview && this.files.length > 0) {
+          const file = this.files[0];
+          const sizeKb = (file.size / 1024).toFixed(1);
+          filePreview.innerHTML = `📄 <strong>${file.name}</strong> (${sizeKb} KB)`;
+        }
+      });
+    }
+
+    loadCurrentUserContext();
+  });
+</script>
