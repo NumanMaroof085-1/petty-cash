@@ -125,7 +125,7 @@
           2</div>
         Itemized Details
       </div>
-      <button type="button" id="btnAddItem" class="btn-outline"
+      <button type="button" id="btnAddItem" onclick="addNewItemRow()" class="btn-outline"
         style="background-color: transparent; border: 1px solid rgb(203, 213, 224); color: rgb(74, 85, 104); padding: 8px 15px; border-radius: 6px; cursor: pointer; font-weight: 600;">+
         Add Item</button>
     </div>
@@ -206,9 +206,16 @@
   </div>
 
   <!-- Submit Button -->
-  <button type="button" id="btnSubmit" class="btn-primary"
+  <button type="button" id="btnSubmit" onclick="submitPettyCashRequest()" class="btn-primary"
     style="background-color: rgb(90, 103, 216); color: white; border: none; padding: 15px; width: 100%; font-size: 1.1rem; font-weight: bold; border-radius: 8px; cursor: pointer; margin-top: 10px; transition: background-color 0.2s ease;">Submit
     for Approval</button>
+
+  <!-- Power Pages Logged-in User Context (Placed in HTML outside script to prevent Power Pages from breaking JS) -->
+  <input type="hidden" id="portalUserId" value="{{ user.id }}" />
+  <input type="hidden" id="portalUserName" value="{{ user.fullname }}" />
+  <input type="hidden" id="portalUserEmail" value="{{ user.emailaddress1 }}" />
+  <input type="hidden" id="portalUserDepartmentId" value="{{ user.hr_department.id }}" />
+  <input type="hidden" id="portalUserManagerId" value="{{ user.hr_reportstomanager.id }}" />
 </div>
 
 <script>
@@ -217,33 +224,34 @@
   // Customize choice integer values to match your Dataverse columns.
   // =========================================================================
   const DATAVERSE_CONFIG = {
+    testContactId: "", // Optional: Paste a Contact GUID here if testing in studio preview
     choices: {
       paymentMethod: {
-        "Cash": 100000000,
-        "Card / Online": 100000001,
-        "Borrow": 100000002
+        "Cash": 123140000,
+        "Card / Online": 123140001,
+        "Borrow": 123140002
       },
       paymentSource: {
-        "Company Cash": 100000000,
-        "Own Pocket": 100000001
+        "Company Cash": 123140000,
+        "Own Pocket": 123140001
       },
       category: {
-        "Travel": 100000000,
-        "Kitchen/Food": 100000001,
-        "IT Equipments": 100000002,
-        "Finance Things": 100000003,
-        "Technical Equipments": 100000004,
-        "Others": 100000005
+        "Travel": 123140000,
+        "Kitchen/Food": 123140001,
+        "IT Equipments": 123140002,
+        "Finance Things": 123140003,
+        "Technical Equipments": 123140004,
+        "Others": 123140005
       },
       approvalStatus: {
-        "Pending": 100000000,
-        "Approved": 100000001,
-        "Rejected": 100000002
+        "Pending": null, // Set to null to let Dataverse automatically apply its default 'Pending' value
+        "Approved": 123140001,
+        "Rejected": 123140002
       },
       erpSyncStatus: {
-        "Not Synced": 100000000,
-        "Synced": 100000001,
-        "Failed": 100000002
+        "Not Synced": null, // Set to null to let Dataverse automatically apply its default 'Not Synced' value
+        "Synced": 123140001,
+        "Failed": 123140002
       }
     },
     entitySets: {
@@ -253,10 +261,10 @@
       departments: "hr_departments"
     },
     navigationProperties: {
-      submittedBy: "hr_submittedby",
-      department: "hr_department",
-      assignedManager: "hr_assignedmanager",
-      parentRequest: "hr_parentrequest"
+      submittedBy: "hr_SubmittedBy",
+      department: "hr_Department",
+      assignedManager: "hr_AssignedManager",
+      parentRequest: "hr_ParentRequest"
     },
     settings: {
       isReceiptMandatory: false, // Set to true if receipt is strictly required
@@ -265,16 +273,40 @@
   };
 
   // =========================================================================
-  // 2. LOGGED IN USER CONTEXT (POWER PAGES LIQUID)
+  // 2. USER CONTEXT RESOLVER
+  // Reads logged-in Contact GUID from hidden HTML inputs rendered by Power Pages
   // =========================================================================
-  const CURRENT_USER = {
-    id: ("{{ user.id }}" || "").replace(/[{}]/g, "").trim(),
-    name: "{{ user.fullname }}" || "",
-    email: "{{ user.emailaddress1 }}" || ""
-  };
+  function getPortalUserContext() {
+    let id = "";
+    let name = "";
+    let email = "";
+
+    const idInput = document.getElementById("portalUserId");
+    const nameInput = document.getElementById("portalUserName");
+    const emailInput = document.getElementById("portalUserEmail");
+
+    if (idInput && idInput.value) {
+      id = idInput.value.replace(/[{}]/g, "").trim();
+    }
+    if (nameInput && nameInput.value) {
+      name = nameInput.value.trim();
+    }
+    if (emailInput && emailInput.value) {
+      email = emailInput.value.trim();
+    }
+
+    const guidMatch = id.match(/[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}/);
+    id = guidMatch ? guidMatch[0] : "";
+
+    if (!id && DATAVERSE_CONFIG.testContactId) {
+      id = DATAVERSE_CONFIG.testContactId.replace(/[{}]/g, "").trim();
+    }
+
+    return { id, name, email };
+  }
 
   let userContext = {
-    contactId: CURRENT_USER.id,
+    contactId: "",
     departmentId: null,
     managerId: null
   };
@@ -314,8 +346,7 @@
     if (lblGrandTotal) lblGrandTotal.innerText = grandTotal.toFixed(2);
   }
 
-  document.getElementById("btnAddItem").addEventListener("click", function (e) {
-    e.preventDefault();
+  function addNewItemRow() {
     const tbody = document.getElementById("tableBody");
     const newRow = document.createElement("tr");
 
@@ -329,7 +360,7 @@
       </td>
     `;
     tbody.appendChild(newRow);
-  });
+  }
 
   function deleteRow(button) {
     const row = button.closest("tr");
@@ -452,21 +483,43 @@
           resolve({ data, textStatus, xhr });
         },
         error: function (xhr, textStatus, errorThrown) {
+          console.error("Dataverse Web API Error Response:", {
+            status: xhr.status,
+            statusText: xhr.statusText,
+            responseJSON: xhr.responseJSON,
+            responseText: xhr.responseText
+          });
+
           let errorMessage = "An unexpected error occurred.";
-          if (xhr.responseJSON && xhr.responseJSON.error && xhr.responseJSON.error.message) {
-            errorMessage = xhr.responseJSON.error.message;
-          } else if (xhr.responseText) {
+          let cdsCode = "";
+          let errObj = (xhr.responseJSON && xhr.responseJSON.error) ? xhr.responseJSON.error : null;
+
+          if (!errObj && xhr.responseText) {
             try {
               const parsed = JSON.parse(xhr.responseText);
-              if (parsed.error && parsed.error.message) errorMessage = parsed.error.message;
-              else errorMessage = xhr.responseText;
-            } catch {
-              errorMessage = xhr.responseText;
+              if (parsed && parsed.error) errObj = parsed.error;
+            } catch { }
+          }
+
+          if (errObj) {
+            errorMessage = errObj.message || errorMessage;
+            cdsCode = errObj.cdscode || (errObj.innererror && errObj.innererror.code) || "";
+            if (errObj.innererror && errObj.innererror.message) {
+              errorMessage += ` - Details: ${errObj.innererror.message}`;
+            } else if (errObj.cdserrordetails && errObj.cdserrordetails.Message) {
+              errorMessage += ` - Details: ${errObj.cdserrordetails.Message}`;
             }
+          } else if (xhr.responseText) {
+            errorMessage = xhr.responseText;
           } else if (errorThrown) {
             errorMessage = errorThrown;
           }
-          reject(new Error(errorMessage));
+
+          const fullMsg = cdsCode ? `${errorMessage} (${cdsCode})` : errorMessage;
+          const errorInstance = new Error(fullMsg);
+          errorInstance.cdscode = cdsCode;
+          errorInstance.status = xhr.status;
+          reject(errorInstance);
         }
       };
 
@@ -487,11 +540,18 @@
           .then(async response => {
             if (!response.ok) {
               let errText = await response.text();
+              let cdsCode = "";
               try {
                 const parsed = JSON.parse(errText);
-                if (parsed.error && parsed.error.message) errText = parsed.error.message;
+                if (parsed.error) {
+                  if (parsed.error.message) errText = parsed.error.message;
+                  if (parsed.error.cdscode) cdsCode = parsed.error.cdscode;
+                }
               } catch { }
-              throw new Error(errText || response.statusText);
+              const errInst = new Error(cdsCode ? `${errText} (${cdsCode})` : (errText || response.statusText));
+              errInst.cdscode = cdsCode;
+              errInst.status = response.status;
+              throw errInst;
             }
             const ct = response.headers.get("content-type");
             if (ct && ct.includes("application/json")) {
@@ -531,21 +591,42 @@
   }
 
   async function loadCurrentUserContext() {
+    const user = getPortalUserContext();
+    userContext.contactId = user.id;
+
+    // 1. Read department and manager directly from Liquid hidden inputs if rendered
+    const deptInput = document.getElementById("portalUserDepartmentId");
+    const mgrInput = document.getElementById("portalUserManagerId");
+
+    if (deptInput && deptInput.value) {
+      const match = deptInput.value.match(/[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}/);
+      if (match) userContext.departmentId = match[0];
+    }
+    if (mgrInput && mgrInput.value) {
+      const match = mgrInput.value.match(/[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}/);
+      if (match) userContext.managerId = match[0];
+    }
+
     if (!userContext.contactId) {
-      console.info("Notice: No Contact GUID found from Liquid ({{ user.id }}). Page may be in preview or user is unauthenticated.");
+      console.info("Notice: No Contact GUID found. If in studio preview or unauthenticated, the request will submit without linking a contact unless DATAVERSE_CONFIG.testContactId is set.");
       return;
     }
-    try {
-      const contactUrl = `/_api/${DATAVERSE_CONFIG.entitySets.contacts}(${userContext.contactId})?$select=_hr_department_value,_hr_reportstomanager_value`;
-      const res = await callWebAPI({ method: "GET", url: contactUrl });
-      if (res && res.data) {
-        userContext.departmentId = res.data._hr_department_value || null;
-        userContext.managerId = res.data._hr_reportstomanager_value || null;
-        console.log("Loaded Contact Profile:", userContext);
+
+    // 2. Fallback: Query Web API if department or manager were not available via Liquid
+    if (!userContext.departmentId || !userContext.managerId) {
+      try {
+        const contactUrl = `/_api/${DATAVERSE_CONFIG.entitySets.contacts}(${userContext.contactId})?$select=_hr_department_value,_hr_reportstomanager_value`;
+        const res = await callWebAPI({ method: "GET", url: contactUrl });
+        if (res && res.data) {
+          if (!userContext.departmentId) userContext.departmentId = res.data._hr_department_value || null;
+          if (!userContext.managerId) userContext.managerId = res.data._hr_reportstomanager_value || null;
+        }
+      } catch (err) {
+        // Silently handle if contact endpoint is restricted by portal table permissions
+        console.info("Note: Contact lookup fields not queryable via Web API. Submitting with user context:", userContext);
       }
-    } catch (err) {
-      console.warn("Could not query contact lookup fields:", err.message);
     }
+    console.log("Active Contact Profile:", userContext);
   }
 
   async function uploadReceiptImage(recordId, file) {
@@ -655,6 +736,255 @@
     }
   }
 
+  async function createHeaderWithFallback(basePayload, lookups) {
+    function buildPayload(navProps, includeChoices = true) {
+      const p = { ...basePayload };
+      if (!includeChoices) {
+        delete p["hr_paymentmethod"];
+        delete p["hr_paymentsource"];
+        delete p["hr_approvalstatus"];
+        delete p["hr_erpsyncstatus"];
+      }
+      if (lookups.contactId) {
+        p[`${navProps.submittedBy}@odata.bind`] = `/${DATAVERSE_CONFIG.entitySets.contacts}(${lookups.contactId})`;
+      }
+      if (lookups.departmentId) {
+        p[`${navProps.department}@odata.bind`] = `/${DATAVERSE_CONFIG.entitySets.departments}(${lookups.departmentId})`;
+      }
+      if (lookups.managerId) {
+        p[`${navProps.assignedManager}@odata.bind`] = `/${DATAVERSE_CONFIG.entitySets.contacts}(${lookups.managerId})`;
+      }
+      return p;
+    }
+
+    function isPicklistError(err) {
+      if (!err) return false;
+      return err.cdscode === "0x8004431a" ||
+        (typeof err.message === "string" && (
+          err.message.includes("0x8004431a") ||
+          err.message.includes("Picklist") ||
+          err.message.includes("picklist") ||
+          err.message.includes("range")
+        ));
+    }
+
+    const schemaNavProps = {
+      submittedBy: "hr_SubmittedBy",
+      department: "hr_Department",
+      assignedManager: "hr_AssignedManager"
+    };
+
+    const logicalNavProps = {
+      submittedBy: "hr_submittedby",
+      department: "hr_department",
+      assignedManager: "hr_assignedmanager"
+    };
+
+    // Attempt 1: Schema Name navigation properties (hr_SubmittedBy, hr_Department, hr_AssignedManager)
+    try {
+      const payload1 = buildPayload(schemaNavProps, true);
+      console.log("Submitting Header (Attempt 1 - Schema Name):", payload1);
+      return await callWebAPI({
+        method: "POST",
+        url: `/_api/${DATAVERSE_CONFIG.entitySets.requests}`,
+        contentType: "application/json; charset=utf-8",
+        data: JSON.stringify(payload1)
+      });
+    } catch (err1) {
+      console.warn("Header creation failed with Schema Name navigation properties. Trying lowercase logical names...", err1.message);
+
+      // If picklist range error occurred on Attempt 1, retry Attempt 1 without choices to preserve lookups
+      if (isPicklistError(err1)) {
+        try {
+          console.warn("Choice integer error detected in Attempt 1. Retrying with lookups but without choice fields to preserve lookups...", err1.message);
+          const p1NoChoices = buildPayload(schemaNavProps, false);
+          return await callWebAPI({
+            method: "POST",
+            url: `/_api/${DATAVERSE_CONFIG.entitySets.requests}`,
+            contentType: "application/json; charset=utf-8",
+            data: JSON.stringify(p1NoChoices)
+          });
+        } catch (err1b) {
+          // Fall through to Attempt 2
+        }
+      }
+
+      // Attempt 2: Logical Name navigation properties (hr_submittedby, hr_department, hr_assignedmanager)
+      try {
+        const payload2 = buildPayload(logicalNavProps, true);
+        console.log("Submitting Header (Attempt 2 - Logical Name):", payload2);
+        return await callWebAPI({
+          method: "POST",
+          url: `/_api/${DATAVERSE_CONFIG.entitySets.requests}`,
+          contentType: "application/json; charset=utf-8",
+          data: JSON.stringify(payload2)
+        });
+      } catch (err2) {
+        if (isPicklistError(err2)) {
+          try {
+            console.warn("Choice integer error detected in Attempt 2. Retrying with logical lookups but without choice fields...", err2.message);
+            const p2NoChoices = buildPayload(logicalNavProps, false);
+            return await callWebAPI({
+              method: "POST",
+              url: `/_api/${DATAVERSE_CONFIG.entitySets.requests}`,
+              contentType: "application/json; charset=utf-8",
+              data: JSON.stringify(p2NoChoices)
+            });
+          } catch (err2b) {
+            // Fall through
+          }
+        }
+
+        // Attempt 3: Try with only submittedBy if department/manager caused the failure
+        if (lookups.contactId && (lookups.departmentId || lookups.managerId)) {
+          console.warn("Attempting header creation with only submittedBy lookup...", err2.message);
+          try {
+            const payload3 = {
+              ...basePayload,
+              "hr_SubmittedBy@odata.bind": `/${DATAVERSE_CONFIG.entitySets.contacts}(${lookups.contactId})`
+            };
+            return await callWebAPI({
+              method: "POST",
+              url: `/_api/${DATAVERSE_CONFIG.entitySets.requests}`,
+              contentType: "application/json; charset=utf-8",
+              data: JSON.stringify(payload3)
+            });
+          } catch (err3) {
+            if (isPicklistError(err3)) {
+              try {
+                const p3NoChoices = { ...payload3 };
+                delete p3NoChoices["hr_paymentmethod"];
+                delete p3NoChoices["hr_paymentsource"];
+                delete p3NoChoices["hr_approvalstatus"];
+                delete p3NoChoices["hr_erpsyncstatus"];
+                return await callWebAPI({
+                  method: "POST",
+                  url: `/_api/${DATAVERSE_CONFIG.entitySets.requests}`,
+                  contentType: "application/json; charset=utf-8",
+                  data: JSON.stringify(p3NoChoices)
+                });
+              } catch (err3b) { }
+            }
+          }
+        }
+
+        // Attempt 4: Safe submission without lookups
+        try {
+          console.warn("Submitting Header without lookups to prevent blocking user submission...", err2.message);
+          return await callWebAPI({
+            method: "POST",
+            url: `/_api/${DATAVERSE_CONFIG.entitySets.requests}`,
+            contentType: "application/json; charset=utf-8",
+            data: JSON.stringify(basePayload)
+          });
+        } catch (err4) {
+          // Attempt 5: Final fallback without choices and without lookups
+          if (isPicklistError(err4)) {
+            console.warn("Picklist value error (0x8004431a). Retrying header submission without optional choice fields in case choice integer is out of range...", err4.message);
+            const strippedPayload = { ...basePayload };
+            delete strippedPayload["hr_approvalstatus"];
+            delete strippedPayload["hr_erpsyncstatus"];
+            delete strippedPayload["hr_paymentsource"];
+            delete strippedPayload["hr_paymentmethod"];
+            return await callWebAPI({
+              method: "POST",
+              url: `/_api/${DATAVERSE_CONFIG.entitySets.requests}`,
+              contentType: "application/json; charset=utf-8",
+              data: JSON.stringify(strippedPayload)
+            });
+          }
+          throw err4;
+        }
+      }
+    }
+  }
+
+  async function createLineItemWithFallback(item, newRequestId, categoryChoice) {
+    const basePayload = {
+      "hr_itemname": item.name,
+      "hr_quantity": item.quantity,
+      "hr_unitprice": item.unitPrice
+    };
+
+    const currentNavProp = "hr_ParentRequest";
+    const altNavProp = "hr_parentrequest";
+
+    // Attempt 1: Using current navigation property and category choice
+    const payload1 = {
+      ...basePayload,
+      [`${currentNavProp}@odata.bind`]: `/${DATAVERSE_CONFIG.entitySets.requests}(${newRequestId})`
+    };
+    if (categoryChoice !== undefined) {
+      payload1["hr_category"] = categoryChoice;
+    }
+
+    try {
+      return await callWebAPI({
+        method: "POST",
+        url: `/_api/${DATAVERSE_CONFIG.entitySets.lineItems}`,
+        contentType: "application/json; charset=utf-8",
+        data: JSON.stringify(payload1)
+      });
+    } catch (err1) {
+      console.warn(`Line item POST failed with '${currentNavProp}'. Trying alternate casing '${altNavProp}'...`, err1.message);
+
+      // Attempt 2: Using alternative lookup casing (e.g. hr_ParentRequest vs hr_parentrequest)
+      const payload2 = {
+        ...basePayload,
+        [`${altNavProp}@odata.bind`]: `/${DATAVERSE_CONFIG.entitySets.requests}(${newRequestId})`
+      };
+      if (categoryChoice !== undefined) {
+        payload2["hr_category"] = categoryChoice;
+      }
+
+      try {
+        const res2 = await callWebAPI({
+          method: "POST",
+          url: `/_api/${DATAVERSE_CONFIG.entitySets.lineItems}`,
+          contentType: "application/json; charset=utf-8",
+          data: JSON.stringify(payload2)
+        });
+        DATAVERSE_CONFIG.navigationProperties.parentRequest = altNavProp;
+        console.log(`Successfully mapped parent lookup to '${altNavProp}'`);
+        return res2;
+      } catch (err2) {
+        // Attempt 3: If categoryChoice was provided, test if the choice value was rejected
+        if (categoryChoice !== undefined) {
+          console.warn("Attempting line item creation without hr_category in case choice integer is out of range...", err2.message);
+          const payload3 = {
+            ...basePayload,
+            [`${currentNavProp}@odata.bind`]: `/${DATAVERSE_CONFIG.entitySets.requests}(${newRequestId})`
+          };
+          try {
+            const res3 = await callWebAPI({
+              method: "POST",
+              url: `/_api/${DATAVERSE_CONFIG.entitySets.lineItems}`,
+              contentType: "application/json; charset=utf-8",
+              data: JSON.stringify(payload3)
+            });
+            console.warn("Notice: Line item saved successfully, but hr_category was omitted because the choice integer in DATAVERSE_CONFIG.choices.category was rejected by Dataverse. Please update your category integers.");
+            return res3;
+          } catch (err3) {
+            const payload4 = {
+              ...basePayload,
+              [`${altNavProp}@odata.bind`]: `/${DATAVERSE_CONFIG.entitySets.requests}(${newRequestId})`
+            };
+            const res4 = await callWebAPI({
+              method: "POST",
+              url: `/_api/${DATAVERSE_CONFIG.entitySets.lineItems}`,
+              contentType: "application/json; charset=utf-8",
+              data: JSON.stringify(payload4)
+            });
+            DATAVERSE_CONFIG.navigationProperties.parentRequest = altNavProp;
+            console.warn("Notice: Line item saved successfully with alternate lookup casing, but hr_category was omitted because the choice integer was rejected.");
+            return res4;
+          }
+        }
+        throw err2;
+      }
+    }
+  }
+
   async function submitPettyCashRequest() {
     const btnSubmit = document.getElementById("btnSubmit");
     const originalBtnText = btnSubmit.innerHTML;
@@ -683,16 +1013,16 @@
         headerPayload["hr_transactiondate"] = new Date(formData.date + "T00:00:00Z").toISOString();
       }
 
-      if (paymentMethodChoice !== undefined) {
+      if (paymentMethodChoice !== undefined && paymentMethodChoice !== null) {
         headerPayload["hr_paymentmethod"] = paymentMethodChoice;
       }
-      if (paymentSourceChoice !== undefined) {
+      if (paymentSourceChoice !== undefined && paymentSourceChoice !== null) {
         headerPayload["hr_paymentsource"] = paymentSourceChoice;
       }
-      if (approvalStatusChoice !== undefined) {
+      if (approvalStatusChoice !== undefined && approvalStatusChoice !== null) {
         headerPayload["hr_approvalstatus"] = approvalStatusChoice;
       }
-      if (erpSyncStatusChoice !== undefined) {
+      if (erpSyncStatusChoice !== undefined && erpSyncStatusChoice !== null) {
         headerPayload["hr_erpsyncstatus"] = erpSyncStatusChoice;
       }
 
@@ -700,29 +1030,8 @@
         headerPayload["hr_othercategory"] = formData.otherCategory;
       }
 
-      // Bind Lookups if available
-      if (userContext.contactId) {
-        headerPayload[`${DATAVERSE_CONFIG.navigationProperties.submittedBy}@odata.bind`] =
-          `/${DATAVERSE_CONFIG.entitySets.contacts}(${userContext.contactId})`;
-      }
-      if (userContext.departmentId) {
-        headerPayload[`${DATAVERSE_CONFIG.navigationProperties.department}@odata.bind`] =
-          `/${DATAVERSE_CONFIG.entitySets.departments}(${userContext.departmentId})`;
-      }
-      if (userContext.managerId) {
-        headerPayload[`${DATAVERSE_CONFIG.navigationProperties.assignedManager}@odata.bind`] =
-          `/${DATAVERSE_CONFIG.entitySets.contacts}(${userContext.managerId})`;
-      }
-
-      console.log("Submitting Header:", headerPayload);
-
-      // 1. Create header record
-      const headerRes = await callWebAPI({
-        method: "POST",
-        url: `/_api/${DATAVERSE_CONFIG.entitySets.requests}`,
-        contentType: "application/json; charset=utf-8",
-        data: JSON.stringify(headerPayload)
-      });
+      // 1. Create header record using intelligent lookup fallback
+      const headerRes = await createHeaderWithFallback(headerPayload, userContext);
 
       const newRequestId = extractEntityId(headerRes.xhr);
       if (!newRequestId) {
@@ -745,24 +1054,7 @@
       // 3. Create Child Line Items
       setLoadingState(true, "Saving product line items...");
       const lineItemPromises = formData.lineItems.map(item => {
-        const lineItemPayload = {
-          "hr_itemname": item.name,
-          "hr_quantity": item.quantity,
-          "hr_unitprice": item.unitPrice,
-          [`${DATAVERSE_CONFIG.navigationProperties.parentRequest}@odata.bind`]:
-            `/${DATAVERSE_CONFIG.entitySets.requests}(${newRequestId})`
-        };
-
-        if (categoryChoice !== undefined) {
-          lineItemPayload["hr_category"] = categoryChoice;
-        }
-
-        return callWebAPI({
-          method: "POST",
-          url: `/_api/${DATAVERSE_CONFIG.entitySets.lineItems}`,
-          contentType: "application/json; charset=utf-8",
-          data: JSON.stringify(lineItemPayload)
-        });
+        return createLineItemWithFallback(item, newRequestId, categoryChoice);
       });
 
       await Promise.all(lineItemPromises);
@@ -783,9 +1075,15 @@
   }
 
   // =========================================================================
-  // 5. INITIALIZE
+  // 5. EXPOSE GLOBALLY & INITIALIZE
   // =========================================================================
-  document.addEventListener("DOMContentLoaded", function () {
+  window.calculateTotals = calculateTotals;
+  window.toggleOtherCategory = toggleOtherCategory;
+  window.deleteRow = deleteRow;
+  window.addNewItemRow = addNewItemRow;
+  window.submitPettyCashRequest = submitPettyCashRequest;
+
+  function initializePettyCashApp() {
     const txtDate = document.getElementById("txtDate");
     if (txtDate && !txtDate.value && DATAVERSE_CONFIG.settings.autoSetTodayDate) {
       const today = new Date().toISOString().split("T")[0];
@@ -794,24 +1092,38 @@
 
     const btnSubmit = document.getElementById("btnSubmit");
     if (btnSubmit) {
-      btnSubmit.addEventListener("click", function (e) {
+      btnSubmit.onclick = function (e) {
         e.preventDefault();
         submitPettyCashRequest();
-      });
+      };
+    }
+
+    const btnAddItem = document.getElementById("btnAddItem");
+    if (btnAddItem) {
+      btnAddItem.onclick = function (e) {
+        e.preventDefault();
+        addNewItemRow();
+      };
     }
 
     const fileReceipt = document.getElementById("fileReceipt");
     if (fileReceipt) {
-      fileReceipt.addEventListener("change", function () {
+      fileReceipt.onchange = function () {
         const filePreview = document.getElementById("filePreview");
         if (filePreview && this.files.length > 0) {
           const file = this.files[0];
           const sizeKb = (file.size / 1024).toFixed(1);
           filePreview.innerHTML = `📄 <strong>${file.name}</strong> (${sizeKb} KB)`;
         }
-      });
+      };
     }
 
     loadCurrentUserContext();
-  });
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initializePettyCashApp);
+  } else {
+    initializePettyCashApp();
+  }
 </script>
