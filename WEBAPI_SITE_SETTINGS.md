@@ -35,8 +35,13 @@ Replace the value with this single comma-separated line after verifying the
 names against the live table:
 
 ```text
-_hr_parentrequest_value,hr_ParentRequest,hr_category,hr_itemname,hr_othercategory,hr_pettycashlineitemid,hr_quantity,hr_unitprice
+_hr_parentrequest_value,hr_ParentRequest,hr_category,hr_itemname,hr_othercategory,hr_pettycashlineitemid,hr_quantity,hr_totalprice,hr_unitprice
 ```
+
+`hr_totalprice` is confirmed to be a Simple currency column, not Calculated.
+The client now writes Quantity multiplied by Unit Price and verifies the saved
+value. Include this field before deploying the updated page. No extra table
+operation permissions are needed just for adding it to the create payload.
 
 ## Webapi/contact/fields
 

@@ -15,7 +15,7 @@ const schema = {
     'hr_approvalstatus', 'hr_erpsyncstatus',
     '_hr_submittedby_value', '_hr_department_value', '_hr_assignedmanager_value'],
   hr_pettycashlineitems: ['hr_pettycashlineitemid', 'hr_itemname', 'hr_quantity',
-    'hr_unitprice', 'hr_category', 'hr_othercategory', '_hr_parentrequest_value']
+    'hr_unitprice', 'hr_totalprice', 'hr_category', 'hr_othercategory', '_hr_parentrequest_value']
 };
 
 function harness(options = {}) {
@@ -46,7 +46,7 @@ function harness(options = {}) {
   };
   nodes.otherCategoryGroup = { style: {} };
   nodes.filePreview = { innerHTML: '' };
-  const receipt = options.receipt ? {
+  const receipt = options.receipt !== false ? {
     name: 'receipt.pdf', type: 'application/pdf', size: 4, lastModified: 123,
     async arrayBuffer() { return new ArrayBuffer(4); }
   } : null;
@@ -174,7 +174,7 @@ test('complete request retains every field, binds all lookups, and verifies chil
   for (const write of writes.slice(1)) {
     assert.equal(write.body.hr_category, 123140005);
     assert.equal(write.body.hr_othercategory, 'Safety supplies');
-    assert.ok(!('hr_totalprice' in write.body), 'Dataverse computes the total');
+    assert.equal(write.body.hr_totalprice, Number((write.body.hr_quantity * write.body.hr_unitprice).toFixed(2)));
   }
   assert.equal(h.calls.filter(c => c.method === 'PUT').length, 1);
   assert.match(h.messages.at(-1), /Success!/);
@@ -304,6 +304,30 @@ test('receipt failure remains an error and retries only the receipt for the same
   assert.match(h.messages.at(-1), /Success!/);
 });
 
+test('mandatory receipt blocks submission before API calls or record creation', async () => {
+  const h = harness({ receipt: false });
+  await h.submit();
+  assert.match(h.messages.at(-1), /Please attach a receipt/);
+  assert.equal(h.calls.length, 0);
+  assert.equal(h.records.size, 0);
+  assert.equal(h.context.window.pettyCashDiagnostics.pendingRequest, null);
+  assert.equal(h.nodes.btnSubmit.disabled, false);
+});
+
+test('required receipt is uploaded before success for standard categories too', async () => {
+  const h = harness();
+  await h.submit();
+  assert.equal(h.calls.at(-1).method, 'PUT');
+  assert.match(h.calls.at(-1).url, /hr_receiptimage/);
+  assert.match(h.messages.at(-1), /including the receipt/);
+  assert.match(h.messages.at(-1), /Success!/);
+});
+
+test('receipt input is marked required in the HTML', () => {
+  const html = fs.readFileSync('New Petty Cash Request.html', 'utf8');
+  assert.match(html, /<input[^>]*id="fileReceipt"[^>]*\brequired\b/);
+});
+
 test('editing a partial request blocks creation of a second header', async () => {
   const h = harness({ omittedHeaderField: '_hr_department_value' });
   await h.submit();
@@ -397,6 +421,7 @@ test('confirmed environment mappings change both the payload and the explicit fi
   assert.ok(!fields.includes('hr_othercategorydetails'));
   const lineFields = settings.find(setting => setting.name === 'Webapi/hr_pettycashlineitem/fields').value.split(',');
   assert.ok(lineFields.includes('hr_othercategorydetails'));
+  assert.ok(lineFields.includes('hr_totalprice'));
   assert.ok(!lineFields.includes('hr_othercategory'));
   assert.ok(fields.includes('hr_DepartmentLookup'));
   assert.ok(fields.includes('_hr_department_value'));
@@ -410,6 +435,49 @@ test('standard categories omit Other Category even when hidden text is left over
   await h.submit();
   assert.ok(h.calls.filter(c => c.method === 'POST').every(c => !('hr_othercategory' in c.body)));
   assert.match(h.messages.at(-1), /Success!/);
+});
+
+test('simple currency totals are saved and verified on every standard-category item', async () => {
+  const h = harness();
+  await h.submit();
+  const linePosts = h.calls.filter(c => c.method === 'POST' && c.body.hr_itemname);
+  assert.deepEqual(linePosts.map(c => c.body.hr_totalprice), [200, 60]);
+  const saved = [...h.records.values()].filter(record => record.hr_itemname);
+  assert.deepEqual(saved.map(record => record.hr_totalprice), [200, 60]);
+  assert.ok(h.calls.filter(c => c.method === 'GET' && /hr_pettycashlineitems\(/.test(c.url))
+    .every(c => c.url.includes('hr_totalprice')));
+  assert.match(h.messages.at(-1), /Success!/);
+});
+
+test('rounded line totals, displayed grand total, and saved header total agree', async () => {
+  const h = harness({ items: [
+    { name: 'First item', quantity: 1, unitPrice: 0.335 },
+    { name: 'Second item', quantity: 1, unitPrice: 0.335 }
+  ] });
+  h.evaluate('calculateTotals();');
+  assert.equal(h.nodes.lblGrandTotal.innerText, '0.68');
+  await h.submit();
+  const posts = h.calls.filter(c => c.method === 'POST');
+  assert.equal(posts[0].body.hr_totalamount, 0.68);
+  assert.deepEqual(posts.slice(1).map(c => c.body.hr_totalprice), [0.34, 0.34]);
+  assert.match(h.messages.at(-1), /Success!/);
+});
+
+test('missing Total Price field exposure blocks saves before creating the header', async () => {
+  const h = harness({ missingColumn: 'hr_totalprice' });
+  await h.submit();
+  assert.match(h.messages.at(-1), /hr_totalprice/);
+  assert.equal(h.calls.filter(c => c.method === 'POST').length, 0);
+});
+
+test('lost item total on read-back stops success and avoids recreating saved records', async () => {
+  const h = harness({ omittedLineField: 'hr_totalprice' });
+  await h.submit();
+  assert.match(h.messages.at(-1), /hr_totalprice/);
+  assert.ok(!h.messages.at(-1).includes('Success!'));
+  await h.submit();
+  assert.equal(h.calls.filter(c => c.method === 'POST').length, 2);
+  assert.equal(h.calls.filter(c => c.method === 'PUT').length, 0);
 });
 
 test('line-only Other Category is exposed and all setup checks pass without a header column', async () => {

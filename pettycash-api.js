@@ -72,6 +72,7 @@
         name: "hr_itemname",
         quantity: "hr_quantity",
         unitPrice: "hr_unitprice",
+        total: "hr_totalprice", // Confirmed Simple currency column; the client must supply it.
         category: "hr_category",
         otherCategory: "hr_othercategory", // Text belongs to each line item, not the request header.
         parentRequest: "hr_parentrequest"
@@ -90,7 +91,7 @@
       parentRequest: "hr_ParentRequest"
     },
     settings: {
-      isReceiptMandatory: false, // Set to true if receipt is strictly required
+      isReceiptMandatory: true, // Require a receipt before any submission writes.
       autoSetTodayDate: true,
       maxReceiptBytes: 10 * 1024 * 1024 // Application limit; also respect the Dataverse file-column limit.
     }
@@ -149,6 +150,11 @@
     }
   }
 
+  function itemTotal(quantity, unitPrice) {
+    // PKR totals are displayed and submitted to two decimal places.
+    return Number((quantity * unitPrice).toFixed(2));
+  }
+
   function calculateTotals() {
     let grandTotal = 0;
     const rows = document.querySelectorAll("#tableBody tr");
@@ -160,7 +166,7 @@
 
       const qty = parseFloat(qtyInput ? qtyInput.value : 0) || 0;
       const price = parseFloat(priceInput ? priceInput.value : 0) || 0;
-      const total = qty * price;
+      const total = itemTotal(qty, price);
 
       if (totalSpan) totalSpan.innerText = total.toFixed(2);
       grandTotal += total;
@@ -484,7 +490,7 @@
       const itemName = nameInput ? nameInput.value.trim() : "";
       const qty = qtyInput ? parseFloat(qtyInput.value) : 0;
       const price = priceInput ? parseFloat(priceInput.value) : 0;
-      const total = qty * price;
+      const total = itemTotal(qty, price);
 
       if (itemName || qty > 0 || price > 0) {
         lineItems.push({
@@ -586,18 +592,18 @@
       [c.name]: item.name,
       [c.quantity]: item.quantity,
       [c.unitPrice]: item.unitPrice,
+      [c.total]: itemTotal(item.quantity, item.unitPrice),
       [c.category]: category,
       [DATAVERSE_CONFIG.navigationProperties.parentRequest + "@odata.bind"]:
         "/" + DATAVERSE_CONFIG.entitySets.requests + "(" + requestId + ")"
     };
     if (otherCategory !== undefined) payload[c.otherCategory] = otherCategory;
     return payload;
-    // hr_totalprice is calculated by Dataverse; do not write a calculated column.
   }
 
   function lineItemReadColumns(includeOtherCategory) {
     const c = DATAVERSE_CONFIG.columns.lineItems;
-    return [c.name, c.quantity, c.unitPrice, c.category, lookupValue(c.parentRequest)]
+    return [c.name, c.quantity, c.unitPrice, c.total, c.category, lookupValue(c.parentRequest)]
       .concat(includeOtherCategory ? [c.otherCategory] : []);
   }
 
@@ -698,7 +704,8 @@
     });
     const actual = res.data || {};
     const expected = { [c.name]: item.name, [c.quantity]: item.quantity,
-      [c.unitPrice]: item.unitPrice, [c.category]: category };
+      [c.unitPrice]: item.unitPrice, [c.total]: itemTotal(item.quantity, item.unitPrice),
+      [c.category]: category };
     if (otherCategory !== undefined) expected[c.otherCategory] = otherCategory;
     const mismatches = Object.entries(expected).filter(([key, value]) =>
       !sameValue(key, actual[key], value)).map(([key]) => key);

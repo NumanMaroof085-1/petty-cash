@@ -179,12 +179,13 @@
       <div class="circle-badge"
         style="background-color: rgb(90, 103, 216); color: white; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 15px; font-size: 1rem;">
         3</div>
-      Receipt Attachment
+      Receipt Attachment <span style="color: red; margin-left: 6px;">*</span>
     </div>
     <div class="upload-zone"
       style="border: 2px dashed rgb(160, 174, 192); border-radius: 8px; padding: 30px; text-align: center; color: rgb(113, 128, 150); background-color: rgb(247, 250, 252);">
-      <p style="margin: 0 0 10px;">Drag &amp; drop receipt file here or <b>click to browse</b></p>
-      <input type="file" id="fileReceipt" accept="image/*,.pdf" style="cursor: pointer;" />
+      <p style="margin: 0 0 10px;">A receipt is required. Choose one image or PDF file.</p>
+      <input type="file" id="fileReceipt" accept="image/*,.pdf" required aria-required="true"
+        aria-label="Receipt attachment (required)" style="cursor: pointer;" />
       <div id="filePreview" style="margin-top: 12px; font-size: 0.9rem; color: #4a5568;"></div>
     </div>
   </div>
@@ -293,6 +294,7 @@
         name: "hr_itemname",
         quantity: "hr_quantity",
         unitPrice: "hr_unitprice",
+        total: "hr_totalprice", // Confirmed Simple currency column; the client must supply it.
         category: "hr_category",
         otherCategory: "hr_othercategory", // Text belongs to each line item, not the request header.
         parentRequest: "hr_parentrequest"
@@ -311,7 +313,7 @@
       parentRequest: "hr_ParentRequest"
     },
     settings: {
-      isReceiptMandatory: false, // Set to true if receipt is strictly required
+      isReceiptMandatory: true, // Require a receipt before any submission writes.
       autoSetTodayDate: true,
       maxReceiptBytes: 10 * 1024 * 1024 // Application limit; also respect the Dataverse file-column limit.
     }
@@ -370,6 +372,11 @@
     }
   }
 
+  function itemTotal(quantity, unitPrice) {
+    // PKR totals are displayed and submitted to two decimal places.
+    return Number((quantity * unitPrice).toFixed(2));
+  }
+
   function calculateTotals() {
     let grandTotal = 0;
     const rows = document.querySelectorAll("#tableBody tr");
@@ -381,7 +388,7 @@
 
       const qty = parseFloat(qtyInput ? qtyInput.value : 0) || 0;
       const price = parseFloat(priceInput ? priceInput.value : 0) || 0;
-      const total = qty * price;
+      const total = itemTotal(qty, price);
 
       if (totalSpan) totalSpan.innerText = total.toFixed(2);
       grandTotal += total;
@@ -705,7 +712,7 @@
       const itemName = nameInput ? nameInput.value.trim() : "";
       const qty = qtyInput ? parseFloat(qtyInput.value) : 0;
       const price = priceInput ? parseFloat(priceInput.value) : 0;
-      const total = qty * price;
+      const total = itemTotal(qty, price);
 
       if (itemName || qty > 0 || price > 0) {
         lineItems.push({
@@ -807,18 +814,18 @@
       [c.name]: item.name,
       [c.quantity]: item.quantity,
       [c.unitPrice]: item.unitPrice,
+      [c.total]: itemTotal(item.quantity, item.unitPrice),
       [c.category]: category,
       [DATAVERSE_CONFIG.navigationProperties.parentRequest + "@odata.bind"]:
         "/" + DATAVERSE_CONFIG.entitySets.requests + "(" + requestId + ")"
     };
     if (otherCategory !== undefined) payload[c.otherCategory] = otherCategory;
     return payload;
-    // hr_totalprice is calculated by Dataverse; do not write a calculated column.
   }
 
   function lineItemReadColumns(includeOtherCategory) {
     const c = DATAVERSE_CONFIG.columns.lineItems;
-    return [c.name, c.quantity, c.unitPrice, c.category, lookupValue(c.parentRequest)]
+    return [c.name, c.quantity, c.unitPrice, c.total, c.category, lookupValue(c.parentRequest)]
       .concat(includeOtherCategory ? [c.otherCategory] : []);
   }
 
@@ -919,7 +926,8 @@
     });
     const actual = res.data || {};
     const expected = { [c.name]: item.name, [c.quantity]: item.quantity,
-      [c.unitPrice]: item.unitPrice, [c.category]: category };
+      [c.unitPrice]: item.unitPrice, [c.total]: itemTotal(item.quantity, item.unitPrice),
+      [c.category]: category };
     if (otherCategory !== undefined) expected[c.otherCategory] = otherCategory;
     const mismatches = Object.entries(expected).filter(([key, value]) =>
       !sameValue(key, actual[key], value)).map(([key]) => key);

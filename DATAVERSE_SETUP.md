@@ -41,6 +41,7 @@ is not necessarily the lookup column's schema name.
 | Mapping in DATAVERSE_CONFIG | Current value | Verification status |
 | --- | --- | --- |
 | columns.lineItems.otherCategory | hr_othercategory | Confirmed by user on the Line Item table; schema name hr_OtherCategory |
+| columns.lineItems.total | hr_totalprice | Confirmed Simple currency column, not Calculated |
 | columns.requests.department | hr_department | Confirmed by user; schema name hr_Department |
 | navigationProperties.department | hr_Department | ReferencingEntityNavigationPropertyName for that lookup |
 | entitySets.departments | hr_departmentses | Confirmed by user via Copy set name |
@@ -113,8 +114,8 @@ values does not change the live settings.
 
 The lists include ordinary logical names, `_<logical-name>_value` for lookup
 reads, and the exact navigation properties used before `@odata.bind` for
-lookup writes. They exclude the calculated `hr_totalprice` write and never
-include a wildcard.
+lookup writes. Line Item fields now include `hr_totalprice`, confirmed to be a
+Simple currency column. The lists never include a wildcard.
 
 For the concealed HTTP 500 details during administrator testing, temporarily
 set `Webapi/error/innererror = true` on the selected website. Capture the error,
@@ -170,6 +171,22 @@ whose Submitted By is missing requires an administrator to inspect it directly
 in Dataverse.
 
 ## Controlled live submissions
+
+Receipts are now required by the client and marked required in the HTML.
+Submission without a receipt stops before any API calls or record creation.
+Receipt-upload failure must still be handled as a partial request, not success.
+This does not make the Dataverse file column business-required or prevent other
+clients from creating records without a receipt; enforce completeness on the
+server before approval or accounting processing.
+
+The user confirmed that `hr_totalprice` is a Simple currency column, not
+Calculated. The client now sends each line's Quantity multiplied by Unit Price
+and verifies it on read-back. Add `hr_totalprice` to
+`Webapi/hr_pettycashlineitem/fields` before deploying this version. Line totals
+use two decimal places, consistent with the PKR UI; the grand total is their
+sum. Existing saved lines with empty totals are not automatically repaired.
+If the column is changed to Calculated later, remove client writes and configure
+the calculation in Dataverse instead.
 
 1. Submit a standard-category request and inspect its header, Department,
    Submitted By, Assigned Manager, date, source/method, statuses, products,

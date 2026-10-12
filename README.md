@@ -18,8 +18,15 @@ approval and accounting integration after a complete submission is available.
 The client waits for the signed-in Contact profile and requires its Department
 and Reports To Manager lookups. It checks that the requested columns are readable
 before saving, sends one complete header payload, and reads the saved fields back.
-It then saves and verifies each product before uploading the receipt. Calculated
-product totals are left to Dataverse.
+It then saves and verifies each product before uploading the receipt. The user
+confirmed that `hr_totalprice` is a Simple currency column, so the client now
+saves Quantity multiplied by Unit Price on each line and verifies it. Each
+line total is rounded to two decimal places; the displayed and saved grand
+total is the sum of those rounded line totals.
+
+A receipt is mandatory: the form rejects a missing receipt before any API
+calls or writes, and does not report success if its upload fails. This is a
+client-side requirement; server-side completeness validation remains necessary.
 
 Errors never cause selected fields, lookups, or categories to be removed from a
 payload. Success is shown only after these operations succeed. Confirmed partial
