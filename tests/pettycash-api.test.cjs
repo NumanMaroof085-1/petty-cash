@@ -328,6 +328,20 @@ test('receipt input is marked required in the HTML', () => {
   assert.match(html, /<input[^>]*id="fileReceipt"[^>]*\brequired\b/);
 });
 
+test('balance widget failures remain read-only and do not break expense submission', async () => {
+  const h = harness();
+  h.nodes.pcEmployeeBalanceValue = { textContent: '' };
+  h.nodes.pcEmployeeBalanceMeaning = { textContent: '' };
+  h.nodes.pcEmployeeBalanceRefresh = { disabled: false };
+  h.context.window.PettyCashModules = { async readBalance() { throw new Error('Cash ledger permission missing'); } };
+  await h.evaluate('refreshEmployeeBalance();');
+  assert.equal(h.nodes.pcEmployeeBalanceValue.textContent, 'Unavailable');
+  assert.match(h.nodes.pcEmployeeBalanceMeaning.textContent, /permission missing/);
+  assert.ok(h.calls.every(call => call.method === 'GET'));
+  await h.submit();
+  assert.match(h.messages.at(-1), /Success!/);
+});
+
 test('editing a partial request blocks creation of a second header', async () => {
   const h = harness({ omittedHeaderField: '_hr_department_value' });
   await h.submit();

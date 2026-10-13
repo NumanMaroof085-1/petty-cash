@@ -176,6 +176,25 @@
     if (lblGrandTotal) lblGrandTotal.innerText = grandTotal.toFixed(2);
   }
 
+  async function refreshEmployeeBalance() {
+    const value = document.getElementById("pcEmployeeBalanceValue");
+    const meaning = document.getElementById("pcEmployeeBalanceMeaning");
+    const refresh = document.getElementById("pcEmployeeBalanceRefresh");
+    if (!value || !meaning) return;
+    if (refresh) refresh.disabled = true;
+    value.textContent = "Loading…";
+    try {
+      if (!window.PettyCashModules) throw new Error("The shared balance script is not installed. Check the Petty Cash Modules Web Template and its page include.");
+      const context = await ensureCurrentUserContext();
+      const amount = await window.PettyCashModules.readBalance(context.contactId);
+      value.textContent = window.PettyCashModules.money(amount);
+      meaning.textContent = window.PettyCashModules.balanceMeaning(amount);
+    } catch (error) {
+      value.textContent = "Unavailable";
+      meaning.textContent = error.message;
+    } finally { if (refresh) refresh.disabled = false; }
+  }
+
   function addNewItemRow() {
     const tbody = document.getElementById("tableBody");
     const newRow = document.createElement("tr");
@@ -924,6 +943,7 @@
   // 5. EXPOSE GLOBALLY & INITIALIZE
   // =========================================================================
   window.calculateTotals = calculateTotals;
+  window.refreshEmployeeBalance = refreshEmployeeBalance;
   window.toggleOtherCategory = toggleOtherCategory;
   window.deleteRow = deleteRow;
   window.addNewItemRow = addNewItemRow;
@@ -966,6 +986,7 @@
     }
 
     ensureCurrentUserContext().catch(err => console.warn("Petty Cash profile is not ready:", err.message));
+    refreshEmployeeBalance();
   }
 
   if (document.readyState === "loading") {

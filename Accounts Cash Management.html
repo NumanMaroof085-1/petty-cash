@@ -1,0 +1,24 @@
+<!-- Restrict BOTH this page and its attached cloud flow to Petty Cash Accounts.
+     Configure PC_MODULE_CONFIG in a page template before this script. -->
+<section data-pc-page="accounts" class="pc-accounts">
+  <style>
+    .pc-accounts{max-width:850px;margin:40px auto;padding:0 20px;font-family:'Segoe UI',sans-serif;color:#334155}.pc-accounts h2{color:#1e293b}
+    .pc-accounts form{background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:25px}.pc-accounts label{display:block;font-weight:600;margin:18px 0 6px}
+    .pc-accounts input,.pc-accounts select{box-sizing:border-box;width:100%;padding:12px;border:1px solid #cbd5e1;border-radius:6px}.pc-accounts button{margin-top:22px;padding:13px 20px;background:#5a67d8;color:white;border:0;border-radius:6px;cursor:pointer}.pc-accounts button:disabled{opacity:.5;cursor:not-allowed}
+  </style>
+  <h2>Accounts Cash Management</h2>
+  <p>Record cash given to an employee or cash returned by an employee.</p>
+  <p id="pcModuleMessage" role="status" aria-live="polite">Loading…</p>
+  <form id="pcAccountsForm">
+    <label for="pcEmployee">Employee</label><select id="pcEmployee" required><option value="">Choose an employee</option></select>
+    <p>Current signed balance: <strong id="pcEmployeeBalance">Choose an employee</strong></p>
+    <label for="pcMovement">Cash movement</label>
+    <select id="pcMovement" required><option value="cash_given">Cash given to employee (+)</option><option value="cash_returned">Cash returned by employee (−)</option></select>
+    <label for="pcCashAmount">Amount (PKR)</label><input id="pcCashAmount" type="number" min="0.01" step="0.01" required />
+    <label for="pcCashReason">Reason or payment reference</label><input id="pcCashReason" type="text" maxlength="100" required />
+    <p>Enter the amount of this cash movement, not a replacement balance. Reimbursements use “Cash given”.</p>
+    <button id="pcPostCash" type="submit" disabled>Record cash movement</button>
+  </form>
+</section>
+{% include 'Petty Cash User Context' %}
+{% include 'Petty Cash Modules' %}

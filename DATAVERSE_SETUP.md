@@ -85,7 +85,8 @@ is no longer required by this client.
 
 ## Update Web API field settings
 
-The user confirmed the live value is `*`. The supplied column screenshots
+The original screenshot used `*`; the user later confirmed the corrected
+submission works live. The supplied column screenshots
 confirm Department is a lookup to Departments and Other Category is simple
 text on the Line Item table. The user subsequently confirmed the logical names and
 the Department entity set, table logical name, and name column. The exact
@@ -210,6 +211,28 @@ Before connecting approvals, implement and enforce submission completeness on
 the server. A header-create trigger can run before all products or the receipt
 exist. Validate employee identity, totals, and payment details on the server
 before any balance change or Business Central posting.
+
+## New balance and portal modules
+
+User identity and the cosmetic Accounts-role indicator are now rendered by the
+`Petty Cash User Context` Web Template using the matching local HTML Source.
+Remove old page-inline user inputs; load that template before the shared script.
+The user's template probe returned a real GUID while the editable page inputs
+returned literal attribute names. The exact rewriting mechanism is unconfirmed.
+Do not hardcode a Contact GUID or treat browser context as authorization.
+The shared `pettycash-modules.js` is pasted inside script tags in the Web Template
+`Petty Cash Modules`; all three local pages use its Liquid include rather than a
+Web File. It supports the request-form balance widget, My Petty Cash Requests
+page, and Accounts Cash Management page. The
+Cash Transaction logical name `hr_cashtransaction`, entity set
+`hr_cashtransactions`, and types 123140000/123140001/123140002 are confirmed.
+Use the explicit field lists in WEBAPI_SITE_SETTINGS.md, scoped roles/table
+permissions, and the backend contract in BALANCE_MODULE_SETUP.md before deployment.
+The accounts form is disabled until a role-protected flow is configured and
+reviewed. No new balance table is needed; the user confirmed Cash Transaction
+Posting Key `crec6_postingkey` (schema `crec6_PostingKey`) and its Active alternate
+key on 2026-10-13. IMPLEMENTATION_LOG.md records new artifacts and pending
+tenant work. These modules must never grant employees direct balance writes.
 
 ## Microsoft references
 

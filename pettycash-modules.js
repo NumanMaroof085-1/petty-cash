@@ -1,0 +1,274 @@
+/* Shared, session-authenticated Power Pages helpers for the balance modules.
+ * Configure PC_MODULE_CONFIG before this file. Never put secrets or signed HTTP
+ * trigger URLs in page source. Cash writes go through a role-protected flow.
+ */
+(function (root) {
+  "use strict";
+  const config = Object.assign({ accountsFlowId: "", accountsSecurityReviewed: false,
+    requestStatus: { Pending: 123140000, Approved: 123140001, Rejected: 123140002 }
+  }, root.PC_MODULE_CONFIG || {});
+  const guidPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+  function guid(value) {
+    const clean = String(value || "").replace(/[{}]/g, "").trim().toLowerCase();
+    if (!guidPattern.test(clean)) throw new Error("A valid employee or record ID is required.");
+    return clean;
+  }
+  async function token() {
+    if (root.shell && typeof root.shell.getTokenDeferred === "function") {
+      const value = await root.shell.getTokenDeferred();
+      if (value) return value;
+    }
+    throw new Error("Your sign-in session could not be verified. Refresh and sign in again.");
+  }
+  async function api(url, options = {}) {
+    const parsed = new URL(url, root.location.origin);
+    if (parsed.origin !== root.location.origin || !parsed.pathname.startsWith("/_api/")) {
+      throw new Error("Unexpected API address; the operation was stopped.");
+    }
+    const response = await root.fetch(parsed.pathname + parsed.search, {
+      method: options.method || "GET", credentials: "same-origin",
+      headers: { Accept: "application/json", "OData-Version": "4.0",
+        "OData-MaxVersion": "4.0", __RequestVerificationToken: await token(),
+        ...(options.headers || {}) }, body: options.body
+    });
+    const text = await response.text();
+    let body;
+    try { body = text ? JSON.parse(text) : null; }
+    catch (_) { throw new Error("The server returned an unexpected response. Check your sign-in session."); }
+    if (!response.ok) {
+      const error = new Error(body && body.error && body.error.message || "The API request failed.");
+      error.status = response.status;
+      throw error;
+    }
+    return { body, status: response.status };
+  }
+  async function collection(url, entitySet) {
+    const rows = [], visited = new Set();
+    while (url) {
+      const parsed = new URL(url, root.location.origin);
+      if (parsed.origin !== root.location.origin || parsed.pathname !== "/_api/" + entitySet || visited.has(parsed.href)) {
+        throw new Error("Unexpected paging response; no partial result will be displayed.");
+      }
+      visited.add(parsed.href);
+      if (visited.size > 100) throw new Error("Too many results. Ask an administrator to narrow this list.");
+      const result = await api(parsed.pathname + parsed.search);
+      if (!result.body || !Array.isArray(result.body.value)) throw new Error("The server did not return a record list.");
+      rows.push(...result.body.value);
+      url = result.body["@odata.nextLink"] || null;
+    }
+    return rows;
+  }
+  function balance(record) {
+    if (!Object.prototype.hasOwnProperty.call(record, "hr_currentbalance")) {
+      throw new Error("Current Balance was not returned. Check the Contact field list and permissions.");
+    }
+    const value = record.hr_currentbalance === null ? 0 : Number(record.hr_currentbalance);
+    if (!Number.isFinite(value)) throw new Error("The saved balance is invalid. Ask accounts to check it.");
+    return value;
+  }
+  function money(value) { return new Intl.NumberFormat("en-PK", { style: "currency", currency: "PKR",
+    minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(value); }
+  function balanceMeaning(value) {
+    return value > 0 ? "Company cash held by you" : value < 0 ? "Company owes you " + money(Math.abs(value)) : "No company cash held or reimbursement outstanding";
+  }
+  async function readBalance(employeeId) {
+    return sumTransactions(await cashTransactions(employeeId));
+  }
+  async function readSavedBalance(employeeId) {
+    const id = guid(employeeId);
+    const result = await api("/_api/contacts(" + id + ")?$select=contactid,hr_currentbalance");
+    if (!result.body || guid(result.body.contactid) !== id) throw new Error("The returned employee does not match.");
+    return balance(result.body);
+  }
+  async function cashTransactions(employeeId) {
+    const id = guid(employeeId);
+    const rows = await collection("/_api/hr_cashtransactions?$select=" +
+      "hr_transactionreference,hr_transactiontype,hr_amount,hr_notespurpose,_hr_employee_value,_hr_linkedrequest_value,createdon" +
+      "&$filter=" + encodeURIComponent("_hr_employee_value eq " + id) +
+      "&$orderby=createdon asc,hr_transactionreference asc&$top=100", "hr_cashtransactions");
+    if (rows.some(row => guid(row._hr_employee_value) !== id)) throw new Error("Another employee's cash transaction was returned. Check table permissions.");
+    return rows;
+  }
+  function sumTransactions(rows) {
+    let cents = 0;
+    const expenses = new Set();
+    for (const row of rows) {
+      const amount = Number(row.hr_amount), rounded = Math.round(amount * 100);
+      if (!Number.isFinite(amount) || amount <= 0 || !Number.isSafeInteger(rounded) || Math.abs(amount * 100 - rounded) > 0.000001) {
+        throw new Error("A cash transaction has an invalid amount. Ask accounts to check the ledger.");
+      }
+      const sign = ({ 123140000: 1, 123140001: -1, 123140002: -1 })[row.hr_transactiontype];
+      if (!sign) throw new Error("An unknown transaction type was found. Balance cannot be calculated safely.");
+      if (row.hr_transactiontype === 123140001) {
+        const requestId = guid(row._hr_linkedrequest_value);
+        if (expenses.has(requestId)) throw new Error("An expense appears twice in the ledger. Ask accounts to check it.");
+        expenses.add(requestId);
+      }
+      cents += sign * rounded;
+      if (!Number.isSafeInteger(cents)) throw new Error("The balance is outside the supported numeric range.");
+    }
+    return cents / 100;
+  }
+  async function myRequests(employeeId) {
+    const id = guid(employeeId);
+    const rows = await collection("/_api/hr_pettycashrequests?$select=" +
+      "hr_pettycashrequestid,hr_requesttitle,hr_transactiondate,hr_totalamount,hr_paymentsource,hr_approvalstatus,hr_managercomments,_hr_submittedby_value" +
+      "&$filter=" + encodeURIComponent("_hr_submittedby_value eq " + id) +
+      "&$orderby=hr_transactiondate desc,hr_pettycashrequestid desc&$top=100", "hr_pettycashrequests");
+    if (rows.some(row => guid(row._hr_submittedby_value) !== id)) {
+      throw new Error("Another employee's request was returned. Check server-side table permissions.");
+    }
+    return rows;
+  }
+  async function employees() {
+    return await collection("/_api/contacts?$select=contactid,fullname,hr_currentbalance&$filter=statecode eq 0&$orderby=fullname asc,contactid asc&$top=100", "contacts");
+  }
+  function validateMovement(value) {
+    const employeeId = guid(value.employeeId);
+    if (!["cash_given", "cash_returned"].includes(value.movement)) throw new Error("Choose cash given or cash returned.");
+    const amount = Number(value.amount);
+    if (!Number.isFinite(amount) || amount <= 0 || Math.abs(amount * 100 - Math.round(amount * 100)) > 0.000001) {
+      throw new Error("Enter a positive amount with no more than two decimal places.");
+    }
+    const notes = String(value.notes || "").trim();
+    if (!notes || notes.length > 100) throw new Error("Enter a reason of 1 to 100 characters.");
+    return { employeeId, movement: value.movement, amount, notes };
+  }
+  let pendingMovement = null, posting = false;
+  function flowReady() { return config.accountsSecurityReviewed === true && guidPattern.test(config.accountsFlowId); }
+  async function postMovement(value) {
+    if (!flowReady()) throw new Error("Cash posting is disabled until the secured accounts flow is configured and reviewed.");
+    if (posting) throw new Error("A cash movement is already being submitted.");
+    const input = validateMovement(value), fingerprint = JSON.stringify(input);
+    if (pendingMovement && pendingMovement.fingerprint !== fingerprint) {
+      throw new Error("The previous cash movement has an unconfirmed result. Keep its details unchanged and check its posting key before starting another.");
+    }
+    if (!pendingMovement) {
+      if (!root.crypto || typeof root.crypto.randomUUID !== "function") throw new Error("Secure operation IDs are unavailable in this browser.");
+      pendingMovement = { fingerprint, postingKey: root.crypto.randomUUID() };
+    }
+    const postingKey = pendingMovement.postingKey;
+    posting = true;
+    try {
+      // Power Pages' documented trigger transport uses form-encoded eventData.
+      const result = await api("/_api/cloudflow/v1.0/trigger/" + guid(config.accountsFlowId), {
+        method: "POST", headers: { "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8" },
+        body: new URLSearchParams({ eventData: JSON.stringify({ ...input, postingKey }) }).toString()
+      });
+      const body = result.body;
+      if (result.status !== 200 || !body || body.status !== "posted" || body.postingKey !== postingKey ||
+          guid(body.employeeId) !== input.employeeId || !guidPattern.test(body.transactionId) ||
+          body.balance === null || typeof body.balance !== "number" || !Number.isFinite(body.balance)) {
+        throw new Error("The flow did not confirm a completed posting. Check posting key " + postingKey + ".");
+      }
+      pendingMovement = null;
+      return body;
+    } catch (error) {
+      // Keep the same key after EVERY failure. A retry must be idempotent on the server.
+      error.message += " Keep this page open. Posting key: " + postingKey + ".";
+      throw error;
+    } finally { posting = false; }
+  }
+  function node(tag, text, className) {
+    const element = root.document.createElement(tag);
+    if (text !== undefined) element.textContent = String(text);
+    if (className) element.className = className;
+    return element;
+  }
+  function signedInId() { return guid(root.document.getElementById("pcModuleUserId").value); }
+  function statusLabel(value) {
+    return Object.keys(config.requestStatus).find(label => config.requestStatus[label] === value) || "Unknown status (" + value + ")";
+  }
+  async function showDashboard() {
+    const message = root.document.getElementById("pcModuleMessage");
+    const button = root.document.getElementById("pcRefresh");
+    const table = root.document.getElementById("pcRequestsBody");
+    button.disabled = true;
+    message.textContent = "Loading your balance and requests…";
+    table.replaceChildren();
+    try {
+      const id = signedInId();
+      const results = await Promise.allSettled([readBalance(id), myRequests(id)]);
+      if (results[0].status === "fulfilled") {
+        root.document.getElementById("pcBalance").textContent = money(results[0].value);
+        root.document.getElementById("pcBalanceMeaning").textContent = balanceMeaning(results[0].value);
+      } else {
+        root.document.getElementById("pcBalance").textContent = "Unavailable";
+        root.document.getElementById("pcBalanceMeaning").textContent = results[0].reason.message;
+      }
+      if (results[1].status === "rejected") throw results[1].reason;
+      for (const row of results[1].value) {
+        const tr = node("tr");
+        const source = row["hr_paymentsource@OData.Community.Display.V1.FormattedValue"] ||
+          ({ 123140000: "Company Cash", 123140001: "Own Pocket" }[row.hr_paymentsource] || "Unknown");
+        for (const text of [row.hr_requesttitle, String(row.hr_transactiondate || "").slice(0, 10),
+          money(Number(row.hr_totalamount)), source, statusLabel(row.hr_approvalstatus), row.hr_managercomments || "—"]) {
+          tr.appendChild(node("td", text));
+        }
+        table.appendChild(tr);
+      }
+      message.textContent = results[1].value.length ? "Loaded " + results[1].value.length + " requests. Use Refresh for the latest saved values." : "You have not submitted any requests yet.";
+    } catch (error) { message.textContent = error.message; }
+    finally { button.disabled = false; }
+  }
+  async function showAccounts() {
+    const document = root.document, message = document.getElementById("pcModuleMessage");
+    const select = document.getElementById("pcEmployee"), submit = document.getElementById("pcPostCash");
+    // Cosmetic Liquid role check is not authorization; the flow MUST enforce its web role.
+    if (document.getElementById("pcAccountsAllowed").value !== "true") {
+      message.textContent = "This page is for the Petty Cash Accounts web role.";
+      return;
+    }
+    try {
+      signedInId();
+      const list = await employees();
+      for (const record of list) {
+        const option = node("option", (record.fullname || "Unnamed employee") + " · " + guid(record.contactid).slice(0, 8));
+        option.value = guid(record.contactid);
+        select.appendChild(option);
+      }
+      select.onchange = async function () {
+        const display = document.getElementById("pcEmployeeBalance");
+        display.textContent = "Loading…";
+        if (!select.value) { display.textContent = "Choose an employee"; return; }
+        const requestedId = select.value;
+        try {
+          const value = await readBalance(requestedId);
+          if (select.value === requestedId) display.textContent = money(value);
+        } catch (error) { if (select.value === requestedId) display.textContent = error.message; }
+      };
+      submit.disabled = !flowReady();
+      message.textContent = flowReady() ? "Record cash physically given or returned. This does not approve expenses." :
+        "Employees loaded. Cash posting is disabled until the accounts flow and security review are configured.";
+      document.getElementById("pcAccountsForm").onsubmit = async function (event) {
+        event.preventDefault();
+        if (submit.disabled) return;
+        submit.disabled = true;
+        try {
+          const result = await postMovement({ employeeId: select.value,
+            movement: document.getElementById("pcMovement").value,
+            amount: document.getElementById("pcCashAmount").value,
+            notes: document.getElementById("pcCashReason").value });
+          message.textContent = "Cash movement posted. Reference: " + result.transactionId + ".";
+          document.getElementById("pcEmployeeBalance").textContent = money(result.balance);
+          document.getElementById("pcCashAmount").value = "";
+          document.getElementById("pcCashReason").value = "";
+        } catch (error) { message.textContent = error.message; }
+        finally { submit.disabled = !flowReady(); }
+      };
+    } catch (error) { message.textContent = error.message; submit.disabled = true; }
+  }
+  root.PettyCashModules = Object.freeze({ readBalance, readSavedBalance, cashTransactions, sumTransactions, myRequests, employees, balanceMeaning, money,
+    validateMovement, postMovement, flowReady,
+    get pendingPostingKey() { return pendingMovement && pendingMovement.postingKey; } });
+  function initialize() {
+    const page = root.document.querySelector("[data-pc-page]");
+    if (!page) return;
+    if (page.dataset.pcPage === "requests") {
+      root.document.getElementById("pcRefresh").onclick = showDashboard;
+      showDashboard();
+    } else if (page.dataset.pcPage === "accounts") showAccounts();
+  }
+  if (root.document.readyState === "loading") root.document.addEventListener("DOMContentLoaded", initialize);
+  else initialize();
+})(window);

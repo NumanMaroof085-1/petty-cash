@@ -1,7 +1,8 @@
 # Power Pages Web API field settings
 
-The live field setting is confirmed to be `*`. Microsoft removed wildcard
-support on September 14, 2026. Replace it with explicit fields on the selected
+The original settings screenshot used `*`; the submission page was subsequently
+confirmed working with the corrected configuration. Microsoft removed wildcard
+support on September 14, 2026. Use explicit fields on the selected
 website, preserving any additional validated fields used by other pages.
 
 These lists are generated from the current client configuration. The user has
@@ -26,7 +27,7 @@ Replace the value with this single comma-separated line after verifying the
 names against the live table:
 
 ```text
-_hr_assignedmanager_value,_hr_department_value,_hr_submittedby_value,hr_AssignedManager,hr_Department,hr_SubmittedBy,hr_approvalstatus,hr_erpsyncstatus,hr_paymentmethod,hr_paymentsource,hr_pettycashrequestid,hr_purpose,hr_receiptimage,hr_requesttitle,hr_totalamount,hr_transactiondate
+_hr_assignedmanager_value,_hr_department_value,_hr_submittedby_value,hr_AssignedManager,hr_Department,hr_SubmittedBy,hr_approvalstatus,hr_erpsyncstatus,hr_managercomments,hr_paymentmethod,hr_paymentsource,hr_pettycashrequestid,hr_purpose,hr_receiptimage,hr_requesttitle,hr_totalamount,hr_transactiondate
 ```
 
 ## Webapi/hr_pettycashlineitem/fields
@@ -49,8 +50,30 @@ Replace the value with this single comma-separated line after verifying the
 names against the live table:
 
 ```text
-_hr_department_value,_hr_reportstomanager_value,contactid
+_hr_department_value,_hr_reportstomanager_value,contactid,fullname,hr_currentbalance,statecode
 ```
+
+`fullname`, `hr_currentbalance`, and `statecode` support the new accounts
+employee selector and saved-balance summary. Employee Contact reads must remain
+Self-scoped; only the Accounts role may read authorized other Contacts.
+
+## Webapi/hr_cashtransaction/fields
+
+Set `Webapi/hr_cashtransaction/enabled` to `true`. The confirmed table logical
+name is `hr_cashtransaction`; its API entity set is `hr_cashtransactions`.
+The new balance widget and pages only read this table:
+
+```text
+_hr_employee_value,_hr_linkedrequest_value,createdon,hr_amount,hr_notespurpose,hr_transactionreference,hr_transactiontype
+```
+
+Employee reads must be Contact-scoped through Employee. Accounts may read
+authorized employee transactions. Do not expose direct ledger or Contact
+balance writes to these pages. See BALANCE_MODULE_SETUP.md for the restricted
+posting flow, confirmed posting-key column, and complete deployment checklist.
+The user-confirmed column is `crec6_postingkey` (schema `crec6_PostingKey`),
+with an Active alternate key. It is used by the trusted backend, not these
+read-only portal calls, so it need not be added to this field allow-list.
 
 ## Webapi/hr_departments/fields
 

@@ -62,6 +62,15 @@
       General Info
     </div>
 
+    <div style="padding:16px;margin-bottom:20px;border:1px solid #e2e8f0;border-radius:8px;background:#f8fafc;" aria-live="polite">
+      <strong>My cash balance</strong>
+      <div id="pcEmployeeBalanceValue" style="font-size:1.5rem;font-weight:700;color:#5a67d8;margin-top:6px;">Loading…</div>
+      <p id="pcEmployeeBalanceMeaning">Positive means company cash held; negative means the company owes you.</p>
+      <button type="button" id="pcEmployeeBalanceRefresh" onclick="refreshEmployeeBalance()"
+        style="padding:6px 12px;border:1px solid #cbd5e1;border-radius:6px;background:white;cursor:pointer;">Refresh balance</button>
+      <small style="display:block;margin-top:8px;">Pending and rejected requests do not affect the balance. A negative balance does not block a request.</small>
+    </div>
+
     <div class="form-group" style="margin-bottom: 15px;">
       <label style="display: block; font-weight: 600; margin-bottom: 6px; color: #4a5568;">Transaction Date <span
           style="color: red;">*</span></label>
@@ -211,14 +220,12 @@
     style="background-color: rgb(90, 103, 216); color: white; border: none; padding: 15px; width: 100%; font-size: 1.1rem; font-weight: bold; border-radius: 8px; cursor: pointer; margin-top: 10px; transition: background-color 0.2s ease;">Submit
     for Approval</button>
 
-  <!-- Power Pages Logged-in User Context (Placed in HTML outside script to prevent Power Pages from breaking JS) -->
-  <input type="hidden" id="portalUserId" value="{{ user.id }}" />
-  <input type="hidden" id="portalUserName" value="{{ user.fullname }}" />
-  <input type="hidden" id="portalUserEmail" value="{{ user.emailaddress1 }}" />
-  <input type="hidden" id="portalUserDepartmentId" value="{{ user.hr_department.id }}" />
-  <input type="hidden" id="portalUserManagerId" value="{{ user.hr_reportstomanager.id }}" />
 </div>
 
+<!-- Render identity inside a Web Template, not editable page-copy attributes. -->
+{% include 'Petty Cash User Context' %}
+<!-- Shared Web Template Source contains pettycash-modules.js inside script tags. -->
+{% include 'Petty Cash Modules' %}
 <script>
 /**
  * Petty Cash - Dataverse Web API Integration
@@ -396,6 +403,25 @@
 
     const lblGrandTotal = document.getElementById("lblGrandTotal");
     if (lblGrandTotal) lblGrandTotal.innerText = grandTotal.toFixed(2);
+  }
+
+  async function refreshEmployeeBalance() {
+    const value = document.getElementById("pcEmployeeBalanceValue");
+    const meaning = document.getElementById("pcEmployeeBalanceMeaning");
+    const refresh = document.getElementById("pcEmployeeBalanceRefresh");
+    if (!value || !meaning) return;
+    if (refresh) refresh.disabled = true;
+    value.textContent = "Loading…";
+    try {
+      if (!window.PettyCashModules) throw new Error("The shared balance script is not installed. Check the Petty Cash Modules Web Template and its page include.");
+      const context = await ensureCurrentUserContext();
+      const amount = await window.PettyCashModules.readBalance(context.contactId);
+      value.textContent = window.PettyCashModules.money(amount);
+      meaning.textContent = window.PettyCashModules.balanceMeaning(amount);
+    } catch (error) {
+      value.textContent = "Unavailable";
+      meaning.textContent = error.message;
+    } finally { if (refresh) refresh.disabled = false; }
   }
 
   function addNewItemRow() {
@@ -1146,6 +1172,7 @@
   // 5. EXPOSE GLOBALLY & INITIALIZE
   // =========================================================================
   window.calculateTotals = calculateTotals;
+  window.refreshEmployeeBalance = refreshEmployeeBalance;
   window.toggleOtherCategory = toggleOtherCategory;
   window.deleteRow = deleteRow;
   window.addNewItemRow = addNewItemRow;
@@ -1188,6 +1215,7 @@
     }
 
     ensureCurrentUserContext().catch(err => console.warn("Petty Cash profile is not ready:", err.message));
+    refreshEmployeeBalance();
   }
 
   if (document.readyState === "loading") {

@@ -6,12 +6,21 @@ approval and accounting integration after a complete submission is available.
 
 ## Files
 
-- `New Petty Cash Request.html`: the Power Pages page fragment, including its script and Liquid user inputs.
+- `New Petty Cash Request.html`: the Power Pages page fragment, including its script and shared template includes.
 - `pettycash-api.js`: the same client script, kept separately for development.
 - `tests/pettycash-api.test.cjs`: local regression tests using simulated portal and Dataverse responses.
 - `DATAVERSE_SETUP.md`: required mappings, site settings, permissions, and live verification steps.
 - `WEBAPI_SITE_SETTINGS.md`: prepared explicit field lists and the remaining live mapping checks.
-- The Word files describe the original requirements and configuration. Their wildcard field settings are now outdated; follow `DATAVERSE_SETUP.md` for the current API configuration.
+- `My Petty Cash Requests.html`: employee balance and request-status dashboard page fragment.
+- `Accounts Cash Management.html`: restricted accounts page fragment; cash posting disabled until the secured backend is configured.
+- `pettycash-modules.js`: canonical shared ledger/dashboard/accounts JavaScript; paste inside script tags in the `Petty Cash Modules` Web Template.
+- `Petty Cash User Context.html`: Source for the `Petty Cash User Context` Web Template; renders escaped dynamic user inputs and the cosmetic Accounts-role indicator outside editable page attributes.
+- `pettycash-module-config.example.js`: accounts flow configuration example; blank/disabled by default.
+- `BALANCE_MODULE_SETUP.md`: exact confirmed ledger mappings, roles/permissions, new page deployment, and backend contract.
+- `IMPLEMENTATION_LOG.md`: dated inventory of every new page/function/column/configuration requirement and its deployment state.
+- `scripts/correct_project_docs.py`: localized Word corrections with source backups and comments; prepares candidates for visual verification.
+- `scripts/finalize_project_docs.py`: guards publication with backup/hash, PDF-content, and rendered-page checks for this documentation revision.
+- The three root Word documents are corrected and visually verified against all 13 pages of the user's Office exports. Pre-edit copies remain in `documentation/backups/2026-10-12`. Use the Markdown guides for exact deployment steps and implementation status.
 
 ## Current implementation
 
@@ -62,7 +71,7 @@ With Node.js 22 or later:
 
 ```powershell
 node --check pettycash-api.js
-node --test --test-isolation=none tests/pettycash-api.test.cjs
+node --test --test-isolation=none tests/pettycash-api.test.cjs tests/pettycash-modules.test.cjs
 ```
 
 These tests make no network requests. They verify field preservation, read-back
@@ -71,12 +80,41 @@ receipt failures, mapping overrides, and synchronization of the two scripts.
 
 ## Deployment
 
+All three pages first include `{% include 'Petty Cash User Context' %}`, then
+load the shared script through `{% include 'Petty Cash Modules' %}`. Create the
+User Context template using the complete matching local HTML file; do not also
+retain the old hidden identity inputs in page Copy. The Modules template Source must contain
+the complete `pettycash-modules.js` wrapped in script tags; the user reports the
+template created on 2026-10-13 and its global object loaded. Its identity probe
+renders the real signed-in GUID; the page-copy inputs instead rendered column
+names. After the separate context template instructions, the user confirmed
+the request-page balance displays live. Nonzero totals and cross-user access
+are not yet verified. Remove the temporary identity probe from Modules Source.
+No JavaScript Web File upload is required.
+The request's inline script remains embedded;
+do not additionally load `pettycash-api.js`. The two new page fragments load
+the same shared script. Follow BALANCE_MODULE_SETUP.md for their deployment.
+
+Cash Transaction table metadata and choice integers were confirmed by the
+user. The ledger drives displayed signed balances; the Contact summary is not
+directly written by the browser. Cash posting is a prepared client contract,
+not a deployed flow or server-side posting implementation. On 2026-10-13 the
+user reported Posting Key `crec6_postingkey` (schema `crec6_PostingKey`) created
+with its alternate key Active. This replaces the earlier proposed `hr_postingkey`.
+The user also confirmed the Cash Transaction field list/enabled setting and
+Contact-scoped Read-only permission assigned to Authenticated Users. Other
+new pages/flows and live authorization tests remain unconfirmed. The reviewed
+2026-10-12 Word snapshots retain the old posting-key proposal and Web File
+deployment approach and page-inline user context; use BALANCE_MODULE_SETUP.md
+and IMPLEMENTATION_LOG.md for the current mapping and Web Template deployment.
+
 Confirm the mappings and portal configuration in `DATAVERSE_SETUP.md`, then
 replace the custom code of the New Petty Cash Request page with the HTML file.
 That file already contains the script. Do not additionally load the standalone
 JavaScript on the same page.
 
-Deployment and an authenticated live submission have not been performed from
+The user confirmed the earlier request submission works live. No new module
+deployment or authenticated balance/flow verification has been performed from
 this workspace. Local tests do not verify your tenant's actual metadata,
 permissions, file-column behavior, or Power Automate flows.
 

@@ -1,0 +1,4 @@
+# Local document backups and render QA are not deliverables.
+documentation/backups/
+documentation/qa/
+documentation/corrected/raw-*.docx
