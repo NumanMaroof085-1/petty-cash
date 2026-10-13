@@ -5,6 +5,47 @@ same change. Record exact files, functionality, schema names, permissions, site
 settings, tests, and deployment state. Never describe a proposed tenant change
 as deployed merely because local code or documentation exists.
 
+## 2026-10-13 Employee dashboard working; actual page name My Requests
+
+- User confirms the employee dashboard is created and working, with website
+  page display name `My Requests` instead of the suggested longer name.
+  In a follow-up the user confirmed the exact partial URL `My-Requests`.
+  No additional page/template creation or source-file rename is required.
+  Preserve configured casing; `/My-Requests/` is the relative link if the page
+  is directly under Home (parent hierarchy/full live URL not independently
+  inspected). No tenant route changed by assistant.
+- Changed the local dashboard h2 to `My Requests`; retained source filename
+  `My Petty Cash Requests.html`, shared template names, data-pc-page="requests",
+  API filters, and table/column mappings. A local heading-only redeploy is
+  optional if the live heading already matches or only navigation was renamed.
+- Added a regression for heading/module identity; updated README.md,
+  BALANCE_MODULE_SETUP.md, DATAVERSE_SETUP.md, and this log. No tenant writes,
+  new table, column, permission, web role, setting, or flow by assistant.
+- User's "working" report does not separately verify signed-out page denial,
+  all comments/statuses, Refresh, or two-employee Request/Line Item/ledger tests.
+  These and backend/protected-field hardening remain pending. Accounts posting
+  stays disabled. The earlier Word snapshots contain the old suggested name.
+- Verification: all 49 local tests pass after the heading-only change.
+
+## 2026-10-13 Other-Contact read denied; dashboard testing next
+
+- User's console screenshot shows manager Contact GET selecting `contactid,
+  hr_currentbalance` returns HTTP 403 with permission-denied-to-read-Contact
+  message. The same output passes employee/profile and all three setup checks.
+- This verifies the specific other-Contact denial for the tested session/record,
+  not all roles/Contacts or cross-user Request/Line Item/ledger isolation.
+- Next instructed deployment, not yet reported done: create authenticated
+  `My Petty Cash Requests` page, URL `my-petty-cash-requests`; page permissions
+  restrict Read to Authenticated Users (not Anyone/Anonymous). Paste updated
+  local fragment into Liquid-rendered HTML. Both shared templates already exist.
+- Ensure `hr_managercomments` is included in the existing Request field allow-list
+  without removing validated submission fields. No new table permission is
+  needed for dashboard reads beyond the existing scoped grants.
+- Test own balance, request list/status/comments, Refresh, and signed-out page
+  restriction. Use a second employee test account to verify Request/Line Item/
+  ledger isolation before production. Approval/Accounts posting stays pending.
+- Documentation updated only; no page, permission, or tenant mutation by assistant.
+
 ## 2026-10-13 Contact binding correction works live (user-reported)
 
 - User confirms request submission works after changing Contact - Manager Binding
@@ -269,7 +310,7 @@ as deployed merely because local code or documentation exists.
 | Artifact | Functionality | Deployment state |
 | --- | --- | --- |
 | New Petty Cash Request.html / pettycash-api.js | Read-only balance widget, Refresh button, signed-balance explanation; balance failure does not break working request submission | Local changes; not deployed by this assistant |
-| My Petty Cash Requests.html | New employee page: ledger-derived balance, own requests, saved approval status, manager comments, Refresh | Local page fragment; page/template must be created in Power Pages |
+| My Petty Cash Requests.html | Employee page: ledger-derived balance, own requests, saved approval status, manager comments, Refresh | User reports live page working as My Requests, partial URL My-Requests; broader checks pending |
 | Accounts Cash Management.html | New accounts page: employee selection, balance, cash-given/cash-returned inputs, notes, server-confirmed posting | Local page fragment; posting disabled by default |
 | pettycash-modules.js | Shared Web API reads, complete same-origin paging, ownership checks, money validation, ledger sum, safe text rendering, CSRF-protected flow transport and same-key retry protection | Initially Web File; replaced by shared Web Template on 2026-10-13 (see above) |
 | pettycash-module-config.example.js | Per-site flow GUID and security-review switch; no secret URLs or credentials | Template example only; blank/disabled by default |

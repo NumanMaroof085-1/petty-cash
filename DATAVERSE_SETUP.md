@@ -228,7 +228,9 @@ returned literal attribute names. The exact rewriting mechanism is unconfirmed.
 Do not hardcode a Contact GUID or treat browser context as authorization.
 The shared `pettycash-modules.js` is pasted inside script tags in the Web Template
 `Petty Cash Modules`; all three local pages use its Liquid include rather than a
-Web File. It supports the request-form balance widget, My Petty Cash Requests
+Web File. It supports the request-form balance widget, the live employee page
+named My Requests (source My Petty Cash Requests.html, confirmed partial URL
+`My-Requests`),
 page, and Accounts Cash Management page. The
 Cash Transaction logical name `hr_cashtransaction`, entity set
 `hr_cashtransactions`, and types 123140000/123140001/123140002 are confirmed.

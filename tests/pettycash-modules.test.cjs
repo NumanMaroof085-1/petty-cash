@@ -26,6 +26,12 @@ test('all three pages include the shared Web Template once without requesting th
   assert.doesNotMatch(script, /<\/script|\{%|\{\{/i);
   new vm.Script(script);
 });
+test('the employee page is titled My Requests without changing its module identity', () => {
+  const html = fs.readFileSync('My Petty Cash Requests.html', 'utf8');
+  assert.match(html, /<h2>My Requests<\/h2>/);
+  assert.match(html, /data-pc-page="requests"/);
+});
+
 test('the shared user-context template preserves input IDs, escapes values, and checks the Accounts role', () => {
   const source = fs.readFileSync('Petty Cash User Context.html', 'utf8');
   for (const id of ['portalUserId', 'portalUserName', 'portalUserEmail', 'pcModuleUserId', 'pcAccountsAllowed']) {

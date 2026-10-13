@@ -25,6 +25,11 @@ This verifies the reported UI read path, not nonzero balance arithmetic,
 cross-user authorization, or cash/approval posting. Before publishing the
 employee dashboard, review Request access scope/Submitted By relationship and
 role associations, including any overlapping Global employee permissions.
+Subsequent user screenshots confirm Request Contact scope, Line Item Parent
+scope, and a specific manager Contact balance GET denied with HTTP 403 while
+setup reads pass. Complete submission works after the Global Append-only
+Contact binding correction. Proceed with restricted dashboard testing; these
+checks do not replace a two-employee Request/Line Item/ledger isolation test.
 
 1. Create a Web Template named exactly `Petty Cash User Context` on the Petty
    Cash website. Paste the entire local `Petty Cash User Context.html` into its
@@ -52,10 +57,21 @@ role associations, including any overlapping Global employee permissions.
    this into the page's HTML Copy or a Web Template that renders Liquid, not
    the Custom JavaScript field (Liquid is server-side). The balance
    widget uses existing employee context and does not block expense submission.
-4. Create the authenticated page `My Petty Cash Requests`, suggested partial URL
-   `my-petty-cash-requests`, using the supplied HTML fragment. Create its Web
+4. The user created the employee page as `My Requests` and reports it working.
+   Source filename remains `My Petty Cash Requests.html`; its local heading now
+   matches `My Requests`. The user confirmed the actual partial URL is exactly
+   `My-Requests`, replacing the earlier suggestion `my-petty-cash-requests`.
+   Preserve this working URL/casing; do not create another page or put the partial
+   URL into the HTML. For a page directly under Home, its relative navigation
+   link is `/My-Requests/`; account for ancestor paths if nested. Create its Web
    Template/Page Template if your deployment uses templates; the local fragment
-   does not create these tenant records. Add it to employee navigation.
+   does not create these tenant records. In page Permissions, select restricted
+   access for Authenticated Users (not Anyone/Anonymous). Ensure the existing
+   Request API fields include `hr_managercomments`, preserving submission fields.
+   The fragment uses both shared includes; do not recreate templates or load a
+   Web File. Test own balance, own requests/status/comments, Refresh, and signed-
+   out page denial before adding it to normal employee navigation. Generic
+   "working" confirmation is not proof that every one of these checks passed.
 5. Create `Accounts Cash Management`, suggested partial URL `accounts-cash`,
    using its HTML. Restrict page access and navigation to `Petty Cash Accounts`.
    Hiding navigation or the Liquid check is not authorization.
@@ -224,7 +240,10 @@ As an ordinary employee, use the manager GUID from checkSetup().profile in
 `PettyCashModules.readSavedBalance(profile.managerId)` for a read-only Contact
 privacy check. An authorization denial is expected, not a returned balance.
 Capture status and error message; unknown/schema/network errors are not proof
-of correct permissions. No secret/token should be copied into shared logs.
+of correct permissions. The user's subsequent screenshot confirms a 403 and
+permission-denied message for the manager Contact balance read, with setup
+checks passing. This validates this tested case only. No secret/token should
+be copied into shared logs.
 
 The binding-only permission is broader than a server-validated manager choice:
 it allows appending to known Contact GUIDs, not reading/changing their data.
@@ -329,6 +348,7 @@ cannot prove real tenant authorization, flow mappings, or concurrent posting.
 - [Power Pages cloud-flow integration](https://learn.microsoft.com/en-us/power-pages/configure/cloud-flow-integration)
 - [Power Pages table permissions](https://learn.microsoft.com/en-us/power-pages/security/table-permissions)
 - [Liquid template includes](https://learn.microsoft.com/en-us/power-pages/configure/liquid/template-tags#include)
+- [Page access permissions](https://learn.microsoft.com/en-us/power-pages/security/page-security)
 - [Microsoft Power Pages lookup permission audit mapping](https://github.com/microsoft/power-platform-skills/blob/main/plugins/power-pages/skills/audit-permissions/SKILL.md)
 - [Dataverse alternate keys](https://learn.microsoft.com/en-us/power-apps/developer/data-platform/define-alternate-keys-entity)
 - [Dataverse concurrency](https://learn.microsoft.com/en-us/power-apps/developer/data-platform/optimistic-concurrency)

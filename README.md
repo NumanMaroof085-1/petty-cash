@@ -11,7 +11,7 @@ approval and accounting integration after a complete submission is available.
 - `tests/pettycash-api.test.cjs`: local regression tests using simulated portal and Dataverse responses.
 - `DATAVERSE_SETUP.md`: required mappings, site settings, permissions, and live verification steps.
 - `WEBAPI_SITE_SETTINGS.md`: prepared explicit field lists and the remaining live mapping checks.
-- `My Petty Cash Requests.html`: employee balance and request-status dashboard page fragment.
+- `My Petty Cash Requests.html`: source for the live employee page named **My Requests**; balance and request-status dashboard. Filename retained; confirmed partial URL `My-Requests`.
 - `Accounts Cash Management.html`: restricted accounts page fragment; cash posting disabled until the secured backend is configured.
 - `pettycash-modules.js`: canonical shared ledger/dashboard/accounts JavaScript; paste inside script tags in the `Petty Cash Modules` Web Template.
 - `Petty Cash User Context.html`: Source for the `Petty Cash User Context` Web Template; renders escaped dynamic user inputs and the cosmetic Accounts-role indicator outside editable page attributes.
@@ -29,7 +29,9 @@ and Reports To Manager lookups. It reads only that employee Contact, not the
 manager's Contact; the manager GUID comes from the employee profile lookup and
 is still bound and verified on the Request. Self Read plus a separate proposed
 Append-only manager binding permission has user-confirmed live submission
-success; the other-Contact read-denial test remains pending.
+success. User's console screenshot also confirms a manager Contact balance
+read is denied with HTTP 403. Other role/record and Request/ledger isolation
+tests remain pending; this single check is not a full security certification.
 This corrects the earlier Append-To-only instruction after the user's association
 403: Contact is the lookup target in Power Pages' permission check, not the source.
 It checks that the requested columns are readable
@@ -110,7 +112,11 @@ user reported Posting Key `crec6_postingkey` (schema `crec6_PostingKey`) created
 with its alternate key Active. This replaces the earlier proposed `hr_postingkey`.
 The user also confirmed the Cash Transaction field list/enabled setting and
 Contact-scoped Read-only permission assigned to Authenticated Users. Other
-new pages/flows and live authorization tests remain unconfirmed. The reviewed
+Accounts page/flows and broader live authorization tests remain unconfirmed.
+The user reports the employee dashboard working under the page name `My Requests`;
+its confirmed partial URL is `My-Requests`. Signed-out/cross-employee tests remain
+unconfirmed. Preserve the configured URL casing; no page/source rename is needed.
+The reviewed
 2026-10-12 Word snapshots retain the old posting-key proposal and Web File
 deployment approach and page-inline user context; use BALANCE_MODULE_SETUP.md
 and IMPLEMENTATION_LOG.md for the current mapping and Web Template deployment.
