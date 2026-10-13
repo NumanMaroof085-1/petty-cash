@@ -130,10 +130,10 @@ Use the employee's actual web role. Do not add anonymous access as a workaround.
 
 | Table | Operations required by this script |
 | --- | --- |
-| Petty Cash Request | Read, Create, Append; Write for receipt upload; Append To for child products |
-| Petty Cash Line Item | Read, Create, Append |
-| Contact | Read the current profile and assigned manager; Append To as a lookup target |
-| Department | Read the current department; Append To as a lookup target |
+| Petty Cash Request | Read, Create, Write for receipt; Append To for its Contact/Department lookup binds; Append as Parent Request lookup target of lines |
+| Petty Cash Line Item | Read, Create, Append To for Parent Request lookup; preserve existing Append during staged testing |
+| Contact | Self Read of current profile; Global Append-only binding permission for manager target (no Global Read or separate manager GET) |
+| Department | Read the current department; Append as lookup target; preserve existing Append To during staged testing |
 
 Table permission scope and column permissions must permit the exact records
 and fields involved. The current employee must have a populated Department
@@ -142,6 +142,12 @@ prevent a caller from submitting requests as another employee; a hidden Liquid
 input is not a security boundary.
 
 Read checks cannot prove that Create, Write, or Append privileges are valid.
+The earlier Contact Append-To-only guidance was corrected after a live 403.
+Microsoft's Power Pages audit guidance checks Append on lookup targets and
+Append To on source tables setting the lookup. Keep Contact - Lookup Self-scoped;
+Contact - Manager Binding is Global Append only, with Read/Write/Create/Delete/
+Append To off. Verify its website and authenticated-user role, sync and retest.
+Do not restore broad Contact reads to fix association errors.
 Those require a controlled live submission with the intended employee role.
 
 ## Test without creating requests first

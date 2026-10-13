@@ -145,13 +145,92 @@ performs writes after validation. Protect the page AND flow. Existing
 `hr_userrole` Choice does not automatically create/assign a Power Pages web role.
 Audit overlapping Global employee permissions: they can undermine limited reads.
 
-The latest 2026-10-13 permission-list screenshot still shows Global Contact,
-Request, and Line Item permissions; Request also allows Write. Their web roles
-are not visible. Review those associations before publishing the dashboard;
-if Authenticated Users is attached, adding a narrower permission alone does
-not remove the existing broad grant. No permission changes were made during
-this review. Manager Contact lookup/read needs must be retained when narrowing
-Contact access; do not blindly switch the only Contact permission to Self.
+The initial 2026-10-13 permission-list screenshot showed Global Contact,
+Request, and Line Item permissions; Request also allowed Write. The user then
+confirmed all three are assigned to the authenticated-user web role. Adding a
+narrower permission alone does not remove these existing broad grants.
+No tenant permission changes were made by the assistant during
+this review. The local form now reads only the employee's Contact and obtains
+the manager GUID from that profile lookup. Manager binding still needs target
+Append To permission and live verification when removing broad Contact reads.
+
+First staged change confirmed by the user's subsequent saved screenshot:
+`Petty Cash Request - Create` is now Contact-scoped through
+`hr_pettycashrequest_SubmittedBy_contact` (Submitted By, `hr_submittedby`), not
+Assigned Manager. Current cropped screenshot does not show flags/roles. Keep
+Read, Write, Create, Append, Append To enabled and Delete disabled initially,
+and keep the authenticated-user role. Sync/refresh and run
+`await pettyCashDiagnostics.checkSetup()` (read-only). User's output passes all
+three checks after the Request scope change. This checks setup reads; it does
+not prove creation, receipt upload, or cross-employee isolation.
+
+Next staged change subsequently confirmed by screenshot: the existing Line
+Item permission has Parent access, `Petty Cash Request - Create` as Parent Table
+Permission, and `hr_pettycashlineitem_ParentRequest_hr_pettycashrequest` as the
+relationship using `hr_parentrequest` on Line Item. Keep Read/Create/Append/Append To enabled,
+Write/Delete disabled, and the authenticated-user role consistent with parent.
+If Parent isn't in the management form, use Design Studio Child permissions
+under the Request permission and ensure the old Global employee permission
+no longer grants access; do not add a child permission while keeping Global.
+Sync/refresh and repeat setup reads, then verify a complete intended test
+submission with line items and receipt before calling creation verified.
+The user's follow-up setup report passes all three read checks after these
+instructions. A later screenshot confirms Parent scope/relationship, and the
+user reports a complete test submission succeeded with all columns populated.
+These are user-provided live results, not independent cross-employee denial tests.
+Use clearly labelled test data for a two-line Others request and test receipt;
+check saved Request lookups/total, each line's total/Other Category/parent, and
+the receipt. This creates Dataverse test records; leave pending and do not
+approve or post a cash movement as part of this compatibility check.
+
+Contacts still need separate hardening before exposing the dashboard (below).
+Retaining Request Write is a compatibility step, not a finished security design.
+Protect approval/comments/sync fields and financial fields after submission and
+enforce trusted initial state/server completeness before enabling posting.
+
+### Contact hardening: submission works; cross-user denial test pending
+
+Deploy the updated request HTML first: it removes the separate manager Contact
+GET from preflight. It still reads the employee's own Department/Reports To
+Manager lookup values and binds/verifies all three Request lookups. No hidden
+GUID or testContactId fallback should be added for this change.
+
+1. Change existing `Contact - Lookup` from Global to Self. Keep Read and existing
+   Append/Append To enabled, Write/Create/Delete off, authenticated-user role.
+2. Add a permission named `Contact - Manager Binding` on `contact`, Global scope,
+   same website/role, with ONLY Append enabled. Read, Write, Create, Delete,
+   and Append To must be off. The earlier Append-To-only instruction was wrong
+   for the Power Pages lookup-target association check and produced a user-
+   reported 403 linking Contact to Request. Do not grant Global Read to ordinary
+   employees. Keep Append To on Request (the table writing these lookup binds).
+3. Sync, sign in again, run setup reads, and submit a clearly labelled test request
+   with receipt to confirm manager binding works under these exact permissions.
+   Mocked tests cannot establish the portal's relationship authorization rules.
+   If rejected, capture the POST error and stop; do not restore broad reads as
+   an automatic workaround. Leave test request Pending.
+4. Verify direct Contact reads for another employee/manager are denied while
+   the current employee profile and ledger balance remain readable. Remove any
+   overlapping authenticated-user Global Read grant before claiming isolation.
+
+Power Pages permission-audit guidance maps Append to lookup target tables and
+Append To to source tables writing those lookups. The user's 403 specifically
+denied associating `contact` to `hr_pettycashrequest` while all read diagnostics
+passed. The user subsequently confirms submission works after the Append-only
+correction. Contact-read denial testing still remains; this success does not
+prove privacy or absence of other overlapping grants. No page/script edit is
+needed for this permission correction.
+
+As an ordinary employee, use the manager GUID from checkSetup().profile in
+`PettyCashModules.readSavedBalance(profile.managerId)` for a read-only Contact
+privacy check. An authorization denial is expected, not a returned balance.
+Capture status and error message; unknown/schema/network errors are not proof
+of correct permissions. No secret/token should be copied into shared logs.
+
+The binding-only permission is broader than a server-validated manager choice:
+it allows appending to known Contact GUIDs, not reading/changing their data.
+Backend must enforce the real submitter/manager and prevent privileged field
+tampering before trusted approvals/accounting. Dedicated Accounts read grants
+will be added separately to `Petty Cash Accounts`, not Authenticated Users.
 
 ## Confirmed posting-key schema
 
@@ -250,5 +329,6 @@ cannot prove real tenant authorization, flow mappings, or concurrent posting.
 - [Power Pages cloud-flow integration](https://learn.microsoft.com/en-us/power-pages/configure/cloud-flow-integration)
 - [Power Pages table permissions](https://learn.microsoft.com/en-us/power-pages/security/table-permissions)
 - [Liquid template includes](https://learn.microsoft.com/en-us/power-pages/configure/liquid/template-tags#include)
+- [Microsoft Power Pages lookup permission audit mapping](https://github.com/microsoft/power-platform-skills/blob/main/plugins/power-pages/skills/audit-permissions/SKILL.md)
 - [Dataverse alternate keys](https://learn.microsoft.com/en-us/power-apps/developer/data-platform/define-alternate-keys-entity)
 - [Dataverse concurrency](https://learn.microsoft.com/en-us/power-apps/developer/data-platform/optimistic-concurrency)

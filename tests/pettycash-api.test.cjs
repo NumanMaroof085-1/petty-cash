@@ -103,7 +103,7 @@ function harness(options = {}) {
         if (options.delayProfile && id === ids.employee) await options.delayProfile;
         return response(200, id === ids.employee ? {
           contactid: id, _hr_department_value: options.noDepartment ? null : ids.department,
-          _hr_reportstomanager_value: ids.manager
+          _hr_reportstomanager_value: options.noManager ? null : ids.manager
         } : { contactid: id });
       }
       if (init.method === 'GET' && set === 'hr_departmentses') {
@@ -179,6 +179,58 @@ test('complete request retains every field, binds all lookups, and verifies chil
   assert.equal(h.calls.filter(c => c.method === 'PUT').length, 1);
   assert.match(h.messages.at(-1), /Success!/);
   for (const call of h.calls) assert.equal(call.headers.__RequestVerificationToken, 'csrf');
+});
+
+test('a complete save reads only the employee Contact while retaining and verifying the manager binding', async () => {
+  const h = harness({ other: true, intercept(call, { error }) {
+    if (call.method === 'GET' && call.url.startsWith('/_api/contacts(') &&
+        !call.url.startsWith('/_api/contacts(' + ids.employee + ')')) {
+      return error(403, 'Other Contact reads are forbidden');
+    }
+  } });
+  await h.submit();
+  const contactReads = h.calls.filter(c => c.method === 'GET' && c.url.startsWith('/_api/contacts('));
+  assert.equal(contactReads.length, 1);
+  assert.ok(contactReads.every(c => c.url.startsWith('/_api/contacts(' + ids.employee + ')')));
+  const header = h.calls.find(c => c.method === 'POST').body;
+  assert.equal(header['hr_AssignedManager@odata.bind'], '/contacts(' + ids.manager + ')');
+  assert.ok(h.calls.some(c => c.method === 'GET' && c.url.includes('hr_pettycashrequests(') &&
+    c.url.includes('_hr_assignedmanager_value')));
+  assert.equal(h.calls.filter(c => c.method === 'PUT').length, 1);
+  assert.match(h.messages.at(-1), /Success!/);
+});
+
+test('a missing manager on the employee profile still blocks all request writes', async () => {
+  const h = harness({ noManager: true });
+  await h.submit();
+  assert.ok(h.calls.every(c => c.method === 'GET'));
+  assert.match(h.messages.at(-1), /no assigned manager/);
+});
+
+test('Contact association 403 retains every bind and permits a full retry after definite rejection', async () => {
+  let permissionFixed = false;
+  const h = harness({ other: true, intercept(call, { error }) {
+    if (!permissionFixed && call.method === 'POST' && call.url === '/_api/hr_pettycashrequests') {
+      return error(403, 'You do not have permission to associate or disassociate table contact to hr_pettycashrequest');
+    }
+  } });
+  await h.submit();
+  assert.equal(h.calls.filter(c => c.method === 'POST').length, 1);
+  assert.equal(h.calls.filter(c => c.method === 'PUT').length, 0);
+  assert.equal(h.context.window.pettyCashDiagnostics.pendingRequest, null);
+  assert.match(h.messages.at(-1), /no reduced request was sent/);
+  permissionFixed = true;
+  await h.submit();
+  const headers = h.calls.filter(c => c.method === 'POST' && c.url === '/_api/hr_pettycashrequests');
+  assert.equal(headers.length, 2);
+  for (const { body } of headers) {
+    assert.equal(body['hr_SubmittedBy@odata.bind'], '/contacts(' + ids.employee + ')');
+    assert.equal(body['hr_AssignedManager@odata.bind'], '/contacts(' + ids.manager + ')');
+    assert.equal(body['hr_Department@odata.bind'], '/hr_departmentses(' + ids.department + ')');
+  }
+  assert.equal(h.calls.filter(c => c.method === 'POST').length, 4);
+  assert.equal(h.calls.filter(c => c.method === 'PUT').length, 1);
+  assert.match(h.messages.at(-1), /Success!/);
 });
 
 test('500 on Department binding causes one full POST and never a reduced success', async () => {

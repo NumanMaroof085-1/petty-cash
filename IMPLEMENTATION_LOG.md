@@ -5,6 +5,116 @@ same change. Record exact files, functionality, schema names, permissions, site
 settings, tests, and deployment state. Never describe a proposed tenant change
 as deployed merely because local code or documentation exists.
 
+## 2026-10-13 Contact binding correction works live (user-reported)
+
+- User confirms request submission works after changing Contact - Manager Binding
+  to Global Append rather than Append To. This verifies reported compatibility
+  after the corrected instruction, not independent inspection of all role flags.
+- Current intended configuration: Contact - Lookup Self Read with existing self
+  association flags; separate Global Append-only binding grant; Contact Global
+  Read remains disabled. Request Contact scope and Line Item Parent scope were
+  confirmed earlier. Runtime code unchanged in this confirmation step.
+- Next gate: as an ordinary employee, attempt a read of the manager's Contact
+  balance through readSavedBalance(profile.managerId). Expect an authorization
+  denial, not a returned balance. Test is read-only; no approval/cash movements.
+  Capture HTTP status/message; arbitrary errors are not proof of denied access.
+- Cross-employee Request/Line Item/ledger denial tests, protected field hardening,
+  dashboard deployment, and financial flows still need verification/implementation.
+
+## 2026-10-13 Contact association 403; binding direction corrected
+
+- User reports Request POST HTTP 403: permission denied associating/disassociating
+  `contact` to `hr_pettycashrequest`, after Self Contact Read plus the earlier
+  Global Append-To-only instruction. All three read checks still pass. This is
+  an association authorization failure, not a schema/receipt/shared-script error.
+- The assistant's earlier binding flag was wrong. Microsoft's Power Pages audit
+  guidance explicitly requires Append on lookup target tables and Append To on
+  tables setting lookup binds. Contact needs Global Append for the manager target;
+  Request already retains Append To. No broad Contact Read is required by this
+  documented mapping; live compatibility and read-denial tests remain necessary.
+- Corrected next tenant instruction (not yet user-confirmed applied): edit
+  Contact - Manager Binding to Global, ONLY Append enabled, Append To/Read/Write/
+  Create/Delete off; same website and authenticated-user role. Contact - Lookup
+  stays Self with its existing flags. Sync/re-sign-in and retry the labelled test.
+  If still rejected, inspect exact grants/roles/website; never restore broad Read
+  or strip Submitted By/Assigned Manager fields to obtain success.
+- Corrected BALANCE_MODULE_SETUP.md, DATAVERSE_SETUP.md, and README.md, plus the
+  association comment in both script copies. Runtime behavior/payload unchanged.
+  Added a local regression for complete-payload
+  Contact-association 403 rejection and retry after a definite permission rejection.
+- No tenant writes by assistant. Association grants are not trusted manager
+  validation; server hardening and cross-user denial testing remain pending.
+- All 48 local tests pass, including the new 403 rejection/retry regression.
+  This verifies client behavior, not the live tenant permission correction.
+
+## 2026-10-13 Scoped submission verified; Contact-read hardening prepared
+
+- User reports a complete test request submitted without errors and all columns
+  retained values under the scoped permissions. No independent tenant inspection
+  or cross-employee denial test was performed by the assistant.
+- Line Item screenshot confirms Parent access, parent permission
+  `Petty Cash Request - Create`, exact relationship
+  `hr_pettycashlineitem_ParentRequest_hr_pettycashrequest`, on
+  `hr_pettycashlineitem`. This supersedes earlier pending relationship notes.
+- Removed the redundant preflight GET of the manager Contact from both embedded
+  request script and pettycash-api.js. Manager GUID is still required from the
+  authenticated employee's own Contact lookup; its binding and read-back check
+  remain mandatory. Missing manager still blocks writes. No payload reduction.
+- Added regression tests: complete save without reading any other Contact, and
+  missing profile manager prevents all writes. Browser/UI/financial rules unchanged.
+- Historical instructions (binding flag corrected in the later 403 entry): change existing
+  Contact - Lookup to Self Read (retain existing self Append/Append To), and add
+  a separate Global Contact binding permission with ONLY Append To, no Read/
+  Write/Create/Delete/Append, for the authenticated-user role. This preserves the
+  intended manager binding without broad Contact reads. Portal binding under
+  these exact grants needs a live complete-save test; it is not guaranteed by
+  mocked tests. If rejected, stop and inspect; do not silently restore Global Read.
+- Global Append To still permits associations to known Contact GUIDs; it is not
+  an authorization check of the chosen manager. Trusted server validation of
+  employee/manager, initial statuses, completion, and protected fields remains
+  required before approval/accounting. Accounts posting stays disabled.
+- Updated BALANCE_MODULE_SETUP.md, DATAVERSE_SETUP.md, and README.md alongside
+  this log. No new column/table/flow/site setting; new binding-only permission
+  is proposed. Earlier reviewed Word files remain dated deployment snapshots.
+- Verification: all 47 local tests pass, including embedded/standalone script
+  synchronization, required manager binding/read-back, and receipt completion
+  without another Contact GET. These mocks do not prove live Append To behavior.
+
+## 2026-10-13 Follow-up read checks passed after Line Item instructions
+
+- User's follow-up `checkSetup()` output passes Request columns, Product columns,
+  and Department target with employee/department/manager context resolved.
+- This is a read-only result after the Line Item Parent-scope instructions.
+  No saved Line Item permission screenshot or exact parent relationship name
+  was supplied, so Parent configuration/role inheritance remains unverified.
+- Next verification is a complete submission using clearly labelled test data,
+  two products, Others text, and a mandatory test receipt. This creates real
+  Dataverse test records: leave pending, do not approve/post financial movements,
+  and inspect the Request/Line Items/receipt. No test write made by assistant.
+- Global Contact hardening, protected financial/status fields, cross-employee
+  denial tests, dashboard deployment, and trusted posting flows remain pending.
+
+## 2026-10-13 Request scope configured; read diagnostics passed
+
+- User screenshot shows saved `Petty Cash Request - Create` on
+  `hr_pettycashrequest`, Contact access, relationship
+  `hr_pettycashrequest_SubmittedBy_contact`, on the Petty Cash website.
+- User's read-only `checkSetup()` output passes request columns, product columns,
+  and department target; the signed-in employee/department/manager resolved.
+  This does not verify writes, receipts, or denial of another employee's records.
+  Privilege flags and assigned roles were instructed to remain unchanged but
+  are not visible in this cropped screenshot.
+- Next instructed change, awaiting confirmation: edit the existing Line Item
+  permission from Global to Parent, with Request permission above as parent and
+  the relationship using Line Item `hr_parentrequest`. Preserve Read/Create/
+  Append/Append To; keep Write/Delete off and authenticated-user role consistent.
+  The exact Line Item relationship schema name has not yet been supplied.
+- If Parent isn't exposed in the management form, inspect the options or use
+  Design Studio's Child permissions under the scoped Request permission;
+  ensure any superseded Global employee grant is removed from effect. Do not
+  silently keep Global access as a fallback. Contacts remain a separate pending
+  hardening step; no permission or runtime code changed by the assistant here.
+
 ## 2026-10-13 Current permission list reviewed
 
 - User's current list shows Cash Transaction Contact-scoped Read only.
@@ -14,11 +124,20 @@ as deployed merely because local code or documentation exists.
   no Write/Delete.
 - Petty Cash Request - Create: Global Read, Write, Create, Append, Append To;
   no Delete.
-- Assigned web roles are not visible. Need roles for Contact, Request, and
-  Line Item permissions to establish which users inherit these global grants.
-  If assigned to Authenticated Users, broad reads/writes conflict with employee
-  isolation. No tenant permissions changed. Retain working submission/receipt
-  and manager-lookup requirements while planning scoped replacements.
+- User subsequently confirmed the authenticated-user web role is attached to
+  Contact, Request, and Line Item permissions. These Global grants therefore
+  conflict with employee isolation. No tenant permissions changed by assistant.
+- First instructed change (subsequently confirmed scoped above): edit the existing Request
+  permission to Contact access via Submitted By (`hr_submittedby`), preserving
+  current privilege flags and role for the submission/receipt regression check.
+  Do not add a narrow permission while leaving the same Global employee grant.
+- Next stages: scope Line Items through employee-owned Requests; address Contact
+  reads without breaking the explicit manager-target GET/binding requirements.
+  Preserve working submission/receipt and manager-lookup requirements. Keep
+  dashboard publication and financial posting pending until security checks pass.
+- Request Write retention is a compatibility step, not completed hardening:
+  employee edits of approvals/sync/comments and financial fields must be blocked
+  appropriately, with server validation, before enabling approval/accounting.
 
 ## 2026-10-13 Request-page balance display confirmed live by user
 

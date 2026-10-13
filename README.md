@@ -25,7 +25,14 @@ approval and accounting integration after a complete submission is available.
 ## Current implementation
 
 The client waits for the signed-in Contact profile and requires its Department
-and Reports To Manager lookups. It checks that the requested columns are readable
+and Reports To Manager lookups. It reads only that employee Contact, not the
+manager's Contact; the manager GUID comes from the employee profile lookup and
+is still bound and verified on the Request. Self Read plus a separate proposed
+Append-only manager binding permission has user-confirmed live submission
+success; the other-Contact read-denial test remains pending.
+This corrects the earlier Append-To-only instruction after the user's association
+403: Contact is the lookup target in Power Pages' permission check, not the source.
+It checks that the requested columns are readable
 before saving, sends one complete header payload, and reads the saved fields back.
 It then saves and verifies each product before uploading the receipt. The user
 confirmed that `hr_totalprice` is a Simple currency column, so the client now

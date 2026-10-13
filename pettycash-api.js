@@ -671,10 +671,9 @@
       method: "GET",
       url: "/_api/" + sets.departments + "(" + context.departmentId + ")?$select=" + c.departments.name
     });
-    await callWebAPI({
-      method: "GET",
-      url: "/_api/" + sets.contacts + "(" + context.managerId + ")?$select=" + c.contacts.id
-    });
+    // Manager GUID comes from the employee's own Contact lookup. Do not GET
+    // another Contact: employee Read must stay Self-scoped. Keep the manager
+    // bind and header read-back; target Append is tested separately live.
   }
 
   function sameValue(column, actual, expected) {
