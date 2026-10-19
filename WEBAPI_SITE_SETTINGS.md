@@ -55,7 +55,8 @@ _hr_department_value,_hr_reportstomanager_value,contactid,fullname,hr_currentbal
 
 `fullname`, `hr_currentbalance`, and `statecode` support the new accounts
 employee selector and saved-balance summary. Employee Contact reads must remain
-Self-scoped; only the Accounts role may read authorized other Contacts.
+Self-scoped; only separately authorized Accounts/Admin roles may read other
+Contacts according to their explicitly assigned table permissions.
 
 ## Webapi/hr_cashtransaction/fields
 
@@ -90,6 +91,114 @@ hr_departmentname
 ```
 
 ## Confirmed names and the remaining binding check
+
+### Current Admin profile-only cleanup (2026-10-19; deployment pending)
+
+Use ADMIN_PROFILE_SETUP.md and admin-profiles-v2. Keep username/login-enabled
+public fields; remove only adx_identity_newpassword from the tested Contact
+union. No password, hash or security stamp is needed by the current page:
+
+```text
+_hr_department_value,_hr_reportstomanager_value,adx_identity_logonenabled,adx_identity_username,contactid,emailaddress1,firstname,fullname,hr_Department,hr_ReportsToManager,hr_currentbalance,hr_userrole,lastname,statecode
+```
+
+Preserve extra independently validated public columns, existing admin-only
+Create/Read and employee Self Read permissions, enabled=true and column profiles.
+No new Write grant, schema column, flow or role is required. Do not remove the
+Admin Create-only input exception without reviewing its default Read behavior;
+the input's API allow-list removal is the relevant exposure change here.
+The assistant has not changed live settings; user publication remains pending.
+
+### Earlier Admin profile phase (historical)
+
+Admin mappings are now confirmed. The user's 2026-10-15 console screenshot
+returns Contact lookup navigation names `hr_Department` and
+`hr_ReportsToManager`. The GUID primary key is `hr_departmentsid`, not the text
+primary name `hr_departmentname`.
+
+After creating the separate admin-only table permissions in ADMIN_USER_SETUP.md,
+merge the following complete Admin/employee union into Contact's field setting,
+preserving any other independently validated fields required by other pages:
+
+```text
+_hr_department_value,_hr_reportstomanager_value,contactid,emailaddress1,firstname,fullname,hr_Department,hr_ReportsToManager,hr_currentbalance,hr_userrole,lastname,statecode
+```
+
+The corresponding Department field list is:
+
+```text
+hr_departmentname,hr_departmentsid,statecode
+```
+
+No wildcard, password/hash field, credential flag, website-role write or ledger
+write is added. Existing `hr_currentbalance` is retained for readers; Admin
+now initializes it to 0 on new Contact creation only, never updating existing
+balances or accepting a chosen starting amount. No field-list change or Write
+privilege is needed for this initialization. Shared field lists do not scope access by
+role; preserve employee Self Read/no Create and grant Global Read/Create only
+to Petty Cash Admin as documented. No live site setting or permission was
+modified by the assistant. The user's screenshot now confirms the two admin
+permission records' expected scopes and privileges, but not their role/website
+bindings. User now reports applying both Admin union field lists and retaining
+enabled=true. A subsequent user console screenshot confirms admin list reads
+pass for 2 Contacts and 2 Departments; full live setting values are not directly
+inspected by the assistant. User subsequently confirms the requested signed-out/
+non-admin page-denial and Admin-only permission binding checks. Local form
+config is now enabled for one controlled profile create after the user updates
+the Admin page. User now reports a Contact created with blank username/balance
+under the former profile-only payload. Local zero initialization is added but
+not deployed/verified live. Actual native login and broader direct-API isolation
+remain unverified on the portal Create path. No additional grant is needed for
+zero initialization. Credential exposure remains pending; user now confirms
+manual table username/password save and sign-in, not portal Create processing.
+
+### Credential edition — failed processing; keep disabled (2026-10-19)
+
+User reports portal Contact Create saved New Password Input without clearing it
+or generating a hash. The subsequent Management Change Password operation
+enabled successful sign-in and request submission. This is not verification of
+website-side credential processing. Stop experimental submissions and remove
+ONLY adx_identity_newpassword from the Contact fields setting, retaining all
+other validated public fields and existing table grants. Hash/security stamp
+stay excluded; no additional secret Read/Update grant or PATCH retry is needed.
+Live flag rollback, field removal and retained-input cleanup are user actions
+not independently performed or confirmed by the assistant. Canonical local
+creation/credential flags remain disabled. See ADMIN_CREDENTIAL_SETUP.md.
+
+The union and explanation below record the earlier test exposure, not a current
+recommendation to expose or re-enable the failed password-input path.
+
+User chooses a separate username. Enhanced Authorization is reported off; use
+Power Pages Column Permission Profiles. Local Admin code supports native
+adx_identity_username, adx_identity_logonenabled and one-time
+adx_identity_newpassword submission, without secret GET/read-back or logging.
+The baseline profile list above is historical; the user now pasted the full
+credential union below as the current Contact field setting.
+
+New Password Input must be Create-only for
+Admin, never Read/Update, under all effective employee/other-role combinations.
+ADMIN_CREDENTIAL_SETUP.md describes staged profiles, later full field list,
+no-read checks and controlled portal Create/sign-in verification. Username/
+Login Enabled are public read-back fields; hash/security stamp stay excluded.
+Current creation/credential guards are false. No table/column/grant deployed
+by assistant and no Contact Write permission is needed.
+User screenshots now confirm both profiles: Admin Create-only input exception
+and sole Admin role; employee no default grant, 12 public Read-only columns and
+Authenticated Users on this website. The admin zero-row probe returned public
+contactid 200 and New Password Input 403, with an attribute-not-found message.
+This does not verify the Create operation, native processing or all-role secret
+protection. Do not add password Read permission to troubleshoot a rejected GET.
+Keep creation/credential flags false. No passwords submitted during this stage.
+
+```text
+_hr_department_value,_hr_reportstomanager_value,adx_identity_logonenabled,adx_identity_newpassword,adx_identity_username,contactid,emailaddress1,firstname,fullname,hr_Department,hr_ReportsToManager,hr_currentbalance,hr_userrole,lastname,statecode
+```
+
+Application of this full list is now user-reported, not independently inspected.
+No live setting or permission modified by assistant. Retain extra validated public
+fields if needed, never hash/stamp, and do not broaden existing table grants.
+
+### Existing request and line item mappings
 
 1. Other Category belongs to the Line Item table. Retain `hr_othercategory` in
    `columns.lineItems.otherCategory`, not in request columns or request fields.

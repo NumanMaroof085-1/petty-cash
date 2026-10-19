@@ -380,6 +380,55 @@ test('receipt input is marked required in the HTML', () => {
   assert.match(html, /<input[^>]*id="fileReceipt"[^>]*\brequired\b/);
 });
 
+for (const scenario of [
+  { name: 'missing manager', options: { noManager: true }, amount: -260, blockedBy: /no assigned manager/ },
+  { name: 'missing department', options: { noDepartment: true }, amount: 1250, blockedBy: /no department/ },
+  { name: 'both lookups missing', options: { noManager: true, noDepartment: true }, amount: 0, blockedBy: /no department/ },
+  { name: 'Contact read denied', options: { intercept(call, { error }) {
+    if (call.url.startsWith('/_api/contacts(')) return error(403, 'Contact profile read denied');
+  } }, amount: 80, blockedBy: /Contact profile read denied/ }
+]) {
+  test('own balance works with ' + scenario.name + ' but submission still validates the profile', async () => {
+    const h = harness(scenario.options);
+    h.nodes.pcEmployeeBalanceValue = { textContent: '' };
+    h.nodes.pcEmployeeBalanceMeaning = { textContent: '' };
+    h.nodes.pcEmployeeBalanceRefresh = { disabled: false };
+    const ledgerReads = [];
+    h.context.window.PettyCashModules = {
+      async readBalance(id) { ledgerReads.push(id); return scenario.amount; },
+      money(amount) { return amount.toFixed(2) + ' PKR'; },
+      balanceMeaning(amount) { return amount < 0 ? 'Company owes you' : amount > 0 ? 'Company cash held' : 'Settled'; }
+    };
+    await h.evaluate('refreshEmployeeBalance();');
+    assert.deepEqual(ledgerReads, [ids.employee], 'Read only the signed-in employee ledger');
+    assert.equal(h.calls.length, 0, 'Balance must not depend on Contact profile API reads');
+    assert.equal(h.nodes.pcEmployeeBalanceValue.textContent, scenario.amount.toFixed(2) + ' PKR');
+    assert.equal(h.nodes.pcEmployeeBalanceMeaning.textContent,
+      scenario.amount < 0 ? 'Company owes you' : scenario.amount > 0 ? 'Company cash held' : 'Settled');
+    assert.equal(h.nodes.pcEmployeeBalanceRefresh.disabled, false);
+    await h.submit();
+    assert.equal(h.calls.filter(call => call.method !== 'GET').length, 0,
+      'An incomplete/inaccessible submission profile still blocks every request write');
+    assert.match(h.messages.at(-1), scenario.blockedBy);
+  });
+}
+
+for (const identity of ['', 'id', '{{ user.id }}']) {
+  test('balance rejects a missing or invalid signed-in identity: ' + JSON.stringify(identity), async () => {
+    const h = harness();
+    h.nodes.portalUserId.value = identity;
+    h.nodes.pcEmployeeBalanceValue = { textContent: '' };
+    h.nodes.pcEmployeeBalanceMeaning = { textContent: '' };
+    h.nodes.pcEmployeeBalanceRefresh = { disabled: false };
+    h.context.window.PettyCashModules = { async readBalance() { assert.fail('Do not read a ledger without identity'); } };
+    await h.evaluate('refreshEmployeeBalance();');
+    assert.equal(h.nodes.pcEmployeeBalanceValue.textContent, 'Unavailable');
+    assert.equal(h.nodes.pcEmployeeBalanceMeaning.textContent, 'Please sign in to view your cash balance.');
+    assert.equal(h.nodes.pcEmployeeBalanceRefresh.disabled, false);
+    assert.equal(h.calls.length, 0);
+  });
+}
+
 test('balance widget failures remain read-only and do not break expense submission', async () => {
   const h = harness();
   h.nodes.pcEmployeeBalanceValue = { textContent: '' };
@@ -389,7 +438,8 @@ test('balance widget failures remain read-only and do not break expense submissi
   await h.evaluate('refreshEmployeeBalance();');
   assert.equal(h.nodes.pcEmployeeBalanceValue.textContent, 'Unavailable');
   assert.match(h.nodes.pcEmployeeBalanceMeaning.textContent, /permission missing/);
-  assert.ok(h.calls.every(call => call.method === 'GET'));
+  assert.equal(h.calls.length, 0, 'A failed ledger read must not trigger Contact reads or writes');
+  assert.equal(h.nodes.pcEmployeeBalanceRefresh.disabled, false);
   await h.submit();
   assert.match(h.messages.at(-1), /Success!/);
 });

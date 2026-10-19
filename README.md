@@ -17,6 +17,12 @@ approval and accounting integration after a complete submission is available.
 - `Petty Cash User Context.html`: Source for the `Petty Cash User Context` Web Template; renders escaped dynamic user inputs and the cosmetic Accounts-role indicator outside editable page attributes.
 - `pettycash-module-config.example.js`: accounts flow configuration example; blank/disabled by default.
 - `BALANCE_MODULE_SETUP.md`: exact confirmed ledger mappings, roles/permissions, new page deployment, and backend contract.
+- `Admin Users.html`: seven-field profile-only edition, with separate username and zero new balance. No password controls; use Management Change Password on the saved Contact. Paired page/template deployment required.
+- `pettycash-admin.js`: version admin-profiles-v2 for Petty Cash Admin template; public profile-only POST/read-back, duplicate checks, safe retries and redacted errors. No password path, ledger entries or existing-user/balance updates.
+- `pettycash-admin-config.example.js`: mirrored in Admin Users.html; profile creation enabled for the user-reviewed admin-only setup. Missing script configuration still defaults to disabled; old credential switches are removed.
+- `ADMIN_PROFILE_SETUP.md`: current Admin configuration, password-free API union, deployment, security boundaries and separate Management password setup.
+- `ADMIN_USER_SETUP.md`: current Admin permissions/metadata/deployment checklist and unresolved native login/email provisioning.
+- `ADMIN_CREDENTIAL_SETUP.md`: historical failed credential experiment and supported Management test results; superseded by ADMIN_PROFILE_SETUP.md. Do not re-enable that path.
 - `IMPLEMENTATION_LOG.md`: dated inventory of every new page/function/column/configuration requirement and its deployment state.
 - `scripts/correct_project_docs.py`: localized Word corrections with source backups and comments; prepares candidates for visual verification.
 - `scripts/finalize_project_docs.py`: guards publication with backup/hash, PDF-content, and rendered-page checks for this documentation revision.
@@ -24,7 +30,10 @@ approval and accounting integration after a complete submission is available.
 
 ## Current implementation
 
-The client waits for the signed-in Contact profile and requires its Department
+Balance viewing uses only the signed-in Contact GUID and the authorized cash
+ledger, independently of department/manager profile readiness. Deploy the
+updated request-page HTML for this fix; shared templates and permissions are
+unchanged. Request submission still waits for the Contact profile and requires its Department
 and Reports To Manager lookups. It reads only that employee Contact, not the
 manager's Contact; the manager GUID comes from the employee profile lookup and
 is still bound and verified on the Request. Self Read plus a separate proposed
@@ -80,7 +89,7 @@ With Node.js 22 or later:
 
 ```powershell
 node --check pettycash-api.js
-node --test --test-isolation=none tests/pettycash-api.test.cjs tests/pettycash-modules.test.cjs
+node --test --test-isolation=none tests/pettycash-api.test.cjs tests/pettycash-modules.test.cjs tests/pettycash-admin.test.cjs
 ```
 
 These tests make no network requests. They verify field preservation, read-back
@@ -105,8 +114,9 @@ do not additionally load `pettycash-api.js`. The two new page fragments load
 the same shared script. Follow BALANCE_MODULE_SETUP.md for their deployment.
 
 Cash Transaction table metadata and choice integers were confirmed by the
-user. The ledger drives displayed signed balances; the Contact summary is not
-directly written by the browser. Cash posting is a prepared client contract,
+user. The ledger drives displayed signed balances; the Admin creation form now
+initializes a new Contact summary to zero only. Existing summaries are not
+directly updated by the browser. Cash posting is a prepared client contract,
 not a deployed flow or server-side posting implementation. On 2026-10-13 the
 user reported Posting Key `crec6_postingkey` (schema `crec6_PostingKey`) created
 with its alternate key Active. This replaces the earlier proposed `hr_postingkey`.

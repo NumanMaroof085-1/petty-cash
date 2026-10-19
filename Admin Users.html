@@ -1,0 +1,59 @@
+<!-- Create one page named Admin Users, proposed partial URL Admin-Users.
+     Restrict PAGE Read and Contact creation to Petty Cash Admin only.
+     Profile-only edition admin-profiles-v2. Passwords are set separately in Management.
+     No hash, existing balance adjustment, or web-role assignment is performed. -->
+<section class="pc-admin" data-pc-page="admin-users">
+  <style>
+    .pc-admin{max-width:850px;margin:40px auto;padding:0 20px;font-family:'Segoe UI',sans-serif;color:#334155}
+    .pc-admin h2{color:#1e293b}.pc-admin form{background:white;border:1px solid #e2e8f0;border-radius:12px;padding:25px}
+    .pc-admin-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}.pc-admin label{display:block;font-weight:600;margin:0 0 6px}
+    .pc-admin input,.pc-admin select{box-sizing:border-box;width:100%;padding:12px;border:1px solid #cbd5e1;border-radius:6px}
+    .pc-admin button{padding:12px 20px;background:#5a67d8;color:white;border:0;border-radius:6px;cursor:pointer;margin-top:20px}
+    .pc-admin button:disabled{opacity:.5;cursor:not-allowed}.pc-admin input:focus,.pc-admin select:focus{outline:2px solid #5a67d8;outline-offset:2px}
+    .pc-admin-note{font-size:.9rem;color:#64748b}.pc-admin [hidden]{display:none!important}
+    @media(max-width:600px){.pc-admin-grid{grid-template-columns:1fr}.pc-admin form{padding:18px}}
+  </style>
+  <h2>Admin Users</h2>
+  <p>Create an employee Contact profile and assign its department and manager.</p>
+  <p id="pcAdminMessage" role="status" aria-live="polite">Checking administrator access…</p>
+  <form id="pcAdminForm" hidden>
+    <fieldset id="pcAdminFields" disabled style="border:0;padding:0;margin:0;min-width:0">
+      <div class="pc-admin-grid">
+        <div><label for="pcAdminFirstName">First name</label><input id="pcAdminFirstName" autocomplete="given-name" maxlength="50" /></div>
+        <div><label for="pcAdminLastName">Last name *</label><input id="pcAdminLastName" autocomplete="family-name" maxlength="50" required /></div>
+        <div><label for="pcAdminEmail">Email *</label><input id="pcAdminEmail" type="email" autocomplete="email" maxlength="100" required /></div>
+        <div><label for="pcAdminUsername">Username *</label><input id="pcAdminUsername" autocomplete="off" autocapitalize="none" spellcheck="false" minlength="3" maxlength="100" required /></div>
+        <div><label for="pcAdminBusinessRole">Business role *</label><select id="pcAdminBusinessRole" required><option value="">Choose a role</option></select></div>
+        <div><label for="pcAdminDepartment">Department *</label><select id="pcAdminDepartment" required><option value="">Choose a department</option></select></div>
+        <div><label for="pcAdminManager">Reports to manager *</label><select id="pcAdminManager" required><option value="">Choose a manager</option></select></div>
+      </div>
+      <p class="pc-admin-note">The business role does not grant website permissions. Assign website web roles separately in Power Pages Management.</p>
+      <p class="pc-admin-note">Use a separate username: 3–100 letters, digits, dots, underscores or hyphens, starting with a letter or digit.</p>
+      <p class="pc-admin-note">This creates a profile only; no password is collected or set. After saving, open the same Contact in Portal Management and use Change Password to set its initial password, then test sign-in. Do not create a second Contact.</p>
+      <p class="pc-admin-note">New profiles start with a zero balance summary and an empty cash ledger. This form does not adjust existing balances.</p>
+    </fieldset>
+    <button id="pcAdminCreate" type="submit" disabled>Create Contact profile</button>
+  </form>
+</section>
+{% include 'Petty Cash User Context' %}
+<script>
+/* Canonical configuration, mirrored inside Admin Users.html before its Admin include.
+ * Profile creation enabled for the user-confirmed admin-only page/table setup.
+ * No credential flags or password submission. Defaults in the script remain fail-closed.
+ * Contact navigation names confirmed by live lookup annotations, 2026-10-15.
+ */
+window.PC_ADMIN_CONFIG = {
+  creationEnabled: true,
+  securityReviewed: true,
+  departmentIdColumn: "hr_departmentsid",
+  contactDepartmentNavigation: "hr_Department",
+  contactManagerNavigation: "hr_ReportsToManager",
+  roleValues: {
+    Employee: 123140000,
+    Manager: 123140001,
+    Accounts: 123140002,
+    Admin: 123140003
+  }
+};
+</script>
+{% include 'Petty Cash Admin' %}

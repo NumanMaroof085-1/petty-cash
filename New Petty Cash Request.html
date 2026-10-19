@@ -414,8 +414,10 @@
     value.textContent = "Loading…";
     try {
       if (!window.PettyCashModules) throw new Error("The shared balance script is not installed. Check the Petty Cash Modules Web Template and its page include.");
-      const context = await ensureCurrentUserContext();
-      const amount = await window.PettyCashModules.readBalance(context.contactId);
+      // Viewing one's ledger needs only identity, not a submission-ready profile.
+      const contactId = normalizeGuid(getPortalUserContext().id);
+      if (!contactId) throw new Error("Please sign in to view your cash balance.");
+      const amount = await window.PettyCashModules.readBalance(contactId);
       value.textContent = window.PettyCashModules.money(amount);
       meaning.textContent = window.PettyCashModules.balanceMeaning(amount);
     } catch (error) {

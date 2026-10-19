@@ -5,6 +5,392 @@ same change. Record exact files, functionality, schema names, permissions, site
 settings, tests, and deployment state. Never describe a proposed tenant change
 as deployed merely because local code or documentation exists.
 
+## 2026-10-19 Admin Users cleaned up to profiles only
+
+- User explicitly requested Admin cleanup. Removed two password controls and
+  credential-writing/validation/guard code from Admin Users.html and
+  pettycash-admin.js. Version is admin-profiles-v2; seven profile fields remain.
+  Any credential-like API input keys are rejected before network requests, and
+  stale credential-enable configuration cannot restore password submission.
+  Script initialization rejects old password-form HTML with a deployment error.
+- Retained separate username, login-enabled=true eligibility flag, exact
+  profile/role/lookup values, literal zero initial balance and read-back. No
+  native hash/stamp access, email/invitation, role assignment, ledger entry,
+  existing-Contact update or arbitrary balance adjustment. Login eligibility
+  does not provision credentials. Supported Management Change Password on the
+  same Contact remains the separate password operation; no account recreation.
+- Kept two release switches creationEnabled/securityReviewed. Mirrored canonical
+  page/example configuration has both true for this user's existing reviewed
+  admin-only deployment; script defaults still false without explicit settings.
+  No live flag, table/column/profile/page permission or role changed by assistant.
+- Preserved paging/duplicate checks including inactive Contacts, active lookup
+  options, HTTPS/session/CSRF, sanitized POST/transport errors, known-ID GET-only
+  retry and uncertain-save blocking. Updated return/diagnostic state to report
+  profileOnly/passwordSetupRequired and never claim login provisioning.
+- Updated 31 Admin tests and seven mock browser states, including rejection of
+  old HTML and credential-like input. All 87 unit tests pass; mock browser
+  desktop/mobile checks pass. No real tenant/credential processing tested.
+- Added ADMIN_PROFILE_SETUP.md; updated Admin/credential/API guides and README
+  to mark old credential guidance historical. Documented exact password-free
+  Contact API union and user-only removal of adx_identity_newpassword, paired
+  template/page deployment, existing permission preservation, safe prior-input
+  cleanup and Management workflow. No new page/table/column/key/role/flow needed.
+  New local revision is not yet published or live-verified by the user.
+
+## 2026-10-19 Management password setup and new-account request verified by user
+
+- User confirmed the balance now displays normally, not only after a console
+  refresh. User also confirmed live Admin script version admin-credentials-v1.
+- Live custom credential Create saved other profile values but left New Password
+  Input populated without generating a hash. This is failed native processing
+  for the tested Create path; no exact plugin/workflow trigger cause is claimed.
+  The earlier manual field-save report did not prove Create would behave alike.
+- Missing Management Contacts were a list-filter issue: user changed the filter
+  and found all Contacts. User then ran Change Password on the existing test
+  Contact, signed in successfully, and successfully created a petty cash request.
+  Record this as user-reported native Management/sign-in/submission success,
+  not assistant tenant inspection, hash inspection, custom provisioning success
+  or a complete multi-role isolation/security certification.
+- Confirmed canonical Admin HTML and example configuration still have
+  creationEnabled=false, securityReviewed=true, credentialSubmissionEnabled=
+  false and credentialSecurityReviewed=false. No release flags changed locally
+  or in the tenant by assistant. User was instructed to stop the failed path;
+  live rollback, removal of adx_identity_newpassword from the API allow list and
+  safe clearing of its retained test value remain separately unconfirmed.
+  No password/hash values were requested or received. Do not repeat POST/PATCH,
+  write hashes, recreate Contacts or change the working account's ledger.
+- Updated ADMIN_CREDENTIAL_SETUP.md, ADMIN_USER_SETUP.md, WEBAPI_SITE_SETTINGS.md
+  and README.md with the actual result and explicit supersession of earlier
+  experimental enablement guidance. Kept supported Management provisioning as
+  the working path. No new table/column/key/role/page/flow/backend integration,
+  permissions, live settings or profile-only implementation added. The current
+  form's credential gates disable its save operation, not just password fields.
+- Documentation only; no code tests rerun, since mocks cannot verify native
+  credential processing. Earlier attempted failure-documentation save was
+  unverified and its entry was absent on inspection; this update records both
+  the failure and the subsequent supported-path success.
+
+## 2026-10-15 Own balance decoupled from submission profile; credential probe recorded
+
+- User authorized needed fixes after the admin's balance widget reported an
+  unassigned manager. Traced to refreshEmployeeBalance calling the full
+  submission-profile resolver. Changed pettycash-api.js and its identical inline
+  copy in New Petty Cash Request.html to normalize signed-in identity and read
+  only that Contact's ledger through the existing shared module. No Contact
+  lookup is required for balance viewing. Real ledger/identity failures remain
+  visible; no fabricated zero, role bypass, permission widening or balance write.
+- Department/manager validation remains required for request submission and
+  setup diagnostics. Separate initialization may warn about an incomplete
+  submission profile without preventing a valid ledger balance from rendering.
+- Added seven regression cases in tests/pettycash-api.test.cjs: missing manager,
+  department, both lookups, denied Contact read, and three invalid/absent identity
+  cases. Tests verify zero profile calls for refresh, unchanged blocked writes,
+  zero/positive/negative displays and refresh-button restoration. Existing
+  ledger-error test also verifies no incidental Contact calls.
+- Extended scripts/verify_module_pages.cjs with actual request-page mock browser
+  states expense-no-manager and expense-profile-denied, including refresh and
+  employee-filter checks. All four page states pass desktop/mobile; all 86 unit
+  tests pass (30 Admin unchanged). Browser requests were intercepted; no live
+  tenant read/write or credential processing was tested. git diff --check passes.
+- Updated BALANCE_MODULE_SETUP.md and README.md: publish the updated HTML to the
+  existing request page, save/sync/reload and verify as admin and employee. Do
+  not load the canonical JS a second time. No shared-template update, new page,
+  table, column, key, web role, setting, permission or flow is required. Live
+  deployment of this balance correction is not yet user-confirmed.
+- User pasted the complete Webapi/contact/fields credential union, including
+  adx_identity_newpassword. Their zero-row admin probe returned contactid 200 and
+  New Password Input 403 with an attribute-not-found message. Recorded this in
+  ADMIN_CREDENTIAL_SETUP.md, ADMIN_USER_SETUP.md and WEBAPI_SITE_SETTINGS.md.
+  The field is not missing from the reported list. GET failure does not verify
+  Create support or the cause/effective scope of secret-read protection; do not
+  make password Read available merely to pass this probe. Hash/stamp stay absent.
+- Clarified supported native local registration can accept passwords, whereas
+  custom admin Contact provisioning is a separate unverified route. No open
+  registration enabled, credential guard changed, credential POST performed,
+  existing Contact repaired, or new server endpoint deployed. Management setup
+  remains the documented fallback. No tenant changes made by the assistant.
+
+## 2026-10-15 Employee column rules and role confirmed; API permission probe next
+
+- Two user screenshots show all 12 requested public Contact columns with Read
+  only, Rows:12, and sole Authenticated Users role on the Petty Cash website.
+  Together with prior grid, employee profile has no default column grant and
+  no secret-column entries. Both profile configurations now screenshot-verified;
+  this is not proof of effective runtime access under every role combination.
+- Updated ADMIN_CREDENTIAL_SETUP.md, ADMIN_USER_SETUP.md and
+  WEBAPI_SITE_SETTINGS.md. Next user instruction: merge reviewed credential union
+  into existing Contact field setting, refresh config, run a read-only zero-GUID
+  query twice selecting public contactid vs adx_identity_newpassword. It matches
+  no real Contact and logs status/error metadata only, never field values.
+- Public control distinguishes general denial; successful empty/400/401 results
+  are inconclusive for value protection and must not enable credentials. Repeat
+  effective-access checks as employee and recheck normal app reads. No credential
+  request or Contact write performed, no native processing/sign-in verified.
+- Save flags unchanged/off; new API field-list application not yet reported.
+  Documentation only; git diff --check verified, no code tests rerun or tenant
+  changes by assistant.
+
+## 2026-10-15 Employee column profile listed; detailed verification pending
+
+- User's Active Column Permission Profiles grid shows Contact - Employee Column
+  Access on contact with blank All Column Permissions. Admin profile remains
+  contact with Create/Read. No individual employee column rows, website or role
+  assignment shown; do not infer all 12 rules or Authenticated Users binding.
+- Updated Admin/credential/API setup guides with partial evidence and request
+  for employee profile Column Permissions and Web Roles sections. No repeated
+  creation needed; password API exposure and credential release remain blocked.
+- Documentation only, git diff --check verification. No code, tenant, schema,
+  permission or credential change by assistant; no tests rerun.
+
+## 2026-10-15 Admin column profile confirmed in screenshots
+
+- User screenshots show saved Contact - Admin Column Access on contact and
+  the Petty Cash website, All Column Permissions Create/Read, explicit
+  adx_identity_newpassword Create only, and only Petty Cash Admin in Web Roles.
+  Recorded as screenshot evidence of configuration, not runtime secret denial.
+- Updated ADMIN_CREDENTIAL_SETUP.md, ADMIN_USER_SETUP.md and
+  WEBAPI_SITE_SETTINGS.md. Next instructed profile Contact - Employee Column
+  Access has no All Column Permissions selections and 12 explicit public
+  Contact logical-name Read-only records, associated with Authenticated Users.
+  No secret columns/default Read, no employee Contact Create/Write grant.
+- Other Contact-reading roles and overlapping profiles still need review;
+  normal reads and effective secret-read denial must be tested before exposure.
+  Credential API allow-list and all local credential release guards unchanged.
+  No assistant tenant mutation, secret access, code or new schema/flow changes.
+- Documentation-only verification: git diff --check; code tests not rerun.
+
+## 2026-10-15 Credential edition prepared; standard column controls pending
+
+- User selects separate username and confirms manual username/New Password
+  Input save generates a hash and permits sign-in. Input clearing not separately
+  confirmed; no password/hash contents requested or received. Manual save is
+  not treated as verification of portal Create processing.
+- Enhanced Authorization is reported unchecked. Use standard Power Pages Column
+  Permission Profiles, not inferred from enhanced data model. No setting toggled.
+- Local Admin Users.html adds username and masked password/confirmation.
+  Username 3–100 letters/digits/dot/_/- (letter/digit first); password 12–100,
+  no trimming/NUL/line breaks, confirmation required. These are app limits;
+  tenant may add password rules. No forced first-login password change configured.
+- pettycash-admin.js version admin-credentials-v1 adds paged case-insensitive
+  username duplicate checks including inactive Contacts. One full POST includes
+  adx_identity_username, adx_identity_logonenabled true, transient
+  adx_identity_newpassword and original profile/binds/zero summary. Public
+  read-back excludes secrets. Result states submitted, not processing/login
+  verified. No email, role assignment, existing-user update, ledger write or flow.
+- Password absent from fingerprints, retry state, diagnostics, storage or URLs.
+  Inputs clear at submit and after outcomes; known saved IDs retry GET-only
+  without password resubmission. Sensitive errors discard server/transport/read
+  exception messages that may echo secrets. HTTPS required; transient string
+  lifetime is not a physical memory-erasure guarantee.
+- Canonical/embedded config: creationEnabled=false, securityReviewed=true,
+  credentialSubmissionEnabled=false, credentialSecurityReviewed=false. No
+  credential field exposure or enablement deployed. Old/new script-page mismatch
+  fails closed during rollout. Existing profile edition is not modified live.
+- Added ADMIN_CREDENTIAL_SETUP.md with metadata/evidence, standard authorization,
+  next Admin column profile, all-role no-read review, future API list, release
+  gates and synthetic processing/login test. Main guide/README/API guide updated.
+- All 79 tests pass (30 Admin). Seven mocked browser modes pass, including
+  credentials-disabled, redacted rejection and password-free verification retry.
+  Desktop/mobile visually reviewed, masked/cleared inputs checked. No tenant
+  calls or real credentials used. No new schema/column/profile/flow by assistant.
+
+## 2026-10-15 First Contact created; zero summary added, credential extension pending
+
+- User reports the test Contact was created; Current Balance/username blank.
+  Both fields were omitted by the prior profile-only payload. No success text,
+  actual login test or complete record-field screenshot supplied.
+- Updated pettycash-admin.js to include literal hr_currentbalance:0 only on
+  Contact POST and select/verify it after save. Reject null/missing/nonzero
+  initial summary without PATCH/PUT/DELETE or overwriting any existing balance.
+  Arbitrary starting balance input is ignored. No ledger transaction is created.
+- Updated Admin page explanatory note, tests and mocked browser fixture/payload
+  checks. Existing hr_currentbalance field setting and Admin Create grant suffice;
+  no extra schema/permission needed. Existing blank Contact not automatically
+  backfilled or recreated; local patch not yet user-deployed/live-verified.
+- User requests username and adx_identity_newpassword input, reporting automatic
+  password assignment. Native adx_identity_username identified in Microsoft
+  Contact reference. Asked email-as-username vs separate name, and actual login/
+  input-clearing result after direct field save, never password/hash contents.
+  No username/password implementation or API exposure added pending answers and
+  processing/column-security verification. Management flow is documented; native
+  portal Create password-processing behavior is not verified in this tenant.
+- Updated ADMIN_USER_SETUP.md, WEBAPI_SITE_SETTINGS.md, README.md and
+  BALANCE_MODULE_SETUP.md with zero-init exception/evidence and credential scope.
+- Verification: all 69 tests pass (20 Admin), plus all four mocked Admin browser
+  modes. No tenant access or credential/balance mutations by assistant.
+
+## 2026-10-15 Access checks reported passed; controlled create enabled locally
+
+- User replies "done" to signed-out Admin page denial, non-admin page denial
+  and new permissions assigned only to Petty Cash Admin. Recorded as user-
+  reported, not independently inspected. No employee collection/direct POST
+  denial output provided; broader production checks remain pending.
+- Set creationEnabled/securityReviewed true in Admin Users.html and mirrored
+  canonical config for this site's controlled test only. Core defaults stay
+  false without config. No metadata/grant/script-template-source changes. User
+  must update the page before live activation; no confirmation yet.
+- Tests updated for reviewed enabled config while retaining either-off/missing
+  flags, non-admin/signed-out, exact full payload and safe-retry checks.
+- Updated ADMIN_USER_SETUP.md, WEBAPI_SITE_SETTINGS.md and README.md with
+  evidence boundaries and one test-profile procedure. No live Contact,
+  credentials, website role, balance/ledger write or tenant mutation by assistant.
+  Actual create/read-back and native login provisioning remain untested.
+- Verification: all 68 local tests pass; git diff --check passes. Mock browser
+  QA passes enabled, disabled, non-admin and unconfigured modes. No tenant calls.
+
+## 2026-10-15 Admin page live read diagnostics pass (user screenshot)
+
+- User reports running checkSetup on admin-users page while signed in as admin.
+  Screenshot: contactsReadable true, departmentsReadable true, contactCount 2,
+  departmentCount 2, creationEnabled false, writePermissionsVerified false,
+  loginProvisioned false. This demonstrates deployed helper/context/config and
+  successful list reads in that session, not create rights or page isolation.
+- Explained all three false values are expected: saving remains disabled;
+  diagnostics are GET-only and do not provision credentials. No runtime code or
+  save flags changed. No live Contact created by this diagnostic.
+- Updated ADMIN_USER_SETUP.md, WEBAPI_SITE_SETTINGS.md and README.md with the
+  observed deployment/read status. Exact URL casing, template source versions,
+  full settings and role bindings are not independently inspected.
+- Next instructed checks: signed-out and non-admin page denial; verify only
+  Admin role binds to new permissions; ordinary employee Contact collection
+  read returns no other Contact. Added read-only query with count/boolean output,
+  no passwords or personal record details. Direct Create-denial/production
+  server validation and actual admin creation/read-back remain untested.
+- Documentation-only change, no code tests rerun. Validation: git diff --check.
+
+## 2026-10-15 Admin API fields applied (user-reported); deployment prepared
+
+- User reports completing the Contact/Department union field setting instructions
+  and enabled=true. Live values/website and runtime reads are not independently
+  inspected. Admin permission role bindings still not shown in grid screenshot.
+- Embedded confirmed config in Admin Users.html before the Admin include, with
+  creationEnabled=false/securityReviewed=false. Updated canonical config comment
+  and regression enforcing exact embedded/canonical match and include order.
+  This removes a manual config assembly step; no new operation is enabled.
+- Updated ADMIN_USER_SETUP.md/WEBAPI_SITE_SETTINGS.md/README.md. Next user
+  deployment: restrict Admin Users page to Petty Cash Admin, update existing
+  User Context template, create Admin script template, paste complete page and
+  run read-only checkSetup. Page URL remains proposed Admin-Users; no page,
+  template or permission was deployed by assistant and no user report of them yet.
+- No new schema/flow/credential/balance writes. Save flags remain off.
+- Verification: all 68 tests pass; git diff --check passes. Updated Admin page
+  browser QA passes enabled, disabled, non-admin and unconfigured states with
+  mocked APIs only; desktop/mobile screenshots regenerated. No tenant requests.
+
+## 2026-10-15 Admin table permissions created (user screenshot)
+
+- User reports completion and provides Active Table Permissions screenshot.
+  Contact - Admin Profiles shows contact / Global / Read Yes, Create Yes,
+  Append Yes, Append To Yes, Write No, Delete No. Departments - Admin Lookup
+  shows hr_departments / Global / Read Yes, Append Yes, all other privileges No.
+- Screenshot also retains employee Contact Self, Request Contact, Line Item
+  Parent and Cash Transaction Contact scopes. It does not show assigned web
+  roles, website, relationships or prove live operation/isolation. Previous
+  instructions assign only Petty Cash Admin to the two new permissions; remind
+  user to verify these bindings and not attach Authenticated/Anonymous roles.
+- Updated ADMIN_USER_SETUP.md/WEBAPI_SITE_SETTINGS.md to distinguish screenshot-
+  confirmed privileges from pending role review, API fields, restricted page,
+  templates and live tests. Next user action is editing existing Contact and
+  Department field settings to the documented complete union values, retaining
+  any other validated fields and enabled=true. No password fields added.
+- Documentation-only change. Both save flags remain false. No assistant tenant
+  mutation, new schema, code behavior, credential change or flow deployment.
+  Validation: git diff --check; no code tests rerun for this documentation change.
+
+## 2026-10-15 Contact navigation names confirmed from live annotations
+
+- User's console screenshot from the documented read-only Contact query returns
+  department `hr_Department` and manager `hr_ReportsToManager`. These confirm
+  exact Contact lookup write names, not merely schema-name guesses. The
+  assistant did not directly query the tenant; no create permissions tested.
+- Filled both navigation mappings in pettycash-admin-config.example.js. Role
+  values and GUID key remain as previously confirmed; both save flags stay false.
+- Updated ADMIN_USER_SETUP.md, README.md and WEBAPI_SITE_SETTINGS.md with
+  confirmed mappings and complete Contact/Department union field lists. No live
+  settings changed, no credential/balance writes, no new schema/flow/permission.
+- Added exact-bind regression using the confirmed configuration; it verifies
+  one mocked full POST/read-back and separately that shipped flags block writes.
+  All 68 tests pass (19 Admin tests). No runtime/UI change or new browser run.
+- Next tenant action: separate Global Contact Read/Create/Append/Append To and
+  Department Read/Append permissions for Petty Cash Admin only, other privileges
+  off. Preserve existing employee scopes. Restricted page/templates/API settings
+  and live direct-API isolation tests still pending; no deployment by assistant.
+
+## 2026-10-15 Department GUID key confirmed for Admin page
+
+- User confirms Department primary key logical name `hr_departmentsid`; schema
+  spelling supplied as `hr_Departmentsld`. API configuration uses the logical
+  name exactly, not the schema spelling or primary-name text hr_departmentname.
+- Updated pettycash-admin-config.example.js, ADMIN_USER_SETUP.md,
+  WEBAPI_SITE_SETTINGS.md and README.md. Documented future Admin Department
+  field list hr_departmentname,hr_departmentsid,statecode; no live setting changed.
+- Added a read-query/config regression using the confirmed GUID key. All 67
+  local tests pass (18 Admin tests). No UI/runtime script change; prior mock
+  browser results still describe the 2026-10-13 UI test run, not a live tenant test.
+- Contact navigation-property verification and admin-only permission review
+  remain pending. Both save flags remain false; no deployment, credential change,
+  new table, column, permission or flow by assistant.
+- Documented an alternative read-only console query on the existing Request
+  page for own-Contact navigation annotations; it outputs only names. The query
+  has not been run against the tenant; null annotations are not a metadata result.
+
+## 2026-10-13 Admin profile page implemented locally; saving gated
+
+- User reports completing Admin web-role assignment. Live role defaults and
+  membership have not been independently inspected.
+- Confirmed hr_userrole Employee 123140000, Manager 123140001, Accounts 123140002,
+  Admin 123140003; Contact schema names hr_Department and hr_ReportsToManager.
+  Exact write navigation properties remain unverified. User supplied Department
+  primary name hr_departmentname; clarified that its Unique identifier GUID key
+  is required, not this text/name column.
+- Added Admin Users.html, pettycash-admin.js, pettycash-admin-config.example.js.
+  Proposed page Admin Users / Admin-Users and template Petty Cash Admin are not
+  deployed. First/last name, email, business role, Department/manager saved as
+  one complete payload, then verified. Complete Contact reads include inactive
+  rows for duplicate checks. Options require active Departments/Contacts.
+- No field stripping or credential/role/balance/ledger writes. Known saved ID
+  resumes verification only; ambiguous creates block retries in memory. Email
+  duplicate checks are client-side, not atomic; server validation remains pending.
+- Shared User Context adds cosmetic Liquid pcAdminAllowed; existing escaped
+  identity IDs and Accounts check preserved. Existing browser mock updated.
+- ADMIN_USER_SETUP.md documents artifact inventory, pending metadata, admin-only
+  Global Contact Read/Create/Append/Append To, Department Read/Append, merged
+  API fields, restricted page, templates, gates, manual native login fallback,
+  and pending direct-API security tests. README/WEBAPI_SITE_SETTINGS updated.
+- No tenant page, permission, setting, table, column, key or flow was created
+  by assistant. Reset error unchanged; profile creation is not login provisioning.
+- Verification: all 66 tests pass (17 new admin tests). Mock browser passes
+  enabled/disabled/non-admin/unconfigured Admin states; desktop/mobile visually
+  reviewed, no overflow. Existing Requests/Accounts browser QA also passes after
+  context change. No live tenant calls. Word snapshots unchanged.
+
+## 2026-10-13 Admin web role created (user-reported)
+
+- User reports creating the administrator web role in Power Pages Management
+  after the `Petty Cash Admin` setup instructions. Exact saved name, website,
+  default role flags, and assignment to a Contact are not independently verified.
+- Updated ADMIN_USER_SETUP.md with the reported creation and the next enhanced-
+  model Contact assignment step. Both default flags must remain No; ordinary
+  authenticated employees must not automatically receive the administrator role.
+- No admin page, new table permission, credential provisioning, or email flow
+  was implemented or deployed in this change. Existing employee permissions and
+  authentication remain unchanged. Documentation-only change.
+
+## 2026-10-13 Admin onboarding requirements and native password fields recorded
+
+- User requests a dedicated administrator-only Contact creation page next.
+  Existing authentication is reported as local email/password; invitations are
+  not wanted. Reset links are conditionally preferred if quick to configure.
+- Confirmed native fields: `adx_identity_newpassword` and
+  `adx_identity_passwordhash`. No new password column, portal field exposure,
+  password storage, or credential change implemented.
+- User reports Forgot Password generic failure, Error ID
+  `d148e7b7-a447-4d04-a904-a8bb2721daf0`; cause and reset process state unknown.
+- Added ADMIN_USER_SETUP.md to separate Contact profile creation from supported
+  login provisioning, record minimal phased design and proposed Petty Cash Admin
+  role, and keep password/email work explicitly unimplemented. No admin page,
+  role, permission, flow, or email was created/sent by the assistant.
+
 ## 2026-10-13 Employee dashboard working; actual page name My Requests
 
 - User confirms the employee dashboard is created and working, with website

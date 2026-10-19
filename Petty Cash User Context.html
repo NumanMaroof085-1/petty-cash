@@ -7,4 +7,5 @@
   <input type="hidden" id="portalUserEmail" value="{{ user.emailaddress1 | escape }}" />
   <input type="hidden" id="pcModuleUserId" value="{{ user.id | escape }}" />
   <input type="hidden" id="pcAccountsAllowed" value="{% if user.roles contains 'Petty Cash Accounts' %}true{% else %}false{% endif %}" />
+  <input type="hidden" id="pcAdminAllowed" value="{% if user.roles contains 'Petty Cash Admin' %}true{% else %}false{% endif %}" />
 </div>

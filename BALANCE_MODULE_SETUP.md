@@ -15,9 +15,39 @@ employee, including every returned page. No records means zero. Invalid amounts,
 unknown types, a duplicated expense request, another employee's record, or paging
 errors produce an error rather than a misleading partial/zero balance.
 `Contact.hr_currentbalance` remains the server-maintained summary; it must be
-reconcilable to the ledger. This version does not directly overwrite it.
+reconcilable to the ledger. Balance/Accounts pages do not directly overwrite it.
+The separate Admin creation form now initializes a NEW Contact summary to 0
+and reads it back, following the user's first blank-summary creation report.
+This creates no cash movement and changes no existing Contact summary; later
+updates remain the trusted backend's responsibility. No new Write permission
+or arbitrary starting-balance input is added. See ADMIN_USER_SETUP.md.
 
 ## Local artifacts and page deployment
+
+### Request-page balance independence (2026-10-15)
+
+The user reported that an admin without a returned Reports To Manager lookup
+saw Unavailable instead of their balance. The widget previously called
+`ensureCurrentUserContext()`, which validates the submission profile before a
+ledger read. `refreshEmployeeBalance()` now validates only the signed-in Contact
+GUID and calls `PettyCashModules.readBalance(contactId)`. Missing department or
+manager, or a denied Contact profile read, no longer blocks an otherwise
+authorized own-ledger balance read. Ledger errors still show Unavailable, never
+a fabricated zero. Signed-out/invalid identity still prevents ledger reads.
+
+Request submission and `pettyCashDiagnostics.checkSetup()` retain their full
+department/manager checks. This is not an admin bypass for expense approval.
+The background initialization may still warn that the submission profile is
+incomplete even while the balance loads correctly.
+
+Deploy the updated **New Petty Cash Request.html** to the existing request page,
+save/sync and reload. Its inline script matches canonical `pettycash-api.js`;
+do not load that JS file separately. Shared templates, schema, field settings,
+web roles and table/column permissions are unchanged. No manager assignment or
+broader Contact access is needed just to view a balance. Verify as the affected
+admin and an ordinary employee; the local tests do not prove live permissions.
+
+### Existing deployment history
 
 Live status (2026-10-13, user-reported): the request-page balance widget now
 displays after switching identity rendering to the User Context template.
@@ -56,7 +86,8 @@ checks do not replace a two-employee Request/Line Item/ledger isolation test.
    `{% include 'Petty Cash Modules' %}` before its inline submission script. Paste
    this into the page's HTML Copy or a Web Template that renders Liquid, not
    the Custom JavaScript field (Liquid is server-side). The balance
-   widget uses existing employee context and does not block expense submission.
+   widget uses only signed-in identity, independently of submission-profile
+   validation, and its failures do not block expense submission.
 4. The user created the employee page as `My Requests` and reports it working.
    Source filename remains `My Petty Cash Requests.html`; its local heading now
    matches `My Requests`. The user confirmed the actual partial URL is exactly
