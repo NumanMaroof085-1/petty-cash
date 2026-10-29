@@ -261,9 +261,7 @@
 
   function resetForm() {
     document.getElementById("txtJustification").value = "";
-    document.getElementById("fileReceipt").value = "";
-    const preview = document.getElementById("filePreview");
-    if (preview) preview.innerHTML = "";
+    getReceiptController().reset();
 
     const selCategory = document.getElementById("selCategory");
     if (selCategory) {
@@ -489,6 +487,12 @@
     return `PCR-${yyyy}${mm}${dd}-${randomSuffix}`;
   }
 
+  function getReceiptController() {
+    const receipts = window.PettyCashReceipts;
+    if (!receipts || !receipts.current) throw new Error("The receipt tools are not installed. Update the Petty Cash Receipts Web Template and its page include.");
+    return receipts.current;
+  }
+
   function getFormData() {
     const txtDate = document.getElementById("txtDate").value;
     const selPaymentSource = document.getElementById("selPaymentSource").value;
@@ -496,8 +500,7 @@
     const selCategory = document.getElementById("selCategory").value;
     const txtOtherCategory = document.getElementById("txtOtherCategory") ? document.getElementById("txtOtherCategory").value.trim() : "";
     const txtJustification = document.getElementById("txtJustification").value.trim();
-    const fileInput = document.getElementById("fileReceipt");
-    const receiptFile = fileInput && fileInput.files && fileInput.files.length > 0 ? fileInput.files[0] : null;
+    const receiptSelection = getReceiptController().snapshot();
 
     const lineItems = [];
     const rows = document.querySelectorAll("#tableBody tr");
@@ -532,7 +535,8 @@
       category: selCategory,
       otherCategory: txtOtherCategory,
       justification: txtJustification,
-      receiptFile: receiptFile,
+      receiptSelection,
+      receiptFile: null,
       lineItems: lineItems,
       grandTotal: grandTotal
     };
@@ -562,17 +566,8 @@
     if (!Number.isFinite(formData.grandTotal) || formData.grandTotal <= 0) {
       throw new Error("Grand total must be greater than 0.");
     }
-    if (DATAVERSE_CONFIG.settings.isReceiptMandatory && !formData.receiptFile) {
+    if (DATAVERSE_CONFIG.settings.isReceiptMandatory && !formData.receiptSelection.files.length) {
       throw new Error("Please attach a receipt file before submitting.");
-    }
-    if (formData.receiptFile) {
-      if (formData.receiptFile.size > DATAVERSE_CONFIG.settings.maxReceiptBytes) {
-        throw new Error("The receipt is too large. Choose a file smaller than " +
-          (DATAVERSE_CONFIG.settings.maxReceiptBytes / 1024 / 1024) + " MB.");
-      }
-      if (!/^(image\/(jpeg|png|gif|webp|bmp)|application\/pdf)$/i.test(formData.receiptFile.type)) {
-        throw new Error("Please choose a receipt in PDF or a supported image format.");
-      }
     }
     if (!formData.justification) {
       throw new Error("Please enter a Business Justification for this expense.");
@@ -738,7 +733,7 @@
       date: data.date, source: data.paymentSource, method: data.paymentMethod,
       category: data.category, other: data.otherCategory, purpose: data.justification,
       items: data.lineItems,
-      receipt: data.receiptFile ? [data.receiptFile.name, data.receiptFile.size, data.receiptFile.lastModified] : null
+      receipt: data.receiptSelection.key
     });
   }
 
@@ -760,6 +755,7 @@
     if (submissionInProgress) return;
     submissionInProgress = true;
     let stage = "validating the form";
+    let receiptController;
     try {
       const formData = getFormData();
       validateForm(formData);
@@ -769,6 +765,21 @@
       }
       if (pendingSubmission && pendingSubmission.fingerprint !== fingerprint) {
         throw new Error("Request " + pendingSubmission.title + " is already partly saved. Restore its original form values and click Submit to finish it.");
+      }
+      stage = "preparing the receipt PDF";
+      setLoadingState(true, "Preparing your receipt PDF...");
+      receiptController = getReceiptController();
+      receiptController.setLocked(true);
+      formData.receiptFile = await receiptController.prepare(formData.receiptSelection, {
+        maxOutputBytes: DATAVERSE_CONFIG.settings.maxReceiptBytes,
+        onProgress: message => setLoadingState(true, message)
+      });
+      if (!formData.receiptFile || formData.receiptFile.type !== "application/pdf" ||
+          !formData.receiptFile.size || formData.receiptFile.size > DATAVERSE_CONFIG.settings.maxReceiptBytes) {
+        throw new Error("The prepared receipt must be a PDF within the configured upload limit.");
+      }
+      if (formFingerprint(getFormData()) !== fingerprint) {
+        throw new Error("The form changed while the receipt was being prepared. Review the form and submit again.");
       }
       setLoadingState(true, "Checking your employee profile...");
       stage = "loading your employee profile";
@@ -782,7 +793,7 @@
         await preflight(payload, context, formData.category === "Others");
         const state = {
           title, payload, context: { ...context }, fingerprint,
-          id: null, lines: [], receiptUploaded: false, uncertain: false
+          id: null, lines: [], receipt: formData.receiptFile, receiptUploaded: false, uncertain: false
         };
         pendingSubmission = state;
         stage = "creating the request";
@@ -836,7 +847,7 @@
       if (formData.receiptFile && !state.receiptUploaded) {
         stage = "uploading the receipt";
         setLoadingState(true, "Uploading your receipt...");
-        await uploadReceiptImage(state.id, formData.receiptFile);
+        await uploadReceiptImage(state.id, state.receipt);
         state.receiptUploaded = true;
       }
       showMessage("Request " + state.title + " and all its products" +
@@ -858,6 +869,7 @@
       showMessage(message, "error");
     } finally {
       submissionInProgress = false;
+      if (receiptController) receiptController.setLocked(Boolean(pendingSubmission));
       setLoadingState(false);
     }
   }
@@ -974,17 +986,8 @@
       };
     }
 
-    const fileReceipt = document.getElementById("fileReceipt");
-    if (fileReceipt) {
-      fileReceipt.onchange = function () {
-        const filePreview = document.getElementById("filePreview");
-        if (filePreview && this.files.length > 0) {
-          const file = this.files[0];
-          const sizeKb = (file.size / 1024).toFixed(1);
-          filePreview.textContent = `${file.name} (${sizeKb} KB)`;
-        }
-      };
-    }
+    if (window.PettyCashReceipts) window.PettyCashReceipts.mount();
+    else showMessage("Receipt tools are missing. Install the Petty Cash Receipts Web Template before submitting.", "error");
 
     ensureCurrentUserContext().catch(err => console.warn("Petty Cash profile is not ready:", err.message));
     refreshEmployeeBalance();

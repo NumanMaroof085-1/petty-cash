@@ -8,6 +8,9 @@ approval and accounting integration after a complete submission is available.
 
 - `New Petty Cash Request.html`: the Power Pages page fragment, including its script and shared template includes.
 - `pettycash-api.js`: the same client script, kept separately for development.
+- `Petty Cash Receipts.html`: complete generated Source for the new Petty Cash Receipts Web Template; pinned PDF library and receipt module already wrapped.
+- `pettycash-receipts.js`: up to 10 ordered JPG/PNG images combined locally into one previewable PDF, or one unchanged existing PDF; limits and safe preparation cache.
+- `RECEIPT_PDF_SETUP.md`: dependency, two-part website deployment, limits, retry behavior and live test checklist.
 - `tests/pettycash-api.test.cjs`: local regression tests using simulated portal and Dataverse responses.
 - `DATAVERSE_SETUP.md`: required mappings, site settings, permissions, and live verification steps.
 - `WEBAPI_SITE_SETTINGS.md`: prepared explicit field lists and the remaining live mapping checks.
@@ -51,7 +54,11 @@ saves Quantity multiplied by Unit Price on each line and verifies it. Each
 line total is rounded to two decimal places; the displayed and saved grand
 total is the sum of those rounded line totals.
 
-A receipt is mandatory: the form rejects a missing receipt before any API
+A receipt is mandatory. The page accepts one PDF or up to 10 JPG/PNG images
+combined locally into one PDF before request writes. Previews create no records;
+partial-save retries retain the exact prepared PDF. Publish the new receipt
+Web Template and updated HTML together; see RECEIPT_PDF_SETUP.md.
+The form rejects a missing receipt before any API
 calls or writes, and does not report success if its upload fails. This is a
 client-side requirement; server-side completeness validation remains necessary.
 
@@ -89,7 +96,8 @@ With Node.js 22 or later:
 
 ```powershell
 node --check pettycash-api.js
-node --test --test-isolation=none tests/pettycash-api.test.cjs tests/pettycash-modules.test.cjs tests/pettycash-admin.test.cjs
+node scripts/build_receipt_template.cjs
+node --test --test-isolation=none tests/pettycash-api.test.cjs tests/pettycash-modules.test.cjs tests/pettycash-admin.test.cjs tests/pettycash-receipts.test.cjs
 ```
 
 These tests make no network requests. They verify field preservation, read-back

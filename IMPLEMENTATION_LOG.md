@@ -5,6 +5,48 @@ same change. Record exact files, functionality, schema names, permissions, site
 settings, tests, and deployment state. Never describe a proposed tenant change
 as deployed merely because local code or documentation exists.
 
+## 2026-10-28 Multi-image receipt PDF upload implemented locally
+
+- User approved one existing PDF OR up to 10 JPG/PNG images combined locally
+  into one PDF, with order/remove controls and preview. Current folder was found
+  at Desktop/petty-cash after the former workspace path ceased to exist. No user
+  file was moved/deleted and no live tenant data was read or written.
+- Added pettycash-receipts.js (receipt-pdf-v1), generated Petty Cash Receipts.html
+  Web Template Source, vendor/jsPDF 4.2.1 MIT library/license and deterministic
+  build script. Pinned npm tarball SHA-512 is checked on --fetch; runtime needs
+  no CDN or external conversion service. Template includes raw guards/script
+  tags and is approximately 427 KiB. User must publish it and the updated request
+  HTML; actual tenant Source/CSP limits remain unverified, never bypassed.
+- Picker supports append, up/down ordering, removal/clear, image thumbnails and
+  prepared PDF preview/download links. Rejects mixed/multiple PDFs, unsupported
+  formats, invalid headers and selection limits without dropping valid files.
+  Enforces 15 MiB/image, 40 MiB combined, 32 MP/12k dimensions and final 10 MiB
+  PDF. Header dimensions are checked before thumbnail decoding. PDF conversion
+  is sequential, bounded/resized, white-flattened JPEG quality .88; normal A4 and
+  custom-height long pages preserve ratios and browser EXIF orientation.
+- Existing PDF bytes pass through. No OCR, original-image upload, storage,
+  telemetry, schema/table/column/key, financial/approval flow, role, permission
+  or Web API field/configuration change. Receipt remains mandatory and one
+  native session/CSRF PUT writes the existing hr_receiptimage file column.
+- Updated canonical pettycash-api.js and identical inline script to prepare and
+  validate the PDF before any request write, reject expense edits made during
+  preparation and retain the exact File in pending state. Fingerprints include
+  source identity/order; monotonic IDs prevent cleared selections aliasing old
+  snapshots. Preparation/partial saves lock receipt controls; retries reuse PDF
+  bytes and existing request/line IDs, ambiguous POST blocking is unchanged.
+- Added receipt unit tests and extended API/module browser fixtures plus
+  scripts/verify_receipt_upload.cjs. 106 tests pass. Mock Chrome checks verify
+  ordered four-page PDF, long/landscape/EXIF layout, mobile width, no preview API
+  writes, cached generation, byte-identical failed-upload retry, existing PDF
+  and corrupt/HEIC/mixed/count/encoding error cases. Independent PDF parser and
+  renderer verified output; PNGs of all pages visually reviewed using PDF skill.
+  Synthetic intermediate files are ignored under tmp/pdfs/. Existing module
+  page browser checks also pass. No real phone/Safari/tenant behavior claimed.
+- Added RECEIPT_PDF_SETUP.md and updated README, Dataverse/API setup guides with
+  exact artifacts, limits, dependency rebuild, two-part deployment and manual
+  acceptance checks. Approval/accounting must still validate all lines plus
+  uploaded receipt server-side; no completion flag/atomic transaction added.
+
 ## 2026-10-19 Admin Users cleaned up to profiles only
 
 - User explicitly requested Admin cleanup. Removed two password controls and

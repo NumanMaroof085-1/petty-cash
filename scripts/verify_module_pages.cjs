@@ -40,6 +40,8 @@ const request = '22222222-2222-4222-8222-222222222222';
       assert.doesNotMatch(moduleSource, /<\/script|\{%|\{\{/i, 'Source must be safe to paste into the script template');
       fragment = fragment.replace(contextInclude, () => renderedContext)
         .replace(include, () => '<script>' + moduleSource + '</script>');
+      if (expense) fragment = fragment.replace("{% include 'Petty Cash Receipts' %}", () =>
+        fs.readFileSync(path.join(root, 'Petty Cash Receipts.html'), 'utf8').replace('{% raw %}', '').replace('{% endraw %}', ''));
       assert.doesNotMatch(fragment, /\{%|\{\{/, 'Mock page must not retain Liquid placeholders');
       await page.route('https://portal.example.test/**', async route => {
         const url = new URL(route.request().url());

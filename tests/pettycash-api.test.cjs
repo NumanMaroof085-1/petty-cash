@@ -151,8 +151,20 @@ function harness(options = {}) {
     }
   });
   context.window.parent = context.window;
+  const selection = { key: receipt ? 'receipt-1' : '', files: receipt ? [receipt] : [] };
+  const preparationCalls = [];
+  const locks = [];
+  if (!options.missingReceiptTools) context.window.PettyCashReceipts = { current: {
+    snapshot() { return selection; },
+    async prepare(snapshot, settings) {
+      preparationCalls.push({ snapshot, settings, writes: calls.filter(call => call.method !== 'GET').length });
+      if (options.prepareReceipt) return options.prepareReceipt(snapshot, settings);
+      return receipt;
+    },
+    setLocked(value) { locks.push(value); }, reset() {}
+  } };
   vm.runInContext(source, context);
-  return { context, calls, records, messages, nodes, evaluate: code => vm.runInContext(code, context),
+  return { context, calls, records, messages, nodes, selection, preparationCalls, locks, evaluate: code => vm.runInContext(code, context),
     submit: () => vm.runInContext('submitPettyCashRequest()', context) };
 }
 
@@ -378,6 +390,74 @@ test('required receipt is uploaded before success for standard categories too', 
 test('receipt input is marked required in the HTML', () => {
   const html = fs.readFileSync('New Petty Cash Request.html', 'utf8');
   assert.match(html, /<input[^>]*id="fileReceipt"[^>]*\brequired\b/);
+});
+
+test('receipt tools are required and never fall back to silently uploading the first selected image', async () => {
+  const h = harness({ missingReceiptTools: true });
+  await h.submit();
+  assert.equal(h.calls.length, 0);
+  assert.match(h.messages.at(-1), /receipt tools are not installed/);
+});
+
+test('failed PDF preparation stops before any API request and permits selection edits', async () => {
+  const h = harness({ prepareReceipt() { throw new Error('Image could not be decoded'); } });
+  await h.submit();
+  assert.equal(h.calls.length, 0);
+  assert.equal(h.records.size, 0);
+  assert.match(h.messages.at(-1), /preparing the receipt PDF/);
+  assert.equal(h.locks.at(-1), false);
+});
+test('expense edits made while preparing a receipt prevent a stale form submission', async () => {
+  let h;
+  h = harness({ prepareReceipt() {
+    h.nodes.txtJustification.value = 'Changed during conversion';
+    return { type: 'application/pdf', size: 20 };
+  } });
+  await h.submit();
+  assert.equal(h.calls.length, 0);
+  assert.match(h.messages.at(-1), /form changed while the receipt/);
+  assert.equal(h.locks.at(-1), false);
+});
+
+test('prepared PDF validation rejects an oversized or non-PDF result before saving', async () => {
+  for (const prepared of [{ type: 'image/jpeg', size: 100 }, { type: 'application/pdf', size: 11 * 1024 * 1024 }]) {
+    const h = harness({ prepareReceipt() { return prepared; } });
+    await h.submit();
+    assert.equal(h.calls.length, 0);
+    assert.match(h.messages.at(-1), /prepared receipt must be a PDF/);
+  }
+});
+
+test('receipt is prepared before writes; retry retains saved records and the exact original PDF bytes', async () => {
+  let uploads = 0, prepared = 0;
+  const first = new ArrayBuffer(7), second = new ArrayBuffer(9);
+  const h = harness({ prepareReceipt() {
+    const bytes = prepared++ === 0 ? first : second;
+    return { type: 'application/pdf', name: 'receipts.pdf', size: bytes.byteLength, async arrayBuffer() { return bytes; } };
+  }, intercept(call, { error }) {
+    if (call.method === 'PUT' && uploads++ === 0) return error(500, 'Upload interrupted');
+  } });
+  await h.submit();
+  assert.equal(h.preparationCalls[0].writes, 0);
+  assert.equal(h.locks.at(-1), true, 'Partial saves keep selection locked');
+  await h.submit();
+  const puts = h.calls.filter(call => call.method === 'PUT');
+  assert.equal(puts.length, 2);
+  assert.equal(puts[0].body, first);
+  assert.equal(puts[1].body, first, 'Use retained state PDF even if a helper incorrectly returns a new object');
+  assert.equal(h.calls.filter(call => call.method === 'POST').length, 3);
+  assert.equal(h.locks.at(-1), false);
+});
+
+test('changing image selection/order after a partial save blocks another preparation or write', async () => {
+  const h = harness({ intercept(call, { error }) { if (call.method === 'PUT') return error(500, 'Upload interrupted'); } });
+  await h.submit();
+  h.selection.key = 'changed-image-order';
+  const before = h.calls.length;
+  await h.submit();
+  assert.equal(h.calls.length, before);
+  assert.equal(h.preparationCalls.length, 1);
+  assert.match(h.messages.at(-1), /Restore its original form values/);
 });
 
 for (const scenario of [

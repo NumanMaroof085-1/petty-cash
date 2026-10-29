@@ -179,6 +179,13 @@ in Dataverse.
 
 ## Controlled live submissions
 
+2026-10-28: the request page accepts one PDF or up to 10 JPG/PNG images combined
+locally before creating records. Deploy the new Petty Cash Receipts template and
+matching HTML together; see RECEIPT_PDF_SETUP.md. The existing hr_receiptimage
+file column, single PUT, API/permission settings and server completeness rule
+are unchanged. Confirm its configured size limit supports the final PDF; no
+tenant limit was inspected or changed by the assistant.
+
 Receipts are now required by the client and marked required in the HTML.
 Submission without a receipt stops before any API calls or record creation.
 Receipt-upload failure must still be handled as a partial request, not success.

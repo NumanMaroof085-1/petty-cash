@@ -190,12 +190,28 @@
         3</div>
       Receipt Attachment <span style="color: red; margin-left: 6px;">*</span>
     </div>
-    <div class="upload-zone"
+    <style>
+      #pcReceiptArea [hidden]{display:none!important}
+      #pcReceiptArea input{max-width:100%}
+      #pcReceiptArea button,#pcReceiptArea a{display:inline-block;margin:5px;padding:8px 12px;border:1px solid #cbd5e1;border-radius:6px;background:white;color:#334155}
+      #pcReceiptArea button:disabled{opacity:.5;cursor:not-allowed}
+      .pc-receipt-row{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid #e2e8f0;text-align:left;flex-wrap:wrap}
+      .pc-receipt-row img{object-fit:contain;background:white;border:1px solid #e2e8f0;border-radius:4px}
+      .pc-receipt-row>span{flex:1;min-width:120px;overflow-wrap:anywhere}
+      .pc-receipt-actions{display:flex;flex-wrap:wrap}
+    </style>
+    <div id="pcReceiptArea" class="upload-zone"
       style="border: 2px dashed rgb(160, 174, 192); border-radius: 8px; padding: 30px; text-align: center; color: rgb(113, 128, 150); background-color: rgb(247, 250, 252);">
-      <p style="margin: 0 0 10px;">A receipt is required. Choose one image or PDF file.</p>
-      <input type="file" id="fileReceipt" accept="image/*,.pdf" required aria-required="true"
-        aria-label="Receipt attachment (required)" style="cursor: pointer;" />
-      <div id="filePreview" style="margin-top: 12px; font-size: 0.9rem; color: #4a5568;"></div>
+      <p id="pcReceiptHelp" style="margin:0 0 10px;">Choose one PDF, or up to 10 JPG/PNG images. Choose again to add images; clear the list to switch to a PDF.</p>
+      <input type="file" id="fileReceipt" accept=".pdf,.jpg,.jpeg,.png,application/pdf,image/jpeg,image/png" multiple required aria-required="true"
+        aria-describedby="pcReceiptHelp pcReceiptStatus" aria-label="Receipt attachment (required)" style="cursor: pointer;" />
+      <p style="font-size:.85rem;">Images: 15 MB each, 40 MB combined, up to 32 megapixels. Final PDF: 10 MB maximum. Check the preview for readable receipt text.</p>
+      <ol id="pcReceiptList" style="list-style:none;padding:0;margin:12px 0;"></ol>
+      <button type="button" id="pcPrepareReceipt" disabled>Prepare PDF</button>
+      <button type="button" id="pcClearReceipts" disabled>Clear list</button>
+      <a id="pcReceiptPreview" hidden target="_blank" rel="noopener noreferrer">Preview PDF</a>
+      <a id="pcReceiptDownload" hidden download>Download PDF</a>
+      <p id="pcReceiptStatus" role="status" aria-live="polite" style="margin-top:12px;color:#4a5568;">Choose one PDF or up to 10 JPG/PNG images.</p>
     </div>
   </div>
 
@@ -226,6 +242,8 @@
 {% include 'Petty Cash User Context' %}
 <!-- Shared Web Template Source contains pettycash-modules.js inside script tags. -->
 {% include 'Petty Cash Modules' %}
+<!-- Static, integrity-pinned PDF library and local receipt tools; no CDN runtime calls. -->
+{% include 'Petty Cash Receipts' %}
 <script>
 /**
  * Petty Cash - Dataverse Web API Integration
@@ -490,9 +508,7 @@
 
   function resetForm() {
     document.getElementById("txtJustification").value = "";
-    document.getElementById("fileReceipt").value = "";
-    const preview = document.getElementById("filePreview");
-    if (preview) preview.innerHTML = "";
+    getReceiptController().reset();
 
     const selCategory = document.getElementById("selCategory");
     if (selCategory) {
@@ -718,6 +734,12 @@
     return `PCR-${yyyy}${mm}${dd}-${randomSuffix}`;
   }
 
+  function getReceiptController() {
+    const receipts = window.PettyCashReceipts;
+    if (!receipts || !receipts.current) throw new Error("The receipt tools are not installed. Update the Petty Cash Receipts Web Template and its page include.");
+    return receipts.current;
+  }
+
   function getFormData() {
     const txtDate = document.getElementById("txtDate").value;
     const selPaymentSource = document.getElementById("selPaymentSource").value;
@@ -725,8 +747,7 @@
     const selCategory = document.getElementById("selCategory").value;
     const txtOtherCategory = document.getElementById("txtOtherCategory") ? document.getElementById("txtOtherCategory").value.trim() : "";
     const txtJustification = document.getElementById("txtJustification").value.trim();
-    const fileInput = document.getElementById("fileReceipt");
-    const receiptFile = fileInput && fileInput.files && fileInput.files.length > 0 ? fileInput.files[0] : null;
+    const receiptSelection = getReceiptController().snapshot();
 
     const lineItems = [];
     const rows = document.querySelectorAll("#tableBody tr");
@@ -761,7 +782,8 @@
       category: selCategory,
       otherCategory: txtOtherCategory,
       justification: txtJustification,
-      receiptFile: receiptFile,
+      receiptSelection,
+      receiptFile: null,
       lineItems: lineItems,
       grandTotal: grandTotal
     };
@@ -791,17 +813,8 @@
     if (!Number.isFinite(formData.grandTotal) || formData.grandTotal <= 0) {
       throw new Error("Grand total must be greater than 0.");
     }
-    if (DATAVERSE_CONFIG.settings.isReceiptMandatory && !formData.receiptFile) {
+    if (DATAVERSE_CONFIG.settings.isReceiptMandatory && !formData.receiptSelection.files.length) {
       throw new Error("Please attach a receipt file before submitting.");
-    }
-    if (formData.receiptFile) {
-      if (formData.receiptFile.size > DATAVERSE_CONFIG.settings.maxReceiptBytes) {
-        throw new Error("The receipt is too large. Choose a file smaller than " +
-          (DATAVERSE_CONFIG.settings.maxReceiptBytes / 1024 / 1024) + " MB.");
-      }
-      if (!/^(image\/(jpeg|png|gif|webp|bmp)|application\/pdf)$/i.test(formData.receiptFile.type)) {
-        throw new Error("Please choose a receipt in PDF or a supported image format.");
-      }
     }
     if (!formData.justification) {
       throw new Error("Please enter a Business Justification for this expense.");
@@ -967,7 +980,7 @@
       date: data.date, source: data.paymentSource, method: data.paymentMethod,
       category: data.category, other: data.otherCategory, purpose: data.justification,
       items: data.lineItems,
-      receipt: data.receiptFile ? [data.receiptFile.name, data.receiptFile.size, data.receiptFile.lastModified] : null
+      receipt: data.receiptSelection.key
     });
   }
 
@@ -989,6 +1002,7 @@
     if (submissionInProgress) return;
     submissionInProgress = true;
     let stage = "validating the form";
+    let receiptController;
     try {
       const formData = getFormData();
       validateForm(formData);
@@ -998,6 +1012,21 @@
       }
       if (pendingSubmission && pendingSubmission.fingerprint !== fingerprint) {
         throw new Error("Request " + pendingSubmission.title + " is already partly saved. Restore its original form values and click Submit to finish it.");
+      }
+      stage = "preparing the receipt PDF";
+      setLoadingState(true, "Preparing your receipt PDF...");
+      receiptController = getReceiptController();
+      receiptController.setLocked(true);
+      formData.receiptFile = await receiptController.prepare(formData.receiptSelection, {
+        maxOutputBytes: DATAVERSE_CONFIG.settings.maxReceiptBytes,
+        onProgress: message => setLoadingState(true, message)
+      });
+      if (!formData.receiptFile || formData.receiptFile.type !== "application/pdf" ||
+          !formData.receiptFile.size || formData.receiptFile.size > DATAVERSE_CONFIG.settings.maxReceiptBytes) {
+        throw new Error("The prepared receipt must be a PDF within the configured upload limit.");
+      }
+      if (formFingerprint(getFormData()) !== fingerprint) {
+        throw new Error("The form changed while the receipt was being prepared. Review the form and submit again.");
       }
       setLoadingState(true, "Checking your employee profile...");
       stage = "loading your employee profile";
@@ -1011,7 +1040,7 @@
         await preflight(payload, context, formData.category === "Others");
         const state = {
           title, payload, context: { ...context }, fingerprint,
-          id: null, lines: [], receiptUploaded: false, uncertain: false
+          id: null, lines: [], receipt: formData.receiptFile, receiptUploaded: false, uncertain: false
         };
         pendingSubmission = state;
         stage = "creating the request";
@@ -1065,7 +1094,7 @@
       if (formData.receiptFile && !state.receiptUploaded) {
         stage = "uploading the receipt";
         setLoadingState(true, "Uploading your receipt...");
-        await uploadReceiptImage(state.id, formData.receiptFile);
+        await uploadReceiptImage(state.id, state.receipt);
         state.receiptUploaded = true;
       }
       showMessage("Request " + state.title + " and all its products" +
@@ -1087,6 +1116,7 @@
       showMessage(message, "error");
     } finally {
       submissionInProgress = false;
+      if (receiptController) receiptController.setLocked(Boolean(pendingSubmission));
       setLoadingState(false);
     }
   }
@@ -1203,17 +1233,8 @@
       };
     }
 
-    const fileReceipt = document.getElementById("fileReceipt");
-    if (fileReceipt) {
-      fileReceipt.onchange = function () {
-        const filePreview = document.getElementById("filePreview");
-        if (filePreview && this.files.length > 0) {
-          const file = this.files[0];
-          const sizeKb = (file.size / 1024).toFixed(1);
-          filePreview.textContent = `${file.name} (${sizeKb} KB)`;
-        }
-      };
-    }
+    if (window.PettyCashReceipts) window.PettyCashReceipts.mount();
+    else showMessage("Receipt tools are missing. Install the Petty Cash Receipts Web Template before submitting.", "error");
 
     ensureCurrentUserContext().catch(err => console.warn("Petty Cash profile is not ready:", err.message));
     refreshEmployeeBalance();

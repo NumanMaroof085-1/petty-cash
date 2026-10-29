@@ -1,5 +1,12 @@
 # Power Pages Web API field settings
 
+2026-10-28 receipt update: images are combined locally into a single PDF for the
+existing hr_receiptimage file column. No new fields, API operations, permissions
+or site settings are required. Publish the new Petty Cash Receipts Web Template
+and updated request HTML; see RECEIPT_PDF_SETUP.md. Confirm the live file-column
+size limit separately; the client maximum remains 10 MiB, and no live setting
+was changed by the assistant.
+
 The original settings screenshot used `*`; the submission page was subsequently
 confirmed working with the corrected configuration. Microsoft removed wildcard
 support on September 14, 2026. Use explicit fields on the selected
