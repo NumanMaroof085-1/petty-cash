@@ -27,6 +27,7 @@ const mockConfig = { creationEnabled: true, securityReviewed: true, departmentId
         .replace(/\{\{ user.fullname \| escape \}\}/g, 'Test administrator')
         .replace(/\{\{ user.emailaddress1 \| escape \}\}/g, 'admin@example.test')
         .replace("{% if user.roles contains 'Petty Cash Accounts' %}true{% else %}false{% endif %}", 'false')
+        .replace("{% if user.roles contains 'Petty Cash Finance' %}true{% else %}false{% endif %}", 'false')
         .replace("{% if user.roles contains 'Petty Cash Admin' %}true{% else %}false{% endif %}", mode === 'non-admin' ? 'false' : 'true');
       const writeMode = ['enabled', 'rejected', 'verification-retry'].includes(mode);
       const config = { ...mockConfig, creationEnabled: mode === 'disabled' ? false : true,

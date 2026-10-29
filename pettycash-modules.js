@@ -4,7 +4,9 @@
  */
 (function (root) {
   "use strict";
-  const config = Object.assign({ accountsFlowId: "", accountsSecurityReviewed: false,
+  // Repeated template includes must not reset an in-flight movement or bind twice.
+  if (root.PettyCashModules && root.PettyCashModules.version === "finance-ledger-v2") return;
+  const config = Object.assign({ financeFlowId: "", financeSecurityReviewed: false,
     requestStatus: { Pending: 123140000, Approved: 123140001, Rejected: 123140002 }
   }, root.PC_MODULE_CONFIG || {});
   const guidPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
@@ -12,6 +14,12 @@
     const clean = String(value || "").replace(/[{}]/g, "").trim().toLowerCase();
     if (!guidPattern.test(clean)) throw new Error("A valid employee or record ID is required.");
     return clean;
+  }
+  function requireFinance() {
+    const allowed = root.document.getElementById("pcFinanceAllowed");
+    const user = root.document.getElementById("pcModuleUserId");
+    if (!allowed || allowed.value !== "true") throw new Error("This page is available only to the Petty Cash Finance web role.");
+    return guid(user && user.value);
   }
   async function token() {
     if (root.shell && typeof root.shell.getTokenDeferred === "function") {
@@ -121,23 +129,47 @@
     return rows;
   }
   async function employees() {
-    return await collection("/_api/contacts?$select=contactid,fullname,hr_currentbalance&$filter=statecode eq 0&$orderby=fullname asc,contactid asc&$top=100", "contacts");
+    requireFinance();
+    const rows = await collection("/_api/contacts?$select=contactid,fullname,adx_identity_username,statecode&$filter=statecode eq 0&$orderby=fullname asc,contactid asc&$top=100", "contacts");
+    for (const row of rows) {
+      guid(row.contactid);
+      if (row.statecode !== 0 || !Object.prototype.hasOwnProperty.call(row, "adx_identity_username")) {
+        throw new Error("An active employee profile/username was not returned. Check Finance Contact read permissions and fields.");
+      }
+    }
+    return rows;
+  }
+  function cashAmount(value) {
+    const raw = String(value == null ? "" : value).trim(), amount = Number(raw);
+    if (!/^(?:\d+|\d*\.\d{1,2})$/.test(raw) || !Number.isFinite(amount) || amount <= 0 || !Number.isSafeInteger(Math.round(amount * 100))) {
+      throw new Error("Enter a positive amount with no more than two decimal places, without separators or exponent notation.");
+    }
+    return amount;
+  }
+  function isMoney(value) { return typeof value === "number" && Number.isFinite(value) &&
+    Number.isSafeInteger(Math.round(value * 100)) && Number(value.toFixed(2)) === value; }
+  function projectedBalance(balance, movement, amount) {
+    if (!isMoney(balance)) throw new Error("Load a valid employee ledger balance first.");
+    if (!["cash_given", "cash_returned"].includes(movement)) throw new Error("Choose cash given or cash returned.");
+    const signedCents = Math.round(cashAmount(amount) * 100) * (movement === "cash_given" ? 1 : -1);
+    const total = Math.round(balance * 100) + signedCents;
+    if (!Number.isSafeInteger(total)) throw new Error("The projected balance is outside the supported numeric range.");
+    return { change: signedCents / 100, balance: total / 100 };
   }
   function validateMovement(value) {
     const employeeId = guid(value.employeeId);
     if (!["cash_given", "cash_returned"].includes(value.movement)) throw new Error("Choose cash given or cash returned.");
-    const amount = Number(value.amount);
-    if (!Number.isFinite(amount) || amount <= 0 || Math.abs(amount * 100 - Math.round(amount * 100)) > 0.000001) {
-      throw new Error("Enter a positive amount with no more than two decimal places.");
-    }
+    const amount = cashAmount(value.amount);
     const notes = String(value.notes || "").trim();
     if (!notes || notes.length > 100) throw new Error("Enter a reason of 1 to 100 characters.");
     return { employeeId, movement: value.movement, amount, notes };
   }
   let pendingMovement = null, posting = false;
-  function flowReady() { return config.accountsSecurityReviewed === true && guidPattern.test(config.accountsFlowId); }
+  function flowReady() { return config.financeSecurityReviewed === true && guidPattern.test(config.financeFlowId); }
   async function postMovement(value) {
-    if (!flowReady()) throw new Error("Cash posting is disabled until the secured accounts flow is configured and reviewed.");
+    if (!flowReady()) throw new Error("Cash posting is disabled until the secured Finance flow is configured and reviewed.");
+    requireFinance();
+    if (new URL(root.location.origin).protocol !== "https:") throw new Error("Finance posting requires HTTPS.");
     if (posting) throw new Error("A cash movement is already being submitted.");
     const input = validateMovement(value), fingerprint = JSON.stringify(input);
     if (pendingMovement && pendingMovement.fingerprint !== fingerprint) {
@@ -151,14 +183,14 @@
     posting = true;
     try {
       // Power Pages' documented trigger transport uses form-encoded eventData.
-      const result = await api("/_api/cloudflow/v1.0/trigger/" + guid(config.accountsFlowId), {
+      const result = await api("/_api/cloudflow/v1.0/trigger/" + guid(config.financeFlowId), {
         method: "POST", headers: { "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8" },
         body: new URLSearchParams({ eventData: JSON.stringify({ ...input, postingKey }) }).toString()
       });
       const body = result.body;
       if (result.status !== 200 || !body || body.status !== "posted" || body.postingKey !== postingKey ||
           guid(body.employeeId) !== input.employeeId || !guidPattern.test(body.transactionId) ||
-          body.balance === null || typeof body.balance !== "number" || !Number.isFinite(body.balance)) {
+          !isMoney(body.balance)) {
         throw new Error("The flow did not confirm a completed posting. Check posting key " + postingKey + ".");
       }
       pendingMovement = null;
@@ -211,55 +243,116 @@
     } catch (error) { message.textContent = error.message; }
     finally { button.disabled = false; }
   }
-  async function showAccounts() {
-    const document = root.document, message = document.getElementById("pcModuleMessage");
-    const select = document.getElementById("pcEmployee"), submit = document.getElementById("pcPostCash");
-    // Cosmetic Liquid role check is not authorization; the flow MUST enforce its web role.
-    if (document.getElementById("pcAccountsAllowed").value !== "true") {
-      message.textContent = "This page is for the Petty Cash Accounts web role.";
-      return;
+  async function showFinance() {
+    const document = root.document, get = id => document.getElementById(id);
+    const message = get("pcModuleMessage"), form = get("pcFinanceForm"), select = get("pcEmployee");
+    const submit = get("pcPostCash"), fields = get("pcFinanceFields"), refresh = get("pcRefreshEmployee");
+    const amount = get("pcCashAmount"), movement = get("pcMovement"), notes = get("pcCashReason"), confirm = get("pcConfirmCash");
+    let people = [], currentBalance = null, loadedId = "", loading = false, saving = false, generation = 0;
+    function value() { return { employeeId: select.value, movement: movement.value, amount: amount.value, notes: notes.value }; }
+    function meaning(balance) {
+      return balance > 0 ? "This employee holds company cash." : balance < 0 ? "The company owes this employee " + money(Math.abs(balance)) + "." : "No company cash held or reimbursement outstanding for this employee.";
+    }
+    function historyMessage(text) {
+      const row = node("tr"), cell = node("td", text); cell.colSpan = 5; row.appendChild(cell);
+      get("pcFinanceHistoryBody").replaceChildren(row);
+    }
+    function update() {
+      const pending = Boolean(pendingMovement), ready = flowReady();
+      const known = loadedId === select.value && currentBalance !== null && people.some(person => guid(person.contactid) === select.value);
+      fields.disabled = !ready || !known || loading || saving || pending;
+      select.disabled = saving || pending;
+      refresh.disabled = !select.value || loading || saving;
+      let valid = false;
+      try { validateMovement(value()); valid = true; } catch (_) { /* Incomplete draft, not a posting error. */ }
+      submit.disabled = !ready || saving || loading || !known || (!pending && (!valid || !confirm.checked));
+      submit.textContent = pending ? "Retry same cash movement" : "Record cash movement";
+      get("pcFinancePostingReference").hidden = !pending;
+      get("pcFinancePostingKey").textContent = pending ? pendingMovement.postingKey : "";
+      get("pcMovementImpact").textContent = "—"; get("pcProjectedBalance").textContent = "—";
+      if (known && !pending) {
+        try {
+          const projected = projectedBalance(currentBalance, movement.value, amount.value);
+          get("pcMovementImpact").textContent = (projected.change > 0 ? "+" : "−") + money(Math.abs(projected.change));
+          get("pcProjectedBalance").textContent = money(projected.balance);
+        } catch (_) { /* No estimate until a valid positive amount is entered. */ }
+      }
+    }
+    async function loadLedger() {
+      const requestedId = select.value, requestGeneration = ++generation;
+      currentBalance = null; loadedId = ""; loading = Boolean(requestedId);
+      if (!pendingMovement) confirm.checked = false;
+      get("pcEmployeeBalance").textContent = requestedId ? "Loading…" : "—";
+      get("pcFinanceBalanceMeaning").textContent = "Choose an employee to view their cash ledger.";
+      historyMessage(requestedId ? "Loading ledger…" : "Choose an employee."); update();
+      if (!requestedId) return;
+      try {
+        const rows = await cashTransactions(requestedId), balance = sumTransactions(rows);
+        if (requestGeneration !== generation || select.value !== requestedId) return;
+        currentBalance = balance; loadedId = requestedId;
+        get("pcEmployeeBalance").textContent = money(balance); get("pcFinanceBalanceMeaning").textContent = meaning(balance);
+        const body = get("pcFinanceHistoryBody"); body.replaceChildren();
+        for (const record of rows.slice(-10).reverse()) {
+          const row = node("tr"), type = record.hr_transactiontype;
+          const sign = type === 123140000 ? "+" : "−";
+          for (const text of [String(record.createdon || "").slice(0, 10), record.hr_transactionreference || "—",
+            ({ 123140000: "Cash given", 123140001: "Approved expense", 123140002: "Cash returned" })[type],
+            sign + money(Number(record.hr_amount)), record.hr_notespurpose || "—"]) row.appendChild(node("td", text));
+          body.appendChild(row);
+        }
+        if (!rows.length) historyMessage("No cash transactions: balance starts at zero.");
+      } catch (error) {
+        if (requestGeneration !== generation || select.value !== requestedId) return;
+        get("pcEmployeeBalance").textContent = "Unavailable"; get("pcFinanceBalanceMeaning").textContent = error.message;
+        historyMessage("The ledger could not be loaded. No partial balance is displayed.");
+      } finally { if (requestGeneration === generation) { loading = false; update(); } }
     }
     try {
-      signedInId();
-      const list = await employees();
-      for (const record of list) {
-        const option = node("option", (record.fullname || "Unnamed employee") + " · " + guid(record.contactid).slice(0, 8));
-        option.value = guid(record.contactid);
-        select.appendChild(option);
+      requireFinance();
+      if (!form) throw new Error("Publish the updated Finance Cash Management page HTML.");
+      // Studio may retain inline display:none independently of the hidden attribute.
+      // Reveal only these two containers, after the Finance role check above.
+      for (const container of [form, get("pcFinanceHistory")]) {
+        container.hidden = false;
+        container.style.display = "block";
       }
-      select.onchange = async function () {
-        const display = document.getElementById("pcEmployeeBalance");
-        display.textContent = "Loading…";
-        if (!select.value) { display.textContent = "Choose an employee"; return; }
-        const requestedId = select.value;
+      people = await employees();
+      for (const record of people) {
+        const id = guid(record.contactid);
+        const option = node("option", (record.fullname || "Unnamed employee") + " · " + (record.adx_identity_username || "No username") + " · " + id.slice(0, 8));
+        option.value = id; select.appendChild(option);
+      }
+      select.onchange = loadLedger; refresh.onclick = loadLedger;
+      for (const input of [amount, notes]) input.oninput = () => { confirm.checked = false; update(); };
+      movement.onchange = () => { confirm.checked = false; update(); };
+      confirm.onchange = update;
+      historyMessage("Choose an employee."); update();
+      message.textContent = flowReady() ? "Finance access checked. Record cash physically given or returned; this page does not approve expenses." :
+        "Read-only setup: employees can be reviewed, but posting is disabled until the secured Finance flow is connected and tested.";
+      form.onsubmit = async event => {
+        event.preventDefault(); if (submit.disabled) return;
+        saving = true; update();
+        message.textContent = "Submitting cash movement. Keep this page open…";
         try {
-          const value = await readBalance(requestedId);
-          if (select.value === requestedId) display.textContent = money(value);
-        } catch (error) { if (select.value === requestedId) display.textContent = error.message; }
-      };
-      submit.disabled = !flowReady();
-      message.textContent = flowReady() ? "Record cash physically given or returned. This does not approve expenses." :
-        "Employees loaded. Cash posting is disabled until the accounts flow and security review are configured.";
-      document.getElementById("pcAccountsForm").onsubmit = async function (event) {
-        event.preventDefault();
-        if (submit.disabled) return;
-        submit.disabled = true;
-        try {
-          const result = await postMovement({ employeeId: select.value,
-            movement: document.getElementById("pcMovement").value,
-            amount: document.getElementById("pcCashAmount").value,
-            notes: document.getElementById("pcCashReason").value });
-          message.textContent = "Cash movement posted. Reference: " + result.transactionId + ".";
-          document.getElementById("pcEmployeeBalance").textContent = money(result.balance);
-          document.getElementById("pcCashAmount").value = "";
-          document.getElementById("pcCashReason").value = "";
+          const operation = postMovement(value()); update();
+          const result = await operation;
+          currentBalance = result.balance; loadedId = result.employeeId;
+          get("pcEmployeeBalance").textContent = money(result.balance); get("pcFinanceBalanceMeaning").textContent = meaning(result.balance);
+          message.textContent = "Cash movement recorded. Transaction reference: " + result.transactionId + ". Balance confirmed by the backend; refresh for the latest ledger rows.";
+          historyMessage("Movement confirmed. Refresh employee balance to reload the ledger history.");
+          amount.value = ""; notes.value = ""; confirm.checked = false;
         } catch (error) { message.textContent = error.message; }
-        finally { submit.disabled = !flowReady(); }
+        finally { saving = false; update(); }
       };
-    } catch (error) { message.textContent = error.message; submit.disabled = true; }
+    } catch (error) {
+      message.textContent = error.message;
+      if (submit) submit.disabled = true;
+      if (fields) fields.disabled = true;
+      if (select) select.disabled = true;
+    }
   }
   root.PettyCashModules = Object.freeze({ readBalance, readSavedBalance, cashTransactions, sumTransactions, myRequests, employees, balanceMeaning, money,
-    validateMovement, postMovement, flowReady,
+    version: "finance-ledger-v2", validateMovement, projectedBalance, postMovement, flowReady,
     get pendingPostingKey() { return pendingMovement && pendingMovement.postingKey; } });
   function initialize() {
     const page = root.document.querySelector("[data-pc-page]");
@@ -267,7 +360,11 @@
     if (page.dataset.pcPage === "requests") {
       root.document.getElementById("pcRefresh").onclick = showDashboard;
       showDashboard();
-    } else if (page.dataset.pcPage === "accounts") showAccounts();
+    } else if (page.dataset.pcPage === "finance") showFinance();
+    else if (page.dataset.pcPage === "accounts") {
+      const button = root.document.getElementById("pcPostCash"); if (button) button.disabled = true;
+      root.document.getElementById("pcModuleMessage").textContent = "This Accounts draft is retired. Publish Finance Cash Management and restrict it to Petty Cash Finance.";
+    }
   }
   if (root.document.readyState === "loading") root.document.addEventListener("DOMContentLoaded", initialize);
   else initialize();

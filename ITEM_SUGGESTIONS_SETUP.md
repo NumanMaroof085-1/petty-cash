@@ -1,7 +1,8 @@
 # Category-specific product suggestions
 
-Implemented locally on 2026-10-29; live publication/testing of this addition is
-pending. User approved the non-destructive behavior discussed on 2026-10-28.
+Implemented locally on 2026-10-29. The user subsequently reported the suggestions
+working perfectly after testing; this is user-reported workflow success, not
+independent tenant/security inspection. User approved the non-destructive behavior discussed on 2026-10-28.
 This is a frontend name-entry shortcut, not an enforced product catalog.
 
 ## Behavior

@@ -5,6 +5,175 @@ same change. Record exact files, functionality, schema names, permissions, site
 settings, tests, and deployment state. Never describe a proposed tenant change
 as deployed merely because local code or documentation exists.
 
+## 2026-10-29 Finance caller variable reported added; employee lookup next
+
+- User reports completion of Initialize variable vActorId using trigger User ID.
+  Recorded as setup reported, not a verified caller Contact mapping or flow run.
+- Next guided action: Dataverse Get a row by ID, named Get_Employee, Contacts,
+  Row ID from employeeId trigger dynamic token, Select columns
+  contactid,fullname,statecode. Active-status validation will follow; this lookup
+  alone does not validate eligibility. Reuse it later instead of duplicating it.
+- Updated FINANCE_FLOW_SETUP.md checkpoint. No code/tenant writes, tests rerun,
+  permission changes or posting enablement.
+
+## 2026-10-29 Finance flow guided build requested
+
+- User reports the five trigger inputs added and requests simpler instructions.
+  Switch to one small action per turn. No Cash Transaction list/create is needed
+  at this checkpoint. Next instructed action is Initialize variable vActorId,
+  String, from built-in trigger User ID (not employeeId). Later normalization,
+  identity verification and posting gates still apply.
+- Updated FINANCE_FLOW_SETUP.md checkpoint. No new action/flow run verified,
+  no code changes or financial writes; documentation only.
+
+## 2026-10-29 Full Finance flow build recipe prepared
+
+- User reports the trigger-finding step done and requests the entire flow setup.
+  Actual trigger inputs/outputs, caller mapping and flow runs remain uninspected.
+- Added FINANCE_FLOW_SETUP.md: exact five-input contract, named Compose/actions,
+  validation, PKR lookup, existing crec6_postingkey uniqueness, one create attempt,
+  read/compare recovery even after create failure, complete paginated ledger,
+  sequential cent calculation, typed success and unconfirmed responses, Finance-
+  only site association and end-to-end tests. No tenant flow/import was created.
+- Identified missing durable operator audit in the existing Word schema. Proposed
+  one Recorded By lookup to Contact on Cash Transaction, populated in the create
+  from the built-in trusted User ID. No table/column was created by assistant.
+  Actual publisher-generated name and Cash Transaction primary GUID remain to
+  be copied from the tenant; placeholders are explicitly marked, not invented.
+- Updated README.md, FINANCE_SETUP.md and WEBAPI_SITE_SETTINGS.md. No portal/API
+  privilege expansion; no balance table; no password fields or frontend changes.
+  Contact hr_currentbalance remains unchanged by this proposed flow. A reconciled
+  summary/approval process is separate work. Posting gates remain disabled.
+- Documentation-only change: reviewed against current primary Microsoft docs;
+  flow expressions and connector/runtime behavior require live validation.
+  Existing local frontend/mock tests do not certify a deployed financial flow.
+- Local document checks passed: balanced Markdown fences, valid JSON examples,
+  balanced delimiters in 12 expression blocks, matching five required inputs,
+  and git diff --check. These checks do not execute Power Automate expressions.
+
+## 2026-10-29 Finance trigger not visible; creation guidance clarified
+
+- User cannot find When Power Pages calls a flow. Clarified trigger versus flow
+  name, searching Power Pages from the site's creation path, same environment,
+  and classic designer where available. Microsoft documentation currently lists
+  the trigger as unsupported in the new designer; user's exact cause unverified.
+- Updated FINANCE_SETUP.md with primary references and screenshot follow-up if
+  still missing. No substitute trigger, code/permission changes, deployed flow
+  or cash posting. Documentation only; no tests rerun.
+
+## 2026-10-29 Finance page reported working; secured posting flow next
+
+- User reports everything working after the Finance visibility/helper fixes.
+  Record the page outcome as user-confirmed, not independent inspection of
+  effective permissions, rendered copy counts or backend writes.
+- Next stage is a solution-aware Finance cash-movement flow using When Power
+  Pages calls a flow, associated with this site and Petty Cash Finance only.
+  Validate inputs, record the trusted operator, deduplicate with the existing
+  crec6_postingkey and return a confirmed signed-ledger balance before enabling
+  posting. Approval/expense posting follows as a separate workflow.
+- Local financeFlowId remains blank and financeSecurityReviewed remains false.
+  No flow or tenant configuration created by assistant; no financial writes.
+
+## 2026-10-29 Finance inline hiding and repeated helper initialization
+
+- User DOM report: two Finance sections, two version-bearing helper scripts,
+  one employee selector/status/form; form hidden=false but inline/computed
+  display=none. Exact source of the second section remains uninspected.
+- Updated pettycash-modules.js to finance-ledger-v2: explicitly display only
+  Finance form/history after the role check; ignore repeated same-version helper
+  loads, preserving initialization and any unconfirmed movement/key.
+- Expanded synthetic Finance browser QA to reproduce inline display:none and
+  duplicate scripts, assert authorized visibility/single directory initialization,
+  unauthorized form/history hiding, and pending-key retention after another load.
+- Updated FINANCE_SETUP.md with paired deployment and duplicate-fragment checks.
+  No schema, permission, configuration gate or backend posting changes. Tenant
+  publication/duplicate-source cleanup and live outcome remain unverified.
+- Validation: all 126 existing unit tests passed; all eight synthetic Finance
+  browser scenarios passed with inline-hidden containers and repeated helpers,
+  including role denial and pending-key retention. git diff --check passed.
+
+## 2026-10-29 Finance page renders helper JS as text; template wrapper correction
+
+- Read user attachment ed59653d-bc33-49eb-bd4b-d2d868b6e711/Pasted text.txt.
+  Visible output contains Finance heading, the initial Checking Finance access
+  message and the complete shared helper body. This indicates the script is
+  rendered as text (missing/escaped wrapper), not completed initialization or
+  successful access testing. Exact live template Source was not inspected.
+- User instructed to replace Petty Cash Modules Source with complete raw JS
+  wrapped once in script tags, no escaped tags/code fences/duplicate append;
+  save/sync and reload, then check finance-ledger-v1 and the status message.
+- Updated FINANCE_SETUP.md. Documentation only; no application code change,
+  tests rerun, tenant write, cash posting or permission modification.
+
+## 2026-10-29 Finance read-permission checklist reported done; page publication next
+
+- User reports completion of the preceding Finance read-permission checklist.
+  No screenshot or live API test was supplied; record user-reported setup, not
+  independent verification of scopes, role bindings or credential exclusion.
+- Next user steps: create/reuse the single Finance page with Finance-only Read,
+  publish complete User Context and Modules Web Template sources plus Finance
+  HTML, then test authorized employee/balance/history reads and unauthorized
+  direct URL denial. Keep flow ID blank/security gate false: disabled cash
+  movement fields and Record button are expected in this read-only phase.
+- Updated FINANCE_SETUP.md. Documentation only; no code tests rerun, no tenant
+  configuration changed and no cash posting enabled by assistant.
+
+## 2026-10-29 Finance role creation reported; read-permission setup next
+
+- User reports the Petty Cash Finance role created. Record role existence as
+  user-reported, not verification of website, default flags, membership or
+  effective access. No role assigned/changed by assistant.
+- Next instructed setup is the two Finance-only Global READ table permissions
+  (contact and hr_cashtransaction), all other new privileges off. Keep employee
+  and Admin grants unchanged. Before Global Contact Read, verify historical
+  password input/hash/stamp are excluded from the Contact API field allow list;
+  no secret-field Read or password-policy change is authorized.
+- Updated FINANCE_SETUP.md. Documentation only; no code tests rerun, no tenant
+  settings/table permissions modified, no cash posting enabled.
+
+## 2026-10-29 Finance cash-management page prepared; backend still required
+
+- User reports suggestions working perfectly. Recorded as user-confirmed UI
+  workflow, not independent tenant/security inspection. User requested Finance
+  add/deduct balances and explicitly selected new exact web role Petty Cash
+  Finance rather than the earlier planned Petty Cash Accounts role.
+- Added Finance Cash Management.html with active employee name/username/GUID
+  selection, full signed-ledger balance, latest ten transactions, refresh,
+  positive cash-given/cash-returned amounts, integer-cent preview, reason and
+  confirmation. Read-only setup is usable once authorized; posting defaults off.
+- Updated shared pettycash-modules.js to finance-ledger-v1 with Finance-specific
+  flow/config keys, guarded employee lookup/posting, strict decimal/safe-cent
+  validation and typed response checks. No browser ledger/Contact writes.
+  Preserved employee balance/dashboard helpers and request status configuration.
+  Retired old Accounts page initialization; kept its source as a labeled draft.
+- Added pcFinanceAllowed to User Context (web-template-v2-finance), preserving
+  all existing identity/Admin/legacy Accounts fields. Only exact Finance role
+  authorizes the new UI; Admin-only, employee and Accounts-only are denied.
+  Those markers are cosmetic; actual page/table/flow enforcement is user setup.
+- Finance request retries keep one UUID, lock inputs after any unconfirmed
+  result and block changed data. No double projection after an uncertain event.
+  Server confirmation drives displayed balance, then Refresh reloads history.
+  A generation token prevents stale A→B→A ledger reads replacing newer data.
+- Added Finance schema/FINANCE_SETUP.md, canonical disabled page config and
+  eight-state mock browser QA. Updated module tests and existing browser context
+  fixtures. 126 unit tests pass; Finance desktop/mobile UI reviewed. Existing
+  module/Admin browser checks pass. Tests use synthetic intercepted requests,
+  not actual tenant authorization, duplicate enforcement or money movement.
+- Documented required Petty Cash Finance role (both default flags No), Finance-
+  only page access and two Global READ-only table grants. Existing Contact/ledger
+  API fields suffice; no schema/key/column/role/permission was created or changed
+  in tenant. Cash Transaction crec6_postingkey remains the existing dedupe key;
+  no direct portal Create/Write permission or balance overwrite introduced.
+- The new flow itself is NOT implemented/deployed in this session. Documented
+  its required site/Finance association, strict inputs, trusted actor audit,
+  PKR/employee eligibility, uniqueness race handling, durable ledger/read-back,
+  all-page total and concurrency-safe summary policy. Actual trigger property
+  names, identity/audit storage, currency and tenant metadata require review.
+  No public HTTP URL, guessed lookup or unsafely enabled posting shipped.
+- User next steps: create/assign Finance role/read grants/page, publish Context,
+  Modules and Finance HTML, verify read-only behavior, then configure/test the
+  secured posting backend. README, API, balance and suggestion-status docs updated.
+
 ## 2026-10-29 Category item suggestions implemented; receipt live success reported
 
 - User reports image-to-PDF conversion working perfectly in live testing.

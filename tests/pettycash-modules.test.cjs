@@ -7,9 +7,9 @@ const employee = '11111111-1111-4111-8111-111111111111';
 const other = '22222222-2222-4222-8222-222222222222';
 const flow = '33333333-3333-4333-8333-333333333333';
 const transaction = '44444444-4444-4444-8444-444444444444';
-test('all three pages include the shared Web Template once without requesting the blocked Web File', () => {
+test('all page fragments include the shared Web Template once without requesting the blocked Web File', () => {
   const include = "{% include 'Petty Cash Modules' %}";
-  for (const file of ['New Petty Cash Request.html', 'My Petty Cash Requests.html', 'Accounts Cash Management.html']) {
+  for (const file of ['New Petty Cash Request.html', 'My Petty Cash Requests.html', 'Accounts Cash Management.html', 'Finance Cash Management.html']) {
     const html = fs.readFileSync(file, 'utf8');
     assert.equal(html.split(include).length - 1, 1, file);
     const contextInclude = "{% include 'Petty Cash User Context' %}";
@@ -45,12 +45,15 @@ test('the shared user-context template preserves input IDs, escapes values, and 
   assert.doesNotMatch(source, /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/i,
     'Never hardcode an employee GUID');
 });
-function harness({ config = {}, fetcher, missingToken = false } = {}) {
+function harness({ config = {}, fetcher, missingToken = false, finance = true, signedIn = true,
+  origin = 'https://portal.example.test' } = {}) {
   const calls = [];
-  const root = { location: { origin: 'https://portal.example.test' }, PC_MODULE_CONFIG: config,
+  const root = { location: { origin }, PC_MODULE_CONFIG: config,
     shell: { async getTokenDeferred() { return missingToken ? '' : 'token'; } },
     crypto: { randomUUID() { return transaction; } },
-    document: { readyState: 'loading', addEventListener() {} },
+    document: { readyState: 'loading', addEventListener() {}, getElementById(id) {
+      return id === 'pcFinanceAllowed' ? { value: String(finance) } : id === 'pcModuleUserId' ? { value: signedIn ? other : '' } : null;
+    } },
     async fetch(url, options) {
       calls.push({ url, ...options });
       const result = fetcher ? await fetcher(url, options, calls.length) : { status: 200, body: { value: [] } };
@@ -119,8 +122,8 @@ test('cash posting is disabled by default and accepts only given or returned cas
     assert.throws(() => h.api.validateMovement({ employeeId: employee, movement: 'cash_given', amount, notes: 'test' }), /positive amount/);
   }
 });
-test('accounts flow uses site-authenticated eventData transport, not direct ledger or balance writes', async () => {
-  const h = harness({ config: { accountsFlowId: flow, accountsSecurityReviewed: true }, fetcher(url, options) {
+test('Finance flow uses site-authenticated eventData transport, not direct ledger or balance writes', async () => {
+  const h = harness({ config: { financeFlowId: flow, financeSecurityReviewed: true }, fetcher(url, options) {
     assert.equal(url, '/_api/cloudflow/v1.0/trigger/' + flow);
     const input = JSON.parse(new URLSearchParams(options.body).get('eventData'));
     assert.equal(input.movement, 'cash_returned');
@@ -136,7 +139,7 @@ test('accounts flow uses site-authenticated eventData transport, not direct ledg
   assert.equal(h.calls.length, 1);
 });
 test('unconfirmed flow result retains its key and cannot be replaced with different details', async () => {
-  const h = harness({ config: { accountsFlowId: flow, accountsSecurityReviewed: true }, fetcher() { return { status: 202, body: null }; } });
+  const h = harness({ config: { financeFlowId: flow, financeSecurityReviewed: true }, fetcher() { return { status: 202, body: null }; } });
   const value = { employeeId: employee, movement: 'cash_given', amount: 100, notes: 'Advance' };
   await assert.rejects(h.api.postMovement(value), /did not confirm/);
   assert.equal(h.api.pendingPostingKey, transaction);
@@ -146,13 +149,81 @@ test('unconfirmed flow result retains its key and cannot be replaced with differ
   assert.equal(JSON.parse(new URLSearchParams(h.calls[1].body).get('eventData')).postingKey, transaction);
 });
 test('missing CSRF token prevents cash posting', async () => {
-  const h = harness({ missingToken: true, config: { accountsFlowId: flow, accountsSecurityReviewed: true } });
+  const h = harness({ missingToken: true, config: { financeFlowId: flow, financeSecurityReviewed: true } });
   await assert.rejects(h.api.postMovement({ employeeId: employee, movement: 'cash_given', amount: 1, notes: 'Advance' }), /session/);
   assert.equal(h.calls.length, 0);
 });
-test('no page enables the accounts flow in its shipped default configuration', () => {
+test('Finance page and canonical configuration match and keep posting disabled by default', () => {
   const example = fs.readFileSync('pettycash-module-config.example.js', 'utf8');
-  assert.match(example, /accountsFlowId: ""/);
-  assert.match(example, /accountsSecurityReviewed: false/);
-  assert.match(fs.readFileSync('Accounts Cash Management.html', 'utf8'), /id="pcPostCash"[^>]*disabled/);
+  assert.match(example, /financeFlowId: ""/);
+  assert.match(example, /financeSecurityReviewed: false/);
+  const html = fs.readFileSync('Finance Cash Management.html', 'utf8');
+  assert.match(html, /id="pcPostCash"[^>]*disabled/);
+  assert.match(html, /id="pcFinanceForm" hidden/);
+  assert.equal(html.match(/<script>\s*([\s\S]*?)\s*<\/script>/)[1].trim().replace(/\r\n/g, '\n'), example.trim().replace(/\r\n/g, '\n'));
+  const context = fs.readFileSync('Petty Cash User Context.html', 'utf8');
+  assert.match(context, /id="pcFinanceAllowed" value="\{% if user.roles contains 'Petty Cash Finance' %\}true\{% else %\}false\{% endif %\}"/);
+});
+
+test('old Accounts configuration never enables Finance posting', () => {
+  assert.equal(harness({ config: { accountsFlowId: flow, accountsSecurityReviewed: true } }).api.flowReady(), false);
+});
+
+test('non-Finance and signed-out callers cannot read Finance employees or invoke a configured flow', async () => {
+  for (const flags of [{ finance: false }, { signedIn: false }]) {
+    const h = harness({ ...flags, config: { financeFlowId: flow, financeSecurityReviewed: true } });
+    await assert.rejects(h.api.employees());
+    await assert.rejects(h.api.postMovement({ employeeId: employee, movement: 'cash_given', amount: 10, notes: 'Advance' }));
+    assert.equal(h.calls.length, 0);
+  }
+});
+
+test('positive decimal amounts are canonicalized; unsafe cents, exponents and separators are rejected', () => {
+  const h = harness(), value = { employeeId: employee, movement: 'cash_given', notes: 'Advance' };
+  assert.equal(h.api.validateMovement({ ...value, amount: '001.20' }).amount, 1.2);
+  assert.equal(h.api.validateMovement({ ...value, amount: '.50' }).amount, 0.5);
+  for (const amount of ['1e3', '1,000', '+1', '1.001', '0.00', '', '9007199254740991']) {
+    assert.throws(() => h.api.validateMovement({ ...value, amount }), /positive amount/);
+  }
+  for (const notes of ['', 'x'.repeat(101)]) assert.throws(() => h.api.validateMovement({ ...value, amount: 1, notes }), /reason/);
+});
+
+test('cash previews use integer cents and preserve negative balances without writing anything', () => {
+  const h = harness();
+  assert.equal(h.api.projectedBalance(-100, 'cash_given', 100).balance, 0);
+  assert.equal(h.api.projectedBalance(100, 'cash_returned', 150).balance, -50);
+  assert.equal(h.api.projectedBalance(0.1, 'cash_given', 0.2).balance, 0.3);
+  assert.throws(() => h.api.projectedBalance(null, 'cash_given', 1), /valid employee/);
+  assert.throws(() => h.api.projectedBalance(0, 'expense_approved', 1), /Choose cash/);
+  assert.equal(h.calls.length, 0);
+});
+
+test('Finance employee list requires active records and usernames, and follows all pages', async () => {
+  const profile = { contactid: employee, fullname: 'Example', adx_identity_username: 'example', statecode: 0 };
+  const h = harness({ fetcher(url) { return { status: 200, body: url.includes('page=2')
+    ? { value: [{ ...profile, contactid: other }] }
+    : { value: [profile], '@odata.nextLink': '/_api/contacts?page=2' } }; } });
+  assert.equal((await h.api.employees()).length, 2);
+  assert.ok(h.calls[0].url.includes('adx_identity_username'));
+  assert.ok(h.calls.every(call => call.method === 'GET'));
+  for (const invalid of [{ ...profile, statecode: 1 }, { ...profile, adx_identity_username: undefined }]) {
+    const bad = harness({ fetcher() { return { status: 200, body: { value: [invalid] } }; } });
+    await assert.rejects(bad.api.employees(), /username was not returned/);
+  }
+});
+
+test('malformed posting confirmations never clear the operation key or claim success', async () => {
+  for (const change of [{ balance: '100' }, { balance: 0.001 }, { employeeId: other }, { transactionId: 'invalid' }, { postingKey: other }]) {
+    const h = harness({ config: { financeFlowId: flow, financeSecurityReviewed: true }, fetcher() {
+      return { status: 200, body: { status: 'posted', postingKey: transaction, employeeId: employee, transactionId: transaction, balance: 100, ...change } };
+    } });
+    await assert.rejects(h.api.postMovement({ employeeId: employee, movement: 'cash_given', amount: 100, notes: 'Advance' }));
+    assert.equal(h.api.pendingPostingKey, transaction);
+  }
+});
+
+test('Finance cash posting refuses insecure origins and keeps direct table writes unavailable', async () => {
+  const h = harness({ origin: 'http://portal.example.test', config: { financeFlowId: flow, financeSecurityReviewed: true } });
+  await assert.rejects(h.api.postMovement({ employeeId: employee, movement: 'cash_given', amount: 1, notes: 'Advance' }), /HTTPS/);
+  assert.equal(h.calls.length, 0);
 });

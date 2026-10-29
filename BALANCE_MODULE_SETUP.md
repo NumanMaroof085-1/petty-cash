@@ -1,5 +1,18 @@
 # Balance and employee portal module setup
 
+## Current Finance module (2026-10-29)
+
+The user chose the NEW **Petty Cash Finance** web role. Use FINANCE_SETUP.md and
+Finance Cash Management.html for the current page/configuration/permissions and
+posting contract. The older Accounts page, Petty Cash Accounts authorization
+and accountsFlowId/accountsSecurityReviewed instructions below are historical,
+superseded by financeFlowId/financeSecurityReviewed and Finance-only access.
+No flow, role, permission or cash movement was deployed by the assistant.
+The current page can perform authorized read-only checks once published;
+cash posting remains disabled until the secured backend is configured/tested.
+All signed-ledger business rules, idempotence and completeness requirements
+below still apply. Do not restore the retired Accounts draft or direct writes.
+
 ## Business rules
 
 Use the existing Cash Transaction table `hr_cashtransaction` / `hr_cashtransactions`.

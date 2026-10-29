@@ -1,11 +1,12 @@
 <!-- Web Template name: Petty Cash User Context. Paste this file into its Source.
      Render once per page, before Petty Cash Modules and the submission script.
      These browser values are context only, never server-side authorization. -->
-<div id="pcUserContext" hidden data-context-version="web-template-v1">
+<div id="pcUserContext" hidden data-context-version="web-template-v2-finance">
   <input type="hidden" id="portalUserId" value="{{ user.id | escape }}" />
   <input type="hidden" id="portalUserName" value="{{ user.fullname | escape }}" />
   <input type="hidden" id="portalUserEmail" value="{{ user.emailaddress1 | escape }}" />
   <input type="hidden" id="pcModuleUserId" value="{{ user.id | escape }}" />
   <input type="hidden" id="pcAccountsAllowed" value="{% if user.roles contains 'Petty Cash Accounts' %}true{% else %}false{% endif %}" />
+  <input type="hidden" id="pcFinanceAllowed" value="{% if user.roles contains 'Petty Cash Finance' %}true{% else %}false{% endif %}" />
   <input type="hidden" id="pcAdminAllowed" value="{% if user.roles contains 'Petty Cash Admin' %}true{% else %}false{% endif %}" />
 </div>

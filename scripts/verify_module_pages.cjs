@@ -20,7 +20,7 @@ const request = '22222222-2222-4222-8222-222222222222';
       page.on('pageerror', error => errors.push(error.message));
       const expense = mode.startsWith('expense-');
       let fragment = fs.readFileSync(path.join(root, expense ? 'New Petty Cash Request.html' :
-        mode === 'requests' ? 'My Petty Cash Requests.html' : 'Accounts Cash Management.html'), 'utf8');
+        mode === 'requests' ? 'My Petty Cash Requests.html' : 'Finance Cash Management.html'), 'utf8');
       let ledgerReads = 0;
       let profileReads = 0;
       const include = "{% include 'Petty Cash Modules' %}";
@@ -33,6 +33,7 @@ const request = '22222222-2222-4222-8222-222222222222';
         .replace(/\{\{ user.fullname \| escape \}\}/g, 'Example employee')
         .replace(/\{\{ user.emailaddress1 \| escape \}\}/g, 'employee@example.test')
         .replace("{% if user.roles contains 'Petty Cash Accounts' %}true{% else %}false{% endif %}", 'true')
+        .replace("{% if user.roles contains 'Petty Cash Finance' %}true{% else %}false{% endif %}", mode === 'accounts' ? 'true' : 'false')
         .replace("{% if user.roles contains 'Petty Cash Admin' %}true{% else %}false{% endif %}", 'false');
       assert.doesNotMatch(renderedContext, /\{%|\{\{/, 'All mock context values must be rendered');
       // Simulate the documented Liquid include with the canonical local script.
@@ -66,7 +67,7 @@ const request = '22222222-2222-4222-8222-222222222222';
             ? { status: 403, json: { error: { message: 'Contact profile read denied' } } }
             : { json: { _hr_department_value: request, _hr_reportstomanager_value: null } });
         } else if (url.pathname === '/_api/contacts') {
-          await route.fulfill({ json: { value: [{ contactid: employee, fullname: 'Example employee', hr_currentbalance: -200 }] } });
+          await route.fulfill({ json: { value: [{ contactid: employee, fullname: 'Example employee', adx_identity_username: 'example.employee', statecode: 0 }] } });
         } else throw new Error('Unexpected network request: ' + url.href);
       });
       await page.goto('https://portal.example.test/preview');

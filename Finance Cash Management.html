@@ -1,0 +1,66 @@
+<!-- Canonical Finance page. Restrict page Read and the attached cloud flow to
+     Petty Cash Finance ONLY. Browser role flags are not server authorization.
+     Posting stays disabled until the secured flow is configured and verified. -->
+<section data-pc-page="finance" class="pc-finance">
+  <style>
+    .pc-finance{max-width:1000px;margin:40px auto;padding:0 20px;font-family:'Segoe UI',sans-serif;color:#334155}
+    .pc-finance h2,.pc-finance h3{color:#1e293b}.pc-finance form,.pc-finance-history{background:white;border:1px solid #e2e8f0;border-radius:12px;padding:24px;margin-top:20px}
+    .pc-finance label{display:block;font-weight:600;margin:16px 0 6px}.pc-finance input:not([type=checkbox]),.pc-finance select{box-sizing:border-box;width:100%;padding:11px;border:1px solid #cbd5e1;border-radius:6px;font:inherit}
+    .pc-finance button{padding:11px 18px;margin-top:16px;background:#5a67d8;color:white;border:0;border-radius:6px;font:inherit;cursor:pointer}.pc-finance button:disabled{opacity:.5;cursor:not-allowed}
+    .pc-finance-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:18px 0}.pc-finance-grid div{background:#f8fafc;padding:16px;border:1px solid #e2e8f0;border-radius:8px;overflow-wrap:anywhere}.pc-finance-grid strong{display:block;font-size:1.2rem;margin-top:8px}
+    .pc-finance-note{color:#64748b;font-size:.9rem}.pc-finance [hidden]{display:none!important}.pc-finance fieldset{border:0;padding:0;margin:0;min-width:0}.pc-finance table{width:100%;border-collapse:collapse;min-width:630px}.pc-finance th,.pc-finance td{padding:10px;text-align:left;border-bottom:1px solid #e2e8f0;overflow-wrap:anywhere}
+    .pc-finance input:focus-visible,.pc-finance select:focus-visible,.pc-finance button:focus-visible{outline:3px solid #818cf8;outline-offset:2px}
+    @media(max-width:650px){.pc-finance-grid{grid-template-columns:1fr}.pc-finance form,.pc-finance-history{padding:18px}}
+  </style>
+  <h2>Finance Cash Management</h2>
+  <p>Add cash given to an employee, or deduct cash returned by an employee. Amounts are cash movements—not replacement balances.</p>
+  <p id="pcModuleMessage" role="status" aria-live="polite">Checking Finance access…</p>
+  <form id="pcFinanceForm" hidden>
+    <label for="pcEmployee">Employee *</label>
+    <select id="pcEmployee" required disabled><option value="">Choose an employee</option></select>
+    <button id="pcRefreshEmployee" type="button" disabled>Refresh employee balance</button>
+    <p id="pcFinanceBalanceMeaning" class="pc-finance-note">Choose an employee to view their cash ledger.</p>
+    <div class="pc-finance-grid" aria-label="Cash movement preview">
+      <div>Current signed balance<strong id="pcEmployeeBalance">—</strong></div>
+      <div>Movement amount<strong id="pcMovementImpact">—</strong></div>
+      <div>Estimated balance after movement<strong id="pcProjectedBalance">—</strong></div>
+    </div>
+    <p class="pc-finance-note">Positive: employee holds company cash. Negative: company owes the employee. The estimate is not a saved balance; other postings may change it.</p>
+    <fieldset id="pcFinanceFields" disabled>
+      <label for="pcMovement">Cash movement *</label>
+      <select id="pcMovement" required>
+        <option value="cash_given">Add — cash given to employee (+)</option>
+        <option value="cash_returned">Deduct — cash returned by employee (−)</option>
+      </select>
+      <label for="pcCashAmount">Movement amount (PKR) *</label>
+      <input id="pcCashAmount" type="number" min="0.01" step="0.01" inputmode="decimal" required />
+      <label for="pcCashReason">Reason or payment reference *</label>
+      <input id="pcCashReason" type="text" maxlength="100" required />
+      <p class="pc-finance-note">Reimbursement uses Add / cash given. Approved expenses are deducted by the approval backend, not entered here. No existing transaction is edited or deleted.</p>
+      <label style="font-weight:400;"><input id="pcConfirmCash" type="checkbox" required /> I checked the employee, movement, amount and reference, and confirm this cash was physically given or returned.</label>
+    </fieldset>
+    <p id="pcFinancePostingReference" class="pc-finance-note" hidden>Operation reference: <code id="pcFinancePostingKey"></code></p>
+    <p class="pc-finance-note">If a posting is unconfirmed, keep this page open and retry the same movement. Do not start another movement or reload until Finance checks the reference.</p>
+    <button id="pcPostCash" type="submit" disabled>Record cash movement</button>
+  </form>
+  <section id="pcFinanceHistory" class="pc-finance-history" hidden aria-labelledby="pcFinanceHistoryTitle">
+    <h3 id="pcFinanceHistoryTitle">Employee cash transactions</h3>
+    <p class="pc-finance-note">Latest 10 from the accessible ledger. Balance includes all returned pages, not just these rows.</p>
+    <p class="pc-finance-note">On smaller screens, scroll the transaction table horizontally.</p>
+    <div style="overflow-x:auto;" role="region" aria-label="Employee transaction history; scroll horizontally" tabindex="0"><table><thead><tr><th>Date (UTC)</th><th>Reference</th><th>Movement</th><th>Signed amount</th><th>Reason</th></tr></thead>
+      <tbody id="pcFinanceHistoryBody"></tbody></table></div>
+  </section>
+</section>
+{% include 'Petty Cash User Context' %}
+<script>
+/* Finance page configuration, mirrored in pettycash-module-config.example.js.
+ * Never paste a public/signed HTTP flow URL. Enable only after Finance-only
+ * page/flow permissions, server validation and duplicate-post tests pass.
+ */
+window.PC_MODULE_CONFIG = {
+  financeFlowId: "",
+  financeSecurityReviewed: false,
+  requestStatus: { Pending: 123140000, Approved: 123140001, Rejected: 123140002 }
+};
+</script>
+{% include 'Petty Cash Modules' %}

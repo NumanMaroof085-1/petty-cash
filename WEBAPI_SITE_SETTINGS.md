@@ -1,5 +1,20 @@
 # Power Pages Web API field settings
 
+Finance flow build guide: FINANCE_FLOW_SETUP.md proposes a backend-only Recorded
+By Contact lookup to identify the Finance operator. This does not require a new
+portal API field, table privilege or site setting. Keep the posting key/operator
+lookup out of the browser allowlist; use the Dataverse flow connection to save
+them. The lookup is not yet reported created, and the flow is not deployed here.
+
+2026-10-29 Finance page: use FINANCE_SETUP.md for the new Petty Cash Finance-only
+Global Contact/ledger READ grants. The existing public Contact union includes
+contactid,fullname,adx_identity_username,statecode, and the existing Cash
+Transaction field list covers balance/history reads. No extra API fields,
+posting-key exposure, browser ledger Create or Contact balance Write is needed.
+Do not grant Global reads to Authenticated Users or expose password/hash/stamp.
+Backend-only posting uses a Finance-restricted site-associated flow, not public
+Dataverse writes; no live setting/permission was changed by the assistant.
+
 2026-10-28 receipt update: images are combined locally into a single PDF for the
 existing hr_receiptimage file column. No new fields, API operations, permissions
 or site settings are required. Publish the new Petty Cash Receipts Web Template

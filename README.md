@@ -16,10 +16,14 @@ approval and accounting integration after a complete submission is available.
 - `DATAVERSE_SETUP.md`: required mappings, site settings, permissions, and live verification steps.
 - `WEBAPI_SITE_SETTINGS.md`: prepared explicit field lists and the remaining live mapping checks.
 - `My Petty Cash Requests.html`: source for the live employee page named **My Requests**; balance and request-status dashboard. Filename retained; confirmed partial URL `My-Requests`.
-- `Accounts Cash Management.html`: restricted accounts page fragment; cash posting disabled until the secured backend is configured.
-- `pettycash-modules.js`: canonical shared ledger/dashboard/accounts JavaScript; paste inside script tags in the `Petty Cash Modules` Web Template.
-- `Petty Cash User Context.html`: Source for the `Petty Cash User Context` Web Template; renders escaped dynamic user inputs and the cosmetic Accounts-role indicator outside editable page attributes.
-- `pettycash-module-config.example.js`: accounts flow configuration example; blank/disabled by default.
+- `Finance Cash Management.html`: Finance-only employee balance, cash-given/returned form, preview/confirmation and ledger history. Posting disabled until the secured backend is configured.
+- `FINANCE_SETUP.md`: current Finance role/read permissions, three-source publication and required posting-flow contract/testing; no live flow deployed.
+- `FINANCE_FLOW_SETUP.md`: complete manual Finance flow build, inputs, action layout, validation, operator lookup, same-key recovery, ledger scan, outputs and live tests. Not an importable or tenant-tested flow.
+- `finance-cash-request.schema.json`: request eventData schema, not an importable flow or server authorization implementation.
+- `Accounts Cash Management.html`: retired historical draft; do not publish it alongside Finance. New shared code leaves it disabled.
+- `pettycash-modules.js`: canonical shared ledger/dashboard/Finance JavaScript (finance-ledger-v2); paste inside script tags in the `Petty Cash Modules` Web Template. Handles inline-hidden Finance containers after the role check and ignores repeated same-version loads.
+- `Petty Cash User Context.html`: shared escaped identity and cosmetic Admin/Finance role markers (web-template-v2-finance); actual server page/table/flow permissions remain mandatory.
+- `pettycash-module-config.example.js`: Finance flow configuration mirrored in the Finance HTML; blank/disabled by default. Old Accounts config flags no longer enable posting.
 - `BALANCE_MODULE_SETUP.md`: exact confirmed ledger mappings, roles/permissions, new page deployment, and backend contract.
 - `Admin Users.html`: seven-field profile-only edition, with separate username and zero new balance. No password controls; use Management Change Password on the saved Contact. Paired page/template deployment required.
 - `pettycash-admin.js`: version admin-profiles-v2 for Petty Cash Admin template; public profile-only POST/read-back, duplicate checks, safe retries and redacted errors. No password path, ledger entries or existing-user/balance updates.
