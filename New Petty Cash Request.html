@@ -123,6 +123,21 @@
     </div>
   </div>
 
+  <!-- Frontend name shortcuts; no catalog lookup, prices or backend changes. -->
+  <section id="pcSuggestionCard" aria-labelledby="pcSuggestionTitle"
+    style="background:#f8faff;border:1px solid #dbe3fa;border-radius:12px;padding:22px 25px;margin-bottom:25px;">
+    <style>
+      #pcSuggestionCard .pc-suggestion-button{padding:9px 16px;border:1px solid #c7d2fe;border-radius:20px;background:white;color:#3730a3;font:inherit;font-weight:600;cursor:pointer;max-width:100%;overflow-wrap:anywhere}
+      #pcSuggestionCard .pc-suggestion-button:hover:not(:disabled){background:#e0e7ff}
+      #pcSuggestionCard .pc-suggestion-button:focus-visible{outline:3px solid #818cf8;outline-offset:3px}
+      #pcSuggestionCard .pc-suggestion-button:disabled{opacity:.5;cursor:not-allowed}
+    </style>
+    <h3 id="pcSuggestionTitle" style="font-size:1.1rem;color:#334155;margin:0 0 8px;">Quick item suggestions — <span id="pcSuggestionCategory">Travel</span></h3>
+    <p style="margin:0 0 14px;color:#64748b;font-size:.9rem;">Optional shortcuts for product names. You can edit names or add items manually; enter quantity and price yourself.</p>
+    <div id="pcSuggestionItems" role="group" aria-label="Suggested product names" style="display:flex;flex-wrap:wrap;gap:10px;"></div>
+    <p id="pcSuggestionStatus" role="status" aria-live="polite" style="margin:12px 0 0;color:#64748b;font-size:.9rem;">Loading item suggestions…</p>
+  </section>
+
   <!-- Section 2: Itemized Details -->
   <div class="section-card"
     style="background-color: rgb(255, 255, 255); border-radius: 12px; padding: 25px; margin-bottom: 25px; box-shadow: rgba(0, 0, 0, 0.05) 0px 4px 6px; border: 1px solid rgb(226, 232, 240);">
@@ -255,6 +270,15 @@
   // =========================================================================
   const DATAVERSE_CONFIG = {
     testContactId: "", // Optional: Paste a Contact GUID here if testing in studio preview
+    // Frontend shortcuts only; extend these lists with approved regular items.
+    itemSuggestions: {
+      "Travel": ["Petrol", "Hotel", "Food"],
+      "Kitchen/Food": ["Chicken", "Naan", "Eggs"],
+      "IT Equipments": [],
+      "Finance Things": [],
+      "Technical Equipments": [],
+      "Others": []
+    },
     choices: {
       paymentMethod: {
         "Cash": 123140000,
@@ -395,6 +419,93 @@
     } else {
       otherGroup.style.display = "none";
     }
+    renderItemSuggestions();
+  }
+
+  function normalizedItemName(value) {
+    return String(value || "").trim().replace(/\s+/g, " ").toLowerCase();
+  }
+
+  function configuredItemSuggestions() {
+    const category = document.getElementById("selCategory").value;
+    const map = DATAVERSE_CONFIG.itemSuggestions || {};
+    const entries = Object.prototype.hasOwnProperty.call(map, category) ? map[category] : [];
+    const seen = new Set();
+    return (Array.isArray(entries) ? entries : []).filter(value => typeof value === "string")
+      .map(value => value.trim()).filter(value => {
+        const key = normalizedItemName(value);
+        if (!key || seen.has(key)) return false;
+        seen.add(key); return true;
+      });
+  }
+
+  function suggestionHint() {
+    return configuredItemSuggestions().length
+      ? "Choose an item to fill an untouched blank row or add a new one. Existing quantities and prices are kept."
+      : "No quick items are configured for this category yet. You can enter any product name manually.";
+  }
+
+  function updateSuggestionLock() {
+    const items = document.getElementById("pcSuggestionItems");
+    const status = document.getElementById("pcSuggestionStatus");
+    if (!items) return;
+    const blocked = submissionInProgress || Boolean(pendingSubmission);
+    for (const button of items.querySelectorAll("button")) button.disabled = blocked;
+    if (status) {
+      if (blocked) {
+        status.textContent = "Suggestions are locked while saving or resuming this request. Keep its existing items unchanged.";
+        status.dataset.lockMessage = "true";
+      } else if (status.dataset.lockMessage === "true") {
+        status.dataset.lockMessage = "false"; status.textContent = suggestionHint();
+      }
+    }
+  }
+
+  function renderItemSuggestions() {
+    const items = document.getElementById("pcSuggestionItems");
+    if (!items) return;
+    const category = document.getElementById("selCategory").value;
+    const heading = document.getElementById("pcSuggestionCategory");
+    const status = document.getElementById("pcSuggestionStatus");
+    if (heading) heading.textContent = category;
+    items.replaceChildren();
+    for (const name of configuredItemSuggestions()) {
+      const button = document.createElement("button");
+      button.type = "button"; button.textContent = name; button.className = "pc-suggestion-button";
+      button.setAttribute("aria-label", "Use suggested item " + name);
+      button.onclick = () => addSuggestedItem(name);
+      items.appendChild(button);
+    }
+    if (status) status.textContent = suggestionHint();
+    updateSuggestionLock();
+  }
+
+  function addSuggestedItem(name) {
+    const status = document.getElementById("pcSuggestionStatus");
+    if (submissionInProgress || pendingSubmission) { updateSuggestionLock(); return null; }
+    if (!configuredItemSuggestions().includes(name)) return null;
+    const rows = Array.from(document.querySelectorAll("#tableBody tr"));
+    const matching = rows.find(row => {
+      const input = row.querySelector(".name-input");
+      return input && normalizedItemName(input.value) === normalizedItemName(name);
+    });
+    if (matching) {
+      matching.querySelector(".qty-input").focus();
+      if (status) status.textContent = name + " is already listed. Its quantity and price were not changed.";
+      return matching;
+    }
+    const blank = rows.find(row => {
+      const product = row.querySelector(".name-input"), quantity = row.querySelector(".qty-input"), price = row.querySelector(".price-input");
+      return (!row.dataset || row.dataset.pcTouched !== "true") && product && quantity && price &&
+        !product.value.trim() && quantity.value === "1" && !price.value.trim();
+    });
+    const row = blank || addNewItemRow();
+    row.querySelector(".name-input").value = name;
+    row.dataset.pcTouched = "true";
+    calculateTotals();
+    row.querySelector(".qty-input").focus();
+    if (status) status.textContent = name + " added. Enter its quantity and unit price; the product name remains editable.";
+    return row;
   }
 
   function itemTotal(quantity, unitPrice) {
@@ -458,6 +569,7 @@
       </td>
     `;
     tbody.appendChild(newRow);
+    return newRow;
   }
 
   function deleteRow(button) {
@@ -485,6 +597,7 @@
     if (loadingText && message) {
       loadingText.innerText = message;
     }
+    updateSuggestionLock();
   }
 
   function showMessage(msg, type) {
@@ -1001,6 +1114,7 @@
   async function submitPettyCashRequest() {
     if (submissionInProgress) return;
     submissionInProgress = true;
+    updateSuggestionLock();
     let stage = "validating the form";
     let receiptController;
     try {
@@ -1207,6 +1321,7 @@
   window.toggleOtherCategory = toggleOtherCategory;
   window.deleteRow = deleteRow;
   window.addNewItemRow = addNewItemRow;
+  window.addSuggestedItem = addSuggestedItem;
   window.submitPettyCashRequest = submitPettyCashRequest;
 
   function initializePettyCashApp() {
@@ -1232,6 +1347,16 @@
         addNewItemRow();
       };
     }
+
+    const tbody = document.getElementById("tableBody");
+    if (tbody && !tbody.dataset.pcSuggestionTracking) {
+      tbody.dataset.pcSuggestionTracking = "true";
+      tbody.addEventListener("input", event => {
+        const row = event.target.closest("tr");
+        if (row && tbody.contains(row)) row.dataset.pcTouched = "true";
+      });
+    }
+    toggleOtherCategory();
 
     if (window.PettyCashReceipts) window.PettyCashReceipts.mount();
     else showMessage("Receipt tools are missing. Install the Petty Cash Receipts Web Template before submitting.", "error");

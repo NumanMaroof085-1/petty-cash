@@ -8,6 +8,7 @@ approval and accounting integration after a complete submission is available.
 
 - `New Petty Cash Request.html`: the Power Pages page fragment, including its script and shared template includes.
 - `pettycash-api.js`: the same client script, kept separately for development.
+- `ITEM_SUGGESTIONS_SETUP.md`: frontend category-name shortcuts, non-destructive row selection, editable starter lists, save/retry locks and request-HTML-only deployment.
 - `Petty Cash Receipts.html`: complete generated Source for the new Petty Cash Receipts Web Template; pinned PDF library and receipt module already wrapped.
 - `pettycash-receipts.js`: up to 10 ordered JPG/PNG images combined locally into one previewable PDF, or one unchanged existing PDF; limits and safe preparation cache.
 - `RECEIPT_PDF_SETUP.md`: dependency, two-part website deployment, limits, retry behavior and live test checklist.
@@ -97,7 +98,7 @@ With Node.js 22 or later:
 ```powershell
 node --check pettycash-api.js
 node scripts/build_receipt_template.cjs
-node --test --test-isolation=none tests/pettycash-api.test.cjs tests/pettycash-modules.test.cjs tests/pettycash-admin.test.cjs tests/pettycash-receipts.test.cjs
+node --test --test-isolation=none tests/pettycash-api.test.cjs tests/pettycash-modules.test.cjs tests/pettycash-admin.test.cjs tests/pettycash-receipts.test.cjs tests/pettycash-suggestions.test.cjs
 ```
 
 These tests make no network requests. They verify field preservation, read-back

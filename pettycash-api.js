@@ -8,6 +8,15 @@
   // =========================================================================
   const DATAVERSE_CONFIG = {
     testContactId: "", // Optional: Paste a Contact GUID here if testing in studio preview
+    // Frontend shortcuts only; extend these lists with approved regular items.
+    itemSuggestions: {
+      "Travel": ["Petrol", "Hotel", "Food"],
+      "Kitchen/Food": ["Chicken", "Naan", "Eggs"],
+      "IT Equipments": [],
+      "Finance Things": [],
+      "Technical Equipments": [],
+      "Others": []
+    },
     choices: {
       paymentMethod: {
         "Cash": 123140000,
@@ -148,6 +157,93 @@
     } else {
       otherGroup.style.display = "none";
     }
+    renderItemSuggestions();
+  }
+
+  function normalizedItemName(value) {
+    return String(value || "").trim().replace(/\s+/g, " ").toLowerCase();
+  }
+
+  function configuredItemSuggestions() {
+    const category = document.getElementById("selCategory").value;
+    const map = DATAVERSE_CONFIG.itemSuggestions || {};
+    const entries = Object.prototype.hasOwnProperty.call(map, category) ? map[category] : [];
+    const seen = new Set();
+    return (Array.isArray(entries) ? entries : []).filter(value => typeof value === "string")
+      .map(value => value.trim()).filter(value => {
+        const key = normalizedItemName(value);
+        if (!key || seen.has(key)) return false;
+        seen.add(key); return true;
+      });
+  }
+
+  function suggestionHint() {
+    return configuredItemSuggestions().length
+      ? "Choose an item to fill an untouched blank row or add a new one. Existing quantities and prices are kept."
+      : "No quick items are configured for this category yet. You can enter any product name manually.";
+  }
+
+  function updateSuggestionLock() {
+    const items = document.getElementById("pcSuggestionItems");
+    const status = document.getElementById("pcSuggestionStatus");
+    if (!items) return;
+    const blocked = submissionInProgress || Boolean(pendingSubmission);
+    for (const button of items.querySelectorAll("button")) button.disabled = blocked;
+    if (status) {
+      if (blocked) {
+        status.textContent = "Suggestions are locked while saving or resuming this request. Keep its existing items unchanged.";
+        status.dataset.lockMessage = "true";
+      } else if (status.dataset.lockMessage === "true") {
+        status.dataset.lockMessage = "false"; status.textContent = suggestionHint();
+      }
+    }
+  }
+
+  function renderItemSuggestions() {
+    const items = document.getElementById("pcSuggestionItems");
+    if (!items) return;
+    const category = document.getElementById("selCategory").value;
+    const heading = document.getElementById("pcSuggestionCategory");
+    const status = document.getElementById("pcSuggestionStatus");
+    if (heading) heading.textContent = category;
+    items.replaceChildren();
+    for (const name of configuredItemSuggestions()) {
+      const button = document.createElement("button");
+      button.type = "button"; button.textContent = name; button.className = "pc-suggestion-button";
+      button.setAttribute("aria-label", "Use suggested item " + name);
+      button.onclick = () => addSuggestedItem(name);
+      items.appendChild(button);
+    }
+    if (status) status.textContent = suggestionHint();
+    updateSuggestionLock();
+  }
+
+  function addSuggestedItem(name) {
+    const status = document.getElementById("pcSuggestionStatus");
+    if (submissionInProgress || pendingSubmission) { updateSuggestionLock(); return null; }
+    if (!configuredItemSuggestions().includes(name)) return null;
+    const rows = Array.from(document.querySelectorAll("#tableBody tr"));
+    const matching = rows.find(row => {
+      const input = row.querySelector(".name-input");
+      return input && normalizedItemName(input.value) === normalizedItemName(name);
+    });
+    if (matching) {
+      matching.querySelector(".qty-input").focus();
+      if (status) status.textContent = name + " is already listed. Its quantity and price were not changed.";
+      return matching;
+    }
+    const blank = rows.find(row => {
+      const product = row.querySelector(".name-input"), quantity = row.querySelector(".qty-input"), price = row.querySelector(".price-input");
+      return (!row.dataset || row.dataset.pcTouched !== "true") && product && quantity && price &&
+        !product.value.trim() && quantity.value === "1" && !price.value.trim();
+    });
+    const row = blank || addNewItemRow();
+    row.querySelector(".name-input").value = name;
+    row.dataset.pcTouched = "true";
+    calculateTotals();
+    row.querySelector(".qty-input").focus();
+    if (status) status.textContent = name + " added. Enter its quantity and unit price; the product name remains editable.";
+    return row;
   }
 
   function itemTotal(quantity, unitPrice) {
@@ -211,6 +307,7 @@
       </td>
     `;
     tbody.appendChild(newRow);
+    return newRow;
   }
 
   function deleteRow(button) {
@@ -238,6 +335,7 @@
     if (loadingText && message) {
       loadingText.innerText = message;
     }
+    updateSuggestionLock();
   }
 
   function showMessage(msg, type) {
@@ -754,6 +852,7 @@
   async function submitPettyCashRequest() {
     if (submissionInProgress) return;
     submissionInProgress = true;
+    updateSuggestionLock();
     let stage = "validating the form";
     let receiptController;
     try {
@@ -960,6 +1059,7 @@
   window.toggleOtherCategory = toggleOtherCategory;
   window.deleteRow = deleteRow;
   window.addNewItemRow = addNewItemRow;
+  window.addSuggestedItem = addSuggestedItem;
   window.submitPettyCashRequest = submitPettyCashRequest;
 
   function initializePettyCashApp() {
@@ -985,6 +1085,16 @@
         addNewItemRow();
       };
     }
+
+    const tbody = document.getElementById("tableBody");
+    if (tbody && !tbody.dataset.pcSuggestionTracking) {
+      tbody.dataset.pcSuggestionTracking = "true";
+      tbody.addEventListener("input", event => {
+        const row = event.target.closest("tr");
+        if (row && tbody.contains(row)) row.dataset.pcTouched = "true";
+      });
+    }
+    toggleOtherCategory();
 
     if (window.PettyCashReceipts) window.PettyCashReceipts.mount();
     else showMessage("Receipt tools are missing. Install the Petty Cash Receipts Web Template before submitting.", "error");

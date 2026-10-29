@@ -5,6 +5,43 @@ same change. Record exact files, functionality, schema names, permissions, site
 settings, tests, and deployment state. Never describe a proposed tenant change
 as deployed merely because local code or documentation exists.
 
+## 2026-10-29 Category item suggestions implemented; receipt live success reported
+
+- User reports image-to-PDF conversion working perfectly in live testing.
+  Recorded as user-reported success, not assistant tenant inspection, universal
+  device coverage or full security verification. Receipt code/template unchanged.
+- User authorized recommended suggestion behavior. Added a card above Itemized
+  Details in New Petty Cash Request.html and matching helpers/config in canonical
+  pettycash-api.js. DATAVERSE_CONFIG.itemSuggestions initially contains only
+  supplied examples: Travel Petrol/Hotel/Food, Kitchen/Food Chicken/Naan/Eggs.
+  Other exact categories have empty lists/manual-entry messaging pending user
+  regular-item lists. No product names were invented as company-approved data.
+- Clicks focus existing names with case/whitespace normalization without changing
+  values; otherwise reuse the first untouched blank/default row or append via
+  existing Add Item helper, which now returns the created row. Name alone is
+  filled, quantity stays 1, price stays blank, quantity receives focus and existing
+  total logic runs. Manual edits, explicit zero prices, custom quantities and
+  previously touched/cleared rows are never overwritten. Delegated input tracking
+  handles initial/new rows without replacing their input-calculation handlers.
+- Category changes only refresh buttons/Other detail visibility, never delete
+  rows. Existing all-lines category semantics remain. Manual name edits, Add Item
+  and deletion remain available; repeated suggested names do not increment qty.
+  Buttons are non-submit, keyboard accessible and rendered with textContent.
+- Suggestion controls and direct helper calls are guarded during submission and
+  partial/uncertain recovery, including after category refresh. Definite header
+  rejection unlocks controls; successful reset restores the default card. Existing
+  fingerprint/receipt retry behavior and unchanged payload shape remain tested.
+- Added 13 focused unit cases and scripts/verify_item_suggestions.cjs. All 119
+  tests pass. Mock browser verifies desktop/mobile/keyboard, safe literal labels,
+  blank/new-row behavior, draft preservation, matching item focus, category/Other,
+  posted names/quantities/prices/totals/category, partial retry with one header and
+  no duplicate lines, uncertain-create lock, definite-rejection unlock and reset.
+  Card screenshots visually reviewed. No tenant records or messages created.
+- Added ITEM_SUGGESTIONS_SETUP.md and updated README/receipt status. Deployment
+  is request-page HTML only; no new library/template/page/table/column/role, API
+  field setting, permission, backend flow or accounting change. User publication
+  and live suggestion acceptance remain pending; actual server security unchanged.
+
 ## 2026-10-28 Multi-image receipt PDF upload implemented locally
 
 - User approved one existing PDF OR up to 10 JPG/PNG images combined locally

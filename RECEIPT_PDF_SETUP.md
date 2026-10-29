@@ -1,7 +1,9 @@
 # Multi-image receipt PDF upload
 
-Date: 2026-10-28. Version **receipt-pdf-v1**. Implemented and verified locally;
-not deployed. The current project folder is Desktop/petty-cash, not the former
+Date: 2026-10-28. Version **receipt-pdf-v1**. The user reported on 2026-10-29 that
+the image-to-PDF feature works perfectly after live testing. This confirms their
+reported workflow, not every phone, file limit, permission or malware behavior.
+The current project folder is Desktop/petty-cash, not the former
 petty cash docs path. Testing used only synthetic receipts and intercepted APIs.
 
 ## Behavior and limits
@@ -105,7 +107,8 @@ rerun tests. Preserve the library's notices and license.
 
 ## Verification and live checklist
 
-106 code tests pass, including previous request/balance/Admin checks. Chrome
+106 code tests passed at receipt implementation (the full suite now has 119
+after the separate suggestion-card addition). Chrome
 mock-browser tests cover ordered portrait/landscape/long/EXIF images, preview
 before writes, cached preparation, byte-identical upload retry, one header/line,
 unchanged existing-PDF upload, corrupt/HEIC/mixed/count/encoding failures and a
