@@ -4,6 +4,16 @@ Power Pages saves employee expense requests, products, and receipts through its
 session-authenticated Dataverse Web API. Power Automate should handle manager
 approval and accounting integration after a complete submission is available.
 
+## UI refresh — 2026-10-31
+
+New request, My Requests, Finance and Admin now share a simpler responsive design.
+My Requests adds local search/status filters and counts. See
+[UI_REFRESH_SETUP.md](UI_REFRESH_SETUP.md) for the exact page/template updates,
+local screenshots and checks. **Preserve the working Finance page's live
+PC_MODULE_CONFIG when publishing its redesigned HTML.** No new Web Files,
+templates, columns, permissions or flows are required. Login/header/footer/home
+are unchanged. This UI refresh is local and has not been published by the assistant.
+
 ## Files
 
 - `New Petty Cash Request.html`: the Power Pages page fragment, including its script and shared template includes.
@@ -24,13 +34,16 @@ approval and accounting integration after a complete submission is available.
 - `FINANCE_FLOW_SETUP.md`: current simpler Finance flow (validate, save once, confirm saved event, website refreshes balance), final six-output response setup and deployment checklist. Earlier in-flow ledger-scan recipe is superseded. Not an importable or tenant-tested flow.
 - `finance-cash-request.schema.json`: regex-free request eventData/Parse JSON schema; Contact IDs still require native lookup validation, and text posting keys require escaped OData filters. Not an importable flow or authorization implementation.
 - `Accounts Cash Management.html`: retired historical draft; do not publish it alongside Finance. New shared code leaves it disabled.
-- `pettycash-modules.js`: canonical shared ledger/dashboard/Finance JavaScript (finance-posting-v4); paste inside script tags in the `Petty Cash Modules` Web Template. Blocks own-account cash movements while retaining own history, confirms postings separately from ledger refresh, and preserves saved confirmation if refresh fails. Native self-posting flow guard still required.
+- `pettycash-modules.js`: canonical shared ledger/dashboard/Finance JavaScript (finance-posting-v5); paste inside script tags in the `Petty Cash Modules` Web Template. Adds local request filters/counts, blocks own-account cash movements while retaining own history, confirms postings separately from ledger refresh, and preserves saved confirmation if refresh fails. Native self-posting flow guard still required.
 - `scripts/repair_open_finance_page.js`: one-time Console repair for an already-open page with a pending movement: adds the required AJAX header and aliases actual lowercase response names without reloading, submitting, or replacing the operation key. Permanent transport fix is in pettycash-modules.js; see the current Finance flow guide.
 - `Petty Cash User Context.html`: shared escaped identity and cosmetic Admin/Finance role markers (web-template-v2-finance); actual server page/table/flow permissions remain mandatory.
-- `pettycash-module-config.example.js`: Finance flow configuration mirrored in the Finance HTML; blank/disabled by default. Old Accounts config flags no longer enable posting.
+- `pettycash-module-config.example.js`: reusable blank/disabled Finance configuration. The Finance HTML separately retains this site's user-confirmed invocation GUID and reviewed=true setting; do not overwrite it with the example. Old Accounts config flags no longer enable posting.
 - `BALANCE_MODULE_SETUP.md`: exact confirmed ledger mappings, roles/permissions, new page deployment, and backend contract.
 - `Admin Users.html`: seven-field profile-only edition, with separate username and zero new balance. No password controls; use Management Change Password on the saved Contact. Paired page/template deployment required.
-- `pettycash-admin.js`: version admin-profiles-v2 for Petty Cash Admin template; public profile-only POST/read-back, duplicate checks, safe retries and redacted errors. No password path, ledger entries or existing-user/balance updates.
+- `pettycash-admin.js`: version admin-profiles-v3 for Petty Cash Admin template; public profile-only POST/read-back, duplicate checks, safe retries and redacted errors. Shorter messages and explicit authorized form visibility; no password path, ledger entries or existing-user/balance updates.
+- `pettycash-ui.css`: scoped design source, embedded into each of the four page fragments by `scripts/build_ui_styles.cjs`; do not upload separately.
+- `UI_REFRESH_SETUP.md`: UI behavior, exact publication/configuration preservation, responsive QA and scope.
+- `scripts/verify_ui_pages.cjs`: mocked browser checks and desktop/mobile screenshots for all four pages, local filtering, empty/error states, narrow screens and host-style isolation.
 - `pettycash-admin-config.example.js`: mirrored in Admin Users.html; profile creation enabled for the user-reviewed admin-only setup. Missing script configuration still defaults to disabled; old credential switches are removed.
 - `ADMIN_PROFILE_SETUP.md`: current Admin configuration, password-free API union, deployment, security boundaries and separate Management password setup.
 - `ADMIN_USER_SETUP.md`: current Admin permissions/metadata/deployment checklist and unresolved native login/email provisioning.

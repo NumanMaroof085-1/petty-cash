@@ -1,5 +1,19 @@
 # Finance cash management
 
+2026-10-31 read-only configuration correction: the live Console returned an
+empty flow ID and Boolean false after the UI publication. Local Finance HTML now
+retains the user-confirmed invocation GUID 0b0976ac-a6d3-f111-a05d-70a8a52176fd
+and financeSecurityReviewed:true before the Modules include. The reusable example
+and shared script still default to disabled. Publish the corrected page and
+reload once pending operations are resolved; this change does not run a flow or
+change server permissions. Older blank/default instructions below are historical.
+
+2026-10-31 UI refresh: the local shared script is now finance-posting-v5.
+The redesigned page preserves the cash-posting contract and self-posting guard;
+see [UI_REFRESH_SETUP.md](UI_REFRESH_SETUP.md). Keep the existing live
+PC_MODULE_CONFIG when replacing the Finance HTML. No native flow changes are
+needed for this UI update, which has not yet been published by the assistant.
+
 Latest 2026-10-31 report: user added the Finance self-posting condition and
 published the new script. Record installation as user-reported; native denial
 tests remain unverified. User also confirms approval-created cash rows lack

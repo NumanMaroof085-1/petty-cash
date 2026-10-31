@@ -5,7 +5,7 @@
 (function (root) {
   "use strict";
   // Repeated template includes must not reset an in-flight movement or bind twice.
-  if (root.PettyCashModules && root.PettyCashModules.version === "finance-posting-v4") return;
+  if (root.PettyCashModules && root.PettyCashModules.version === "finance-posting-v5") return;
   const config = Object.assign({ financeFlowId: "", financeSecurityReviewed: false,
     requestStatus: { Pending: 123140000, Approved: 123140001, Rejected: 123140002 }
   }, root.PC_MODULE_CONFIG || {});
@@ -221,11 +221,55 @@
   function statusLabel(value) {
     return Object.keys(config.requestStatus).find(label => config.requestStatus[label] === value) || "Unknown status (" + value + ")";
   }
+  let dashboardRows = [];
+  function renderDashboardRequests() {
+    const get = id => root.document.getElementById(id), table = get("pcRequestsBody");
+    const query = String(get("pcRequestSearch")?.value || "").trim().toLocaleLowerCase();
+    const status = get("pcRequestStatus")?.value || "";
+    const rows = dashboardRows.filter(row => (!status || statusLabel(row.hr_approvalstatus) === status) &&
+      [row.hr_requesttitle, row.hr_transactiondate, row.hr_managercomments, money(Number(row.hr_totalamount)),
+        statusLabel(row.hr_approvalstatus), row["hr_paymentsource@OData.Community.Display.V1.FormattedValue"] ||
+          ({ 123140000: "Company Cash", 123140001: "Own Pocket" }[row.hr_paymentsource] || "Unknown")]
+        .join(" ").toLocaleLowerCase().includes(query));
+    table.replaceChildren();
+    for (const row of rows) {
+      const tr = node("tr");
+      const source = row["hr_paymentsource@OData.Community.Display.V1.FormattedValue"] ||
+        ({ 123140000: "Company Cash", 123140001: "Own Pocket" }[row.hr_paymentsource] || "Unknown");
+      const label = statusLabel(row.hr_approvalstatus);
+      const values = [row.hr_requesttitle, String(row.hr_transactiondate || "").slice(0, 10),
+        money(Number(row.hr_totalamount)), source, label, row.hr_managercomments || "—"];
+      values.forEach((text, index) => {
+        const cell = node("td", index === 4 ? undefined : text, index === 2 ? "pc-numeric" :
+          index === 5 && !row.hr_managercomments ? "pc-no-comment" : "");
+        if (index === 4) {
+          const known = ["Pending", "Approved", "Rejected"].includes(label);
+          cell.appendChild(node("span", label, "pc-status" + (known ? " pc-status-" + label.toLowerCase() : "")));
+        }
+        tr.appendChild(cell);
+      });
+      table.appendChild(tr);
+    }
+    if (!rows.length) {
+      const row = node("tr"), cell = node("td", dashboardRows.length ? "No requests match your search." : "No requests yet. Create your first request to get started.", "pc-empty");
+      cell.colSpan = 6; row.appendChild(cell); table.appendChild(row);
+    }
+    for (const [id, count] of [["pcRequestCount", dashboardRows.length],
+      ["pcPendingCount", dashboardRows.filter(row => row.hr_approvalstatus === config.requestStatus.Pending).length],
+      ["pcApprovedCount", dashboardRows.filter(row => row.hr_approvalstatus === config.requestStatus.Approved).length]]) {
+      if (get(id)) get(id).textContent = String(count);
+    }
+    if (get("pcRequestResults")) get("pcRequestResults").textContent = rows.length + " of " + dashboardRows.length + " requests";
+  }
   async function showDashboard() {
     const message = root.document.getElementById("pcModuleMessage");
     const button = root.document.getElementById("pcRefresh");
     const table = root.document.getElementById("pcRequestsBody");
+    let requestsLoaded = false;
     button.disabled = true;
+    for (const id of ["pcRequestSearch", "pcRequestStatus"]) {
+      const control = root.document.getElementById(id); if (control) control.disabled = true;
+    }
     message.textContent = "Loading your balance and requests…";
     table.replaceChildren();
     try {
@@ -239,19 +283,23 @@
         root.document.getElementById("pcBalanceMeaning").textContent = results[0].reason.message;
       }
       if (results[1].status === "rejected") throw results[1].reason;
-      for (const row of results[1].value) {
-        const tr = node("tr");
-        const source = row["hr_paymentsource@OData.Community.Display.V1.FormattedValue"] ||
-          ({ 123140000: "Company Cash", 123140001: "Own Pocket" }[row.hr_paymentsource] || "Unknown");
-        for (const text of [row.hr_requesttitle, String(row.hr_transactiondate || "").slice(0, 10),
-          money(Number(row.hr_totalamount)), source, statusLabel(row.hr_approvalstatus), row.hr_managercomments || "—"]) {
-          tr.appendChild(node("td", text));
-        }
-        table.appendChild(tr);
+      dashboardRows = results[1].value;
+      requestsLoaded = true;
+      renderDashboardRequests();
+      message.textContent = "";
+    } catch (error) {
+      dashboardRows = []; table.replaceChildren(); message.textContent = error.message;
+      for (const id of ["pcRequestCount", "pcPendingCount", "pcApprovedCount"]) {
+        const count = root.document.getElementById(id); if (count) count.textContent = "—";
       }
-      message.textContent = results[1].value.length ? "Loaded " + results[1].value.length + " requests. Use Refresh for the latest saved values." : "You have not submitted any requests yet.";
-    } catch (error) { message.textContent = error.message; }
-    finally { button.disabled = false; }
+      const summary = root.document.getElementById("pcRequestResults"); if (summary) summary.textContent = "";
+    }
+    finally {
+      button.disabled = false;
+      for (const id of ["pcRequestSearch", "pcRequestStatus"]) {
+        const control = root.document.getElementById(id); if (control) control.disabled = !requestsLoaded;
+      }
+    }
   }
   async function showFinance() {
     const document = root.document, get = id => document.getElementById(id);
@@ -269,7 +317,7 @@
       return balance > 0 ? "This employee holds company cash." : balance < 0 ? "The company owes this employee " + money(Math.abs(balance)) + "." : "No company cash held or reimbursement outstanding for this employee.";
     }
     function historyMessage(text) {
-      const row = node("tr"), cell = node("td", text); cell.colSpan = 5; row.appendChild(cell);
+      const row = node("tr"), cell = node("td", text, "pc-empty"); cell.colSpan = 5; row.appendChild(cell);
       get("pcFinanceHistoryBody").replaceChildren(row);
     }
     function update() {
@@ -283,7 +331,7 @@
       let valid = false;
       try { validateMovement(value()); valid = true; } catch (_) { /* Incomplete draft, not a posting error. */ }
       submit.disabled = !ready || saving || loading || !known || selfSelected || (!pending && (!valid || !confirm.checked));
-      submit.textContent = pending ? "Retry same cash movement" : "Record cash movement";
+      submit.textContent = saving ? "Recording…" : pending ? "Retry same cash movement" : "Record cash movement";
       get("pcFinancePostingReference").hidden = !pending;
       get("pcFinancePostingKey").textContent = pending ? pendingMovement.postingKey : "";
       get("pcMovementImpact").textContent = "—"; get("pcProjectedBalance").textContent = "—";
@@ -313,9 +361,10 @@
         for (const record of rows.slice(-10).reverse()) {
           const row = node("tr"), type = record.hr_transactiontype;
           const sign = type === 123140000 ? "+" : "−";
-          for (const text of [String(record.createdon || "").slice(0, 10), record.hr_transactionreference || "—",
+          [String(record.createdon || "").slice(0, 10), record.hr_transactionreference || "—",
             ({ 123140000: "Cash given", 123140001: "Approved expense", 123140002: "Cash returned" })[type],
-            sign + money(Number(record.hr_amount)), record.hr_notespurpose || "—"]) row.appendChild(node("td", text));
+            sign + money(Number(record.hr_amount)), record.hr_notespurpose || "—"].forEach((text, index) =>
+              row.appendChild(node("td", text, index === 3 ? "pc-numeric" : "")));
           body.appendChild(row);
         }
         if (!rows.length) historyMessage("No cash transactions: balance starts at zero.");
@@ -357,8 +406,8 @@
       movement.onchange = () => { confirm.checked = false; update(); };
       confirm.onchange = update;
       historyMessage("Choose an employee."); update();
-      message.textContent = flowReady() ? "Finance access checked. Record cash physically given or returned; this page does not approve expenses." :
-        "Read-only setup: employees can be reviewed, but posting is disabled until the secured Finance flow is connected and tested.";
+      message.textContent = flowReady() ? "" :
+        "Read-only mode. Connect and verify the Finance flow to enable posting.";
       form.onsubmit = async event => {
         event.preventDefault(); if (submit.disabled) return;
         saving = true; update();
@@ -380,13 +429,16 @@
     }
   }
   root.PettyCashModules = Object.freeze({ readBalance, readSavedBalance, cashTransactions, sumTransactions, myRequests, employees, balanceMeaning, money,
-    version: "finance-posting-v4", validateMovement, projectedBalance, postMovement, flowReady,
+    version: "finance-posting-v5", validateMovement, projectedBalance, postMovement, flowReady,
     get pendingPostingKey() { return pendingMovement && pendingMovement.postingKey; } });
   function initialize() {
     const page = root.document.querySelector("[data-pc-page]");
     if (!page) return;
     if (page.dataset.pcPage === "requests") {
       root.document.getElementById("pcRefresh").onclick = showDashboard;
+      const search = root.document.getElementById("pcRequestSearch"), status = root.document.getElementById("pcRequestStatus");
+      if (search) search.oninput = renderDashboardRequests;
+      if (status) status.onchange = renderDashboardRequests;
       showDashboard();
     } else if (page.dataset.pcPage === "finance") showFinance();
     else if (page.dataset.pcPage === "accounts") {

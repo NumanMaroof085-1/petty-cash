@@ -11,7 +11,7 @@
     departmentIdColumn: "", contactDepartmentNavigation: "",
     contactManagerNavigation: "", roleValues: {} }, root.PC_ADMIN_CONFIG || {});
   const roles = ["Employee", "Manager", "Accounts", "Admin"];
-  const version = "admin-profiles-v2";
+  const version = "admin-profiles-v3";
   const contactColumns = "contactid,fullname,emailaddress1,adx_identity_username,hr_userrole,statecode";
   const guidPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
   let busy = false, pending = null;
@@ -243,6 +243,7 @@
         throw new Error("Old Admin page HTML detected. Publish Admin Users.html and the Petty Cash Admin template together; password fields are no longer supported.");
       }
       form.hidden = false;
+      form.style.display = "block";
       const data = await loadOptions();
       options(element("pcAdminBusinessRole"), roles.map(role => ({ value: role, label: role })));
       options(element("pcAdminDepartment"), [{ value: "", label: "Choose a department" },
@@ -252,14 +253,15 @@
           label: String(row.fullname || "Unnamed Contact") + " — " + String(row.emailaddress1 || row.contactid) }))]);
       const enabled = config.creationEnabled === true && config.securityReviewed === true;
       fields.disabled = !enabled; button.disabled = !enabled;
-      message(enabled ? "Ready to create a Contact profile. Set its password separately using Portal Management Change Password." : "Configuration reads passed. Contact creation remains disabled until admin-only permissions are reviewed.");
+      message(enabled ? "" : "Read-only mode. Verify admin permissions to enable profile creation.");
       form.addEventListener("submit", async event => {
         event.preventDefault(); if (button.disabled || !form.reportValidity()) return;
         const value = formValue(); fields.disabled = true; button.disabled = true;
+        button.textContent = "Saving…";
         message("Checking and saving the Contact profile…");
         try {
           const result = await createProfile(value);
-          message("Contact profile, username and zero balance verified. Contact ID: " + result.id + ". Password not set: use Portal Management Change Password on this Contact, assign website web roles as needed, then test sign-in. Do not create another Contact for password setup.");
+          message("Profile created. Contact ID: " + result.id + ". Set the password using Portal Management → Change Password, then assign website web roles and test sign-in.");
           form.reset();
         } catch (error) {
           message(error.message + (pending ? " Keep this page open. " + (pending.uncertain ? "Do not repeat the create until its result is checked." : "Contact ID: " + pending.id + ". Retry unchanged to verify, not recreate.") : ""));

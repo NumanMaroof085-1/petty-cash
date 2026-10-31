@@ -199,14 +199,24 @@ test('non-JSON posting responses preserve HTTP status and operation key without 
     assert.equal(h.calls.length, 1, 'An error must not trigger an automatic cash retry');
   }
 });
-test('Finance page and canonical configuration match and keep posting disabled by default', () => {
+test('Finance page retains the confirmed site config while the reusable example stays disabled', () => {
   const example = fs.readFileSync('pettycash-module-config.example.js', 'utf8');
   assert.match(example, /financeFlowId: ""/);
   assert.match(example, /financeSecurityReviewed: false/);
   const html = fs.readFileSync('Finance Cash Management.html', 'utf8');
   assert.match(html, /id="pcPostCash"[^>]*disabled/);
   assert.match(html, /id="pcFinanceForm" hidden/);
-  assert.equal(html.match(/<script>\s*([\s\S]*?)\s*<\/script>/)[1].trim().replace(/\r\n/g, '\n'), example.trim().replace(/\r\n/g, '\n'));
+  const pageScope = { window: {} }, exampleScope = { window: {} };
+  vm.runInNewContext(html.match(/<script>\s*([\s\S]*?)\s*<\/script>/)[1], pageScope);
+  vm.runInNewContext(example, exampleScope);
+  assert.equal(pageScope.window.PC_MODULE_CONFIG.financeFlowId, '0b0976ac-a6d3-f111-a05d-70a8a52176fd');
+  assert.equal(pageScope.window.PC_MODULE_CONFIG.financeSecurityReviewed, true);
+  assert.ok(html.indexOf('window.PC_MODULE_CONFIG') < html.indexOf("{% include 'Petty Cash Modules' %}"));
+  const configured = harness({ config: pageScope.window.PC_MODULE_CONFIG });
+  assert.equal(configured.api.flowReady(), true);
+  assert.equal(configured.calls.length, 0, 'Loading config must not post cash or call any API');
+  assert.equal(harness({ config: exampleScope.window.PC_MODULE_CONFIG }).api.flowReady(), false);
+  assert.equal(harness().api.flowReady(), false, 'Missing config remains disabled');
   const context = fs.readFileSync('Petty Cash User Context.html', 'utf8');
   assert.match(context, /id="pcFinanceAllowed" value="\{% if user.roles contains 'Petty Cash Finance' %\}true\{% else %\}false\{% endif %\}"/);
 });

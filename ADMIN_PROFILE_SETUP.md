@@ -1,6 +1,9 @@
 # Admin Users: profile-only setup
 
-Current implementation: **admin-profiles-v2**, 2026-10-19. This guide supersedes
+Current implementation: **admin-profiles-v3**, UI refresh 2026-10-31; profile-only
+behavior from 2026-10-19 is retained. See [UI_REFRESH_SETUP.md](UI_REFRESH_SETUP.md)
+for the updated page/template publication and responsive design checks.
+This guide supersedes
 earlier credential rollout instructions. Local implementation and mock tests do
 not mean the updated page/template or site settings have been deployed.
 

@@ -187,7 +187,7 @@
       }
       controls();
     }
-    function changed() { discardPreview(); say(files.length ? files.length + ' receipt file(s) selected. Prepare and preview the PDF to check readability and order.' : 'Choose one PDF or up to 10 JPG/PNG images.'); render(); }
+    function changed() { discardPreview(); say(files.length ? files.length + ' file(s) selected. Prepare a PDF to preview.' : ''); render(); }
     function append(added) {
       ensureEditable(); if (!added.length) return;
       const next = files.concat(Array.from(added)); validateSelection(next);
@@ -232,9 +232,7 @@
         previewUrl = root.URL.createObjectURL(file);
         if (preview) { preview.href = previewUrl; preview.hidden = false; }
         if (download) { download.href = previewUrl; download.download = file.name; download.hidden = false; }
-        say('PDF ready: ' + (file.size / 1024 / 1024).toFixed(2) + ' MB. ' +
-          (kind(selection.files[0]) === 'pdf' ? 'Existing PDF kept unchanged.' : selection.files.length + ' image(s), one per page. Original images are not uploaded.') +
-          ' Preview it to check readability before submitting.');
+        say('PDF ready: ' + (file.size / 1024 / 1024).toFixed(2) + ' MB. Check the preview before submitting.');
         return file;
       })();
       try { return await inflight; }

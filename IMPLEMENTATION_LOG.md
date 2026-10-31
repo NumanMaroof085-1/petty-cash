@@ -5,6 +5,60 @@ same change. Record exact files, functionality, schema names, permissions, site
 settings, tests, and deployment state. Never describe a proposed tenant change
 as deployed merely because local code or documentation exists.
 
+## 2026-10-31 Preserve working Finance page configuration after UI publication
+
+- User reports read-only mode after setting the flow ID; live Console explicitly
+  returns flowId empty, reviewed false (Boolean), ready false. The local Finance
+  HTML also still contained disabled placeholders. This confirms defaults are
+  being served; live cache/include source of the overwrite is not yet inspected.
+- Finance Cash Management.html now contains the previously user-confirmed native
+  site invocation GUID 0b0976ac-a6d3-f111-a05d-70a8a52176fd and Boolean true review
+  flag before the existing Modules include. Shared-script defaults and reusable
+  example remain disabled; the example is no longer described as a page mirror.
+- Added regression coverage that the actual page config enables flowReady without
+  an API call, is ordered before the include, and example/missing config remain
+  disabled. Updated publication guide, README and Finance setup. No transport,
+  ledger, write validation, role check, flow, table/column or permission changes.
+- Local unit checks and generated-style consistency pass. This does not submit
+  cash or deploy the page; corrected live ready state still needs user confirmation.
+
+## 2026-10-31 Refresh New request, My Requests, Finance and Admin UI
+
+- User authorizes a modern, simpler UI across all four working pages, with
+  existing functionality preserved. Login/header/footer/home remain for later.
+- Introduced scoped pettycash-ui.css and scripts/build_ui_styles.cjs. Generated
+  CSS is embedded in all four page fragments; no new tenant asset/template is
+  needed. Added UI_REFRESH_SETUP.md with exact publication steps and live Finance
+  config preservation; defaults remain blank/false in the local Finance fragment.
+- Simplified page and routine success/ready instructions, retained visible error
+  and pending references/recovery guidance, moved longer tips into details.
+  Reworked balance cards, grouped forms, table styling and mobile item, request
+  and transaction cards; statuses/amounts stay visible without scrolling sideways.
+  Labels/options retain saved values, IDs and event handlers. Added named inputs
+  and remove buttons to request-created/reset rows and kept canonical/inline
+  request scripts synchronized; only labels and suggestion copy changed there.
+- pettycash-modules.js version finance-posting-v5 adds local request search/status
+  filtering, loaded-set counts, result counts, plain-text status badges, clear
+  empty states, disabled filters/unavailable counts on read failure and recovery.
+  No extra API calls for filtering. Ledger calculations, flow transport/payload,
+  pending-key state, own-account restriction and authorization gates unchanged.
+- pettycash-admin.js version admin-profiles-v3 adds shorter routine messages,
+  Saving state and authorized explicit form display for Studio's inline hiding.
+  Seven fields, credentials separation, write/readback and retry logic retained.
+- Receipt selection and PDF-ready messages shortened; regenerated Petty Cash
+  Receipts.html from unchanged pinned jsPDF and the local receipt module. No
+  conversion, limit, output-byte or upload behavior changes.
+- Added scripts/verify_ui_pages.cjs for all four layouts at 1440/768/390/320px,
+  host control isolation, visible control names, keyboard focus/reduced motion,
+  filter semantics/no API calls, counts, refresh, untrusted text and error recovery.
+  Updated existing Admin QA assertions for version and concise success wording.
+- Local validation: 132 unit checks; 13 Finance, seven Admin, four shared-page
+  browser states; suggestions and receipt PDF/upload/retry browser suites; four
+  responsive UI cases. Reviewed generated desktop/mobile screenshots. All data
+  synthetic, requests intercepted; no live site/flow/data writes or deployment.
+- No schema, web role, site setting, table permission or flow changes. Existing
+  manager-approval duplicate-guard guidance remains a separate pending task.
+
 ## 2026-10-31 Guide existing approved-expense lookup and creation gate
 
 - User asks to implement the first approval recommendation and reports adding

@@ -179,8 +179,8 @@
 
   function suggestionHint() {
     return configuredItemSuggestions().length
-      ? "Choose an item to fill an untouched blank row or add a new one. Existing quantities and prices are kept."
-      : "No quick items are configured for this category yet. You can enter any product name manually.";
+      ? "Choose an item, then add quantity and price."
+      : "No suggestions yet. Add items manually below.";
   }
 
   function updateSuggestionLock() {
@@ -242,7 +242,7 @@
     row.dataset.pcTouched = "true";
     calculateTotals();
     row.querySelector(".qty-input").focus();
-    if (status) status.textContent = name + " added. Enter its quantity and unit price; the product name remains editable.";
+    if (status) status.textContent = name + " added. Enter quantity and price.";
     return row;
   }
 
@@ -298,12 +298,12 @@
     const newRow = document.createElement("tr");
 
     newRow.innerHTML = `
-      <td valign="top" style="padding: 10px; vertical-align: top;"><input type="text" class="form-control name-input" placeholder="Enter product name" style="width: 100%; padding: 10px; border: 1px solid #cbd5e0; border-radius: 6px; box-sizing: border-box;"></td>
-      <td valign="top" style="padding: 10px; vertical-align: top;"><input type="number" class="form-control qty-input" value="1" min="1" oninput="calculateTotals()" style="width: 100%; padding: 10px; border: 1px solid #cbd5e0; border-radius: 6px; box-sizing: border-box;"></td>
-      <td valign="top" style="padding: 10px; vertical-align: top;"><input type="number" class="form-control price-input" placeholder="0" min="0" step="any" oninput="calculateTotals()" style="width: 100%; padding: 10px; border: 1px solid #cbd5e0; border-radius: 6px; box-sizing: border-box;"></td>
+      <td valign="top" style="padding: 10px; vertical-align: top;"><input type="text" aria-label="Product name" class="form-control name-input" placeholder="Enter product name" style="width: 100%; padding: 10px; border: 1px solid #cbd5e0; border-radius: 6px; box-sizing: border-box;"></td>
+      <td valign="top" style="padding: 10px; vertical-align: top;"><input type="number" aria-label="Quantity" class="form-control qty-input" value="1" min="1" oninput="calculateTotals()" style="width: 100%; padding: 10px; border: 1px solid #cbd5e0; border-radius: 6px; box-sizing: border-box;"></td>
+      <td valign="top" style="padding: 10px; vertical-align: top;"><input type="number" aria-label="Unit price (PKR)" class="form-control price-input" placeholder="0" min="0" step="any" oninput="calculateTotals()" style="width: 100%; padding: 10px; border: 1px solid #cbd5e0; border-radius: 6px; box-sizing: border-box;"></td>
       <td valign="top" style="padding: 18px 10px 10px; vertical-align: top; font-weight: bold;">
         <span class="row-total">0.00</span>
-        <button type="button" class="btn-outline" style="color: #e53e3e; border: 1px solid #feb2b2; background: #fff5f5; border-radius: 4px; padding: 2px 8px; margin-left: 10px; cursor: pointer;" onclick="deleteRow(this)">✕</button>
+        <button type="button" class="btn-outline" style="color: #e53e3e; border: 1px solid #feb2b2; background: #fff5f5; border-radius: 4px; padding: 2px 8px; margin-left: 10px; cursor: pointer;" aria-label="Remove item" onclick="deleteRow(this)">✕</button>
       </td>
     `;
     tbody.appendChild(newRow);
@@ -372,9 +372,9 @@
     const tbody = document.getElementById("tableBody");
     tbody.innerHTML = `
       <tr>
-        <td valign="top" style="padding: 10px; vertical-align: top;"><input type="text" placeholder="Enter product name" class="form-control name-input" style="width: 100%; padding: 10px; border: 1px solid rgb(203, 213, 224); border-radius: 6px; box-sizing: border-box;" /></td>
-        <td valign="top" style="padding: 10px; vertical-align: top;"><input type="number" value="1" min="1" oninput="calculateTotals()" class="form-control qty-input" style="width: 100%; padding: 10px; border: 1px solid rgb(203, 213, 224); border-radius: 6px; box-sizing: border-box;" /></td>
-        <td valign="top" style="padding: 10px; vertical-align: top;"><input type="number" placeholder="0" min="0" step="any" oninput="calculateTotals()" class="form-control price-input" style="width: 100%; padding: 10px; border: 1px solid rgb(203, 213, 224); border-radius: 6px; box-sizing: border-box;" /></td>
+        <td valign="top" style="padding: 10px; vertical-align: top;"><input type="text" placeholder="Enter product name" aria-label="Product name" class="form-control name-input" style="width: 100%; padding: 10px; border: 1px solid rgb(203, 213, 224); border-radius: 6px; box-sizing: border-box;" /></td>
+        <td valign="top" style="padding: 10px; vertical-align: top;"><input type="number" value="1" min="1" oninput="calculateTotals()" aria-label="Quantity" class="form-control qty-input" style="width: 100%; padding: 10px; border: 1px solid rgb(203, 213, 224); border-radius: 6px; box-sizing: border-box;" /></td>
+        <td valign="top" style="padding: 10px; vertical-align: top;"><input type="number" placeholder="0" min="0" step="any" oninput="calculateTotals()" aria-label="Unit price (PKR)" class="form-control price-input" style="width: 100%; padding: 10px; border: 1px solid rgb(203, 213, 224); border-radius: 6px; box-sizing: border-box;" /></td>
         <td valign="top" style="padding: 18px 10px 10px; vertical-align: top; font-weight: bold;"><span class="row-total">0.00</span></td>
       </tr>
     `;

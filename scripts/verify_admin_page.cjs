@@ -66,7 +66,7 @@ const mockConfig = { creationEnabled: true, securityReviewed: true, departmentId
       await page.goto('https://portal.example.test/preview');
       await page.waitForFunction(() => !document.querySelector('#pcAdminMessage').textContent.includes('Checking administrator'));
       assert.equal(await page.locator('#portalUserId').count(), 1);
-      assert.equal(await page.evaluate(() => window.PettyCashAdmin.version), 'admin-profiles-v2');
+      assert.equal(await page.evaluate(() => window.PettyCashAdmin.version), 'admin-profiles-v3');
       if (mode !== 'legacy-html') {
         assert.equal(await page.locator('#pcAdminForm input, #pcAdminForm select').count(), 7);
         assert.equal(await page.locator('input[type="password"]').count(), 0);
@@ -91,8 +91,8 @@ const mockConfig = { creationEnabled: true, securityReviewed: true, departmentId
         }
         if (mode === 'rejected') await page.waitForFunction(() => document.querySelector('#pcAdminMessage').textContent.includes('HTTP 400'));
         else {
-          await page.waitForFunction(() => document.querySelector('#pcAdminMessage').textContent.includes('zero balance verified'));
-          assert.match(await page.locator('#pcAdminMessage').textContent(), /Password not set: use Portal Management Change Password/);
+          await page.waitForFunction(() => document.querySelector('#pcAdminMessage').textContent.includes('Profile created.'));
+          assert.match(await page.locator('#pcAdminMessage').textContent(), /Set the password using Portal Management → Change Password/);
         }
         assert.doesNotMatch(await page.locator('#pcAdminMessage').textContent(), /Unexpected server details/);
         assert.equal(calls.filter(call => call.method === 'POST').length, 1);

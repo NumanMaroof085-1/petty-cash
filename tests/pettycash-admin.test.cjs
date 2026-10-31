@@ -159,7 +159,7 @@ test('success performs one POST with CSRF and read-back, and never claims login 
   const h = harness();
   assert.deepEqual(JSON.parse(JSON.stringify(await h.api.createProfile(input))), { id: contact, profileCreated: true,
     passwordSetupRequired: true, loginProvisioned: false });
-  assert.equal(h.api.version, 'admin-profiles-v2');
+  assert.equal(h.api.version, 'admin-profiles-v3');
   assert.equal(h.calls.filter(call => call.method === 'POST').length, 1);
   assert.equal(h.calls.find(call => call.method === 'POST').headers.__RequestVerificationToken, 'token');
   assert.equal(h.api.pendingOperation, null);

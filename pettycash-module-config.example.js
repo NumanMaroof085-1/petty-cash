@@ -1,4 +1,4 @@
-/* Finance page configuration, mirrored in pettycash-module-config.example.js.
+/* Reusable Finance page configuration; disabled until configured for a site.
  * Never paste a public/signed HTTP flow URL. Enable only after Finance-only
  * page/flow permissions, server validation and duplicate-post tests pass.
  */
