@@ -16,9 +16,9 @@ const ledgerRow = (employeeId, type, amount, reference = 'CT-TEST') => ({ _hr_em
   const output = path.join(root, 'documentation', 'qa', 'finance'); fs.mkdirSync(output, { recursive: true });
   const browser = await chromium.launch({ headless: true, executablePath: 'C:/Program Files/Google/Chrome/Application/chrome.exe' });
   try {
-    for (const mode of ['readonly', 'retry', 'employee', 'admin-only', 'accounts-only', 'signed-out', 'bad-ledger', 'race']) {
+    for (const mode of ['readonly', 'retry', 'posted', 'refresh-failed', 'invalid-refresh', 'employee', 'admin-only', 'accounts-only', 'signed-out', 'bad-ledger', 'race']) {
       const page = await browser.newPage({ viewport: { width: 1180, height: 1000 } });
-      const calls = [], errors = [], posted = new Map(); let firstUnconfirmed = false, firstA = true;
+      const calls = [], errors = [], posted = new Map(); let firstUnconfirmed = false, nextUnconfirmed = false, firstA = true, refreshFailureSent = false;
       let releaseFirst, firstStartedResolve, firstDoneResolve;
       const firstGate = new Promise(resolve => { releaseFirst = resolve; });
       const firstStarted = new Promise(resolve => { firstStartedResolve = resolve; });
@@ -55,6 +55,12 @@ const ledgerRow = (employeeId, type, amount, reference = 'CT-TEST') => ({ _hr_em
           { contactid: other, fullname: 'Same name', adx_identity_username: 'employee.two', statecode: 0 }] } });
         if (url.pathname === '/_api/hr_cashtransactions') {
           const id = url.searchParams.get('$filter').split(' ').at(-1);
+          if (posted.size && !refreshFailureSent && ['refresh-failed', 'invalid-refresh'].includes(mode)) {
+            refreshFailureSent = true;
+            return mode === 'refresh-failed'
+              ? route.fulfill({ status: 503, json: { error: { message: 'Synthetic ledger refresh failure' } } })
+              : route.fulfill({ json: { value: [ledgerRow(id, 99, 100)] } });
+          }
           if (mode === 'race' && id === employee) {
             if (firstA) { firstA = false; firstStartedResolve(); await firstGate;
               await route.fulfill({ json: { value: ledgers.get(id) } }); firstDoneResolve(); return; }
@@ -64,14 +70,16 @@ const ledgerRow = (employeeId, type, amount, reference = 'CT-TEST') => ({ _hr_em
         }
         assert.equal(url.pathname, '/_api/cloudflow/v1.0/trigger/' + flow);
         assert.equal(request.method(), 'POST');
+        assert.equal(request.headers()['x-requested-with'], 'XMLHttpRequest');
         const input = JSON.parse(new URLSearchParams(request.postData()).get('eventData'));
         if (!posted.has(input.postingKey)) {
           posted.set(input.postingKey, input);
           ledgers.get(input.employeeId).push(ledgerRow(input.employeeId, input.movement === 'cash_given' ? 123140000 : 123140002, input.amount, 'CT-NEW'));
         } else assert.deepEqual(posted.get(input.postingKey), input, 'Retries cannot change an operation');
         if (mode === 'retry' && !firstUnconfirmed) { firstUnconfirmed = true; return route.fulfill({ status: 202, json: {} }); }
-        const balance = ledgers.get(input.employeeId).reduce((total, row) => total + (row.hr_transactiontype === 123140000 ? 1 : -1) * row.hr_amount, 0);
-        return route.fulfill({ json: { status: 'posted', postingKey: input.postingKey, employeeId: input.employeeId, transactionId: transaction, balance } });
+        if (mode === 'retry' && posted.size === 2 && !nextUnconfirmed) { nextUnconfirmed = true; return route.fulfill({ status: 202, json: {} }); }
+        return route.fulfill({ json: { status: 'posted', postingkey: input.postingKey, employeeid: input.employeeId,
+          transactionid: transaction, ...(mode === 'posted' ? {} : { balance: 0 }) } });
       });
       await page.goto('https://portal.example.test/preview');
       await page.waitForFunction(() => !document.querySelector('#pcModuleMessage').textContent.includes('Checking Finance'));
@@ -113,6 +121,35 @@ const ledgerRow = (employeeId, type, amount, reference = 'CT-TEST') => ({ _hr_em
             assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth), false);
             await page.screenshot({ path: path.join(output, 'finance-mobile.png'), fullPage: true });
             await page.locator('#pcPostCash').click();
+            if (mode !== 'retry') {
+              await page.waitForFunction(() => document.querySelector('#pcModuleMessage').textContent.includes('Cash movement recorded') &&
+                !document.querySelector('#pcRefreshEmployee').disabled);
+              assert.equal(posted.size, 1);
+              assert.equal(calls.filter(call => call.method === 'POST').length, 1);
+              assert.equal(await page.evaluate(() => window.PettyCashModules.pendingPostingKey), null);
+              assert.equal(await page.locator('#pcCashAmount').inputValue(), '');
+              assert.equal(await page.locator('#pcConfirmCash').isChecked(), false);
+              assert.equal(await page.locator('#pcPostCash').textContent(), 'Record cash movement');
+              if (mode === 'posted') {
+                assert.match(await page.locator('#pcEmployeeBalance').textContent(), /100/);
+                assert.match(await page.locator('#pcModuleMessage').textContent(), /Balance and history refreshed/);
+                assert.match(await page.locator('#pcFinanceHistoryBody').textContent(), /CT-NEW/);
+              } else {
+                assert.equal(await page.locator('#pcEmployeeBalance').textContent(), 'Unavailable');
+                assert.match(await page.locator('#pcModuleMessage').textContent(), /movement is already saved/);
+                assert.equal(await page.locator('#pcPostCash').isDisabled(), true);
+                assert.equal(await page.locator('#pcFinancePostingReference').isVisible(), false);
+                await page.addScriptTag({ content: helper });
+                assert.match(await page.locator('#pcModuleMessage').textContent(), /movement is already saved/);
+                await page.locator('#pcRefreshEmployee').click();
+                await page.waitForFunction(() => document.querySelector('#pcModuleMessage').textContent.includes('Balance and history refreshed'));
+                assert.match(await page.locator('#pcEmployeeBalance').textContent(), /100/);
+                assert.match(await page.locator('#pcFinanceHistoryBody').textContent(), /CT-NEW/);
+                assert.equal(calls.filter(call => call.method === 'POST').length, 1, 'Refresh after a saved movement must never repost cash');
+              }
+              assert.deepEqual(errors, []); await page.close(); console.log('Verified Finance: ' + mode + ' (mock APIs only).');
+              continue;
+            }
             await page.waitForFunction(() => document.querySelector('#pcPostCash').textContent.includes('Retry same'));
             assert.equal(await page.locator('#pcEmployee').isDisabled(), true);
             assert.equal(await page.locator('#pcCashAmount').isDisabled(), true);
@@ -125,7 +162,10 @@ const ledgerRow = (employeeId, type, amount, reference = 'CT-TEST') => ({ _hr_em
             await page.waitForFunction(() => !document.querySelector('#pcRefreshEmployee').disabled);
             assert.equal(await page.locator('#pcProjectedBalance').textContent(), '—', 'Unconfirmed postings must not be projected a second time');
             await page.locator('#pcPostCash').click();
-            await page.waitForFunction(() => document.querySelector('#pcModuleMessage').textContent.includes('Cash movement recorded'));
+            await page.waitForFunction(() => document.querySelector('#pcModuleMessage').textContent.includes('Balance and history refreshed') &&
+              !document.querySelector('#pcRefreshEmployee').disabled);
+            assert.match(await page.locator('#pcEmployeeBalance').textContent(), /100/, 'Use the ledger, never the response placeholder zero');
+            assert.match(await page.locator('#pcFinanceHistoryBody').textContent(), /CT-NEW/);
             assert.equal(posted.size, 1); assert.equal(calls.filter(call => call.method === 'POST').length, 2);
             assert.equal(await page.locator('#pcCashAmount').inputValue(), '');
             assert.equal(await page.locator('#pcConfirmCash').isChecked(), false);
@@ -133,8 +173,18 @@ const ledgerRow = (employeeId, type, amount, reference = 'CT-TEST') => ({ _hr_em
             await page.locator('#pcCashAmount').fill('50'); await page.locator('#pcCashReason').fill('Cash returned');
             assert.match(await page.locator('#pcProjectedBalance').textContent(), /150/);
             await page.locator('#pcConfirmCash').check(); await page.locator('#pcPostCash').click();
+            await page.waitForFunction(() => document.querySelector('#pcModuleMessage').textContent.includes('did not confirm'));
+            const secondKey = await page.evaluate(() => window.PettyCashModules.pendingPostingKey);
+            assert.notEqual(secondKey, pendingKey, 'A separate movement gets a fresh operation key');
+            await page.locator('#pcRefreshEmployee').click();
+            await page.waitForFunction(() => !document.querySelector('#pcRefreshEmployee').disabled);
+            assert.match(await page.locator('#pcModuleMessage').textContent(), /did not confirm/,
+              'An earlier saved movement must not make a later pending movement look confirmed');
+            assert.equal(await page.evaluate(() => window.PettyCashModules.pendingPostingKey), secondKey);
+            await page.locator('#pcPostCash').click();
             await page.waitForFunction(() => document.querySelector('#pcCashAmount').value === '' && document.querySelector('#pcEmployeeBalance').textContent.includes('150'));
             assert.equal(posted.size, 2);
+            assert.equal(calls.filter(call => call.method === 'POST').length, 4, 'Each pending movement retries with its own original key');
           }
         }
       }

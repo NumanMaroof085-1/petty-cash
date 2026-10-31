@@ -1,14 +1,14 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "title": "Finance cash movement eventData contract; not an importable Power Automate flow",
+  "title": "Finance cash movement schema without regex keywords; not an importable flow; native Contact lookups validate IDs",
   "type": "object",
   "additionalProperties": false,
   "required": ["employeeId", "movement", "amount", "notes", "postingKey"],
   "properties": {
-    "employeeId": { "type": "string", "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$" },
+    "employeeId": { "type": "string", "minLength": 36, "maxLength": 36 },
     "movement": { "type": "string", "enum": ["cash_given", "cash_returned"] },
     "amount": { "type": "number", "minimum": 0.01, "multipleOf": 0.01 },
     "notes": { "type": "string", "minLength": 1, "maxLength": 100 },
-    "postingKey": { "type": "string", "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$" }
+    "postingKey": { "type": "string", "minLength": 36, "maxLength": 36 }
   }
 }

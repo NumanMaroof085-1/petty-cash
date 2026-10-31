@@ -5,6 +5,621 @@ same change. Record exact files, functionality, schema names, permissions, site
 settings, tests, and deployment state. Never describe a proposed tenant change
 as deployed merely because local code or documentation exists.
 
+## 2026-10-30 Document current Finance flowchart and manager handoff
+
+- User requests a flowchart for understanding and asks whether Finance is
+  complete before starting manager approval.
+- Added FINANCE_FLOWCHART.md: Mermaid diagram covering website input, native
+  Finance authorization, employee/caller/input/key validation, create-or-reuse,
+  durable read-back/comparison, success/failure responses, and separate website
+  ledger calculation/refresh. Includes exact guided action mapping, signs,
+  operator audit, unchanged Contact summary and same-key retry explanation.
+- Diagram shows the actual simpler design, not the removed in-flow ledger
+  loop or unimplemented self-posting rule. Unexpected failures remain
+  unconfirmed; no blanket catch/finalizer is invented.
+- Completion checklist distinguishes implemented/user-reported core Finance
+  behavior from pending self-posting policy/implementation, latest query-cap
+  fix publication and controlled live return/retry/access/concurrency checks.
+  Manager approval can begin independently; Finance is not production-signed-off.
+- Added links in FINANCE_SETUP.md, FINANCE_FLOW_SETUP.md and README.md.
+  Microsoft flow integration and Run after references checked. Docs only;
+  no frontend/flow/schema/permission/data changes or new live tests.
+
+## 2026-10-30 Finance balance discrepancy resolved after hard refresh
+
+- User confirms read-only Finance API returns all three transactions, then
+  reports hard refresh restored the correct logs and balance. Record the
+  observed discrepancy as resolved, without claiming a particular cache layer
+  or fresh financial data mutation was verified.
+- Updated FINANCE_FLOW_SETUP.md and FINANCE_SETUP.md with the outcome. No extra
+  cash transaction, Contact summary update, flow/code/permission change or new
+  runtime test is required for this status update. The independent large-ledger
+  cap fix remains locally tested; deployment is not separately confirmed.
+- Self-posting remains unimplemented/proposed. Existing broader live test
+  limitations remain. Documentation diff whitespace checked.
+
+## 2026-10-30 Investigate Finance-only wrong balance; remove ledger result cap
+
+- User reports three transactions, expected +100, latest +100 missing on Finance
+  while other pages show correct balance. Requested read-only API-row sum vs
+  DOM balance, widget count, version and pending state to distinguish stale
+  reads from deployed UI behavior. Root cause not yet established.
+- Verified signed calculation uses agreed types. Found independent query
+  defect: cashTransactions used $top=100 as if it were a page-size setting;
+  OData instead limits the whole result. Removed the ledger-only limit and
+  retained the existing nextLink/origin/100-page safety checks. No directory
+  or request query changes, Contact writes, flow changes or cash mutations.
+- Added a meaningful 101-row regression that models actual $top truncation.
+  Passed all 131 unit tests and 11 mocked Finance browser states. This cap fix
+  affects larger histories and does not explain the user's three-row case.
+- Microsoft documents portal per-user data caching and non-immediate workflow
+  write visibility; this is a diagnostic possibility, not a confirmed cause.
+  Do not refresh away a pending key, repeat cash, or force Contact totals to
+  mask the discrepancy. User's raw read diagnostic remains outstanding.
+- Updated FINANCE_FLOW_SETUP.md and FINANCE_SETUP.md; deployment/current
+  Finance balance remains unverified. Diff whitespace checked.
+
+## 2026-10-30 User reports working Finance posting; discuss self-posting
+
+- User reports the preceding step working and asks about balance changes and
+  preventing Finance users from increasing their own balance. Record this as
+  user-observed success, not independently verified rows/run/amounts or all
+  financial tests complete.
+- Verified local source: cash_given adds and cash_returned subtracts through
+  Cash Transaction rows; displayed balances are ledger-derived. This flow does
+  not update Contact.hr_currentbalance. Expense-approval posting remains a
+  separate backend task.
+- Verified current client has no self-posting check. FINANCE_FLOW_SETUP.md
+  records a proposed native employee-versus-actor check plus matching UI.
+  Recommendation: another Finance user handles both Add and Returned for the
+  operator's own account; this broader policy is not yet selected/implemented.
+- Discussion/docs only, no frontend/flow/schema/permission changes or new tests.
+  Microsoft site flow role authorization reference checked; diff verified.
+
+## 2026-10-30 Flow starts; correct Parse_Posting_Key expression entry
+
+- User reports an actual flow run and HTTP 200 rejected response after transport
+  repair. Current pending key is 5817c32c-5480-4dc9-a164-de75a96435f1 (different
+  from earlier HTTP 500 key); preserve the current page's operation.
+- Parse_Posting_Key failed InvalidJSON, unexpected 'a' at position 0; parallel
+  rejection/Terminate executed. No successful cash posting is reported.
+- FINANCE_FLOW_SETUP.md / FINANCE_SETUP.md now instruct clearing Content and
+  committing addProperty(json('{}'),'postingKey',outputs('Posting_Key')) through
+  the Expression/fx tab. The character matches a literal function string but
+  actual Content has not been inspected; describe this as an inference. Keep
+  the length-36 object schema and failure/success run-after unchanged.
+- Permanent shared-template publication remains necessary; management tab can
+  be updated without reloading the still-pending Finance page. After flow save,
+  user can retry the same current movement/key. No new browser transport code,
+  modules, schema, role, columns or tenant writes by the assistant in this step.
+- Microsoft addProperty and Parse JSON references checked; documentation diff
+  verified. Existing local test results unchanged; tenant correction/save and
+  successful movement outcome remain pending.
+
+## 2026-10-30 Repair pre-trigger Finance HTTP 500 transport
+
+- User confirms the earlier site route matches, then reports a POST 500 with
+  pending key 9eb9ba6f-71da-4dda-82b3-492fde257399 and no matching flow run.
+  Response HTML is the generic Power Pages error page, correlation
+  01ee3f96-c050-4f54-9cac-21f9e739ed38, empty RTGE01 error. No known sign-in
+  cause, cash row or executed flow action is inferred.
+- Found missing required X-Requested-With: XMLHttpRequest in the canonical
+  fetch POST. Microsoft power-pages-samples documents a masked 500/no-run for
+  this omission. Added the header with CSRF/credentials/eventData unchanged.
+  Also accept documented lowercase response field names while preserving
+  HTTP/status/key/employee/saved GUID confirmation checks and ignored balance.
+- Non-JSON API errors now retain HTTP status instead of asserting a sign-in
+  problem, without copying raw HTML/private response contents. Error paths
+  retain the pending key and never automatically resubmit.
+- Added scripts/repair_open_finance_page.js for the still-open pending page:
+  install sends no requests, exact flow-route wrapper preserves original body,
+  CSRF and key, adds header and aliases actual returned field names. This lets
+  the user explicitly retry the original movement without a reload/new key.
+  Permanent shared-template publication follows resolution of the pending item.
+- Tests passed: all 130 unit tests, including 26 module tests and the exact
+  console repair against a simulated old loaded helper; 11 mocked Finance
+  browser states enforce header and lowercase replies. Corrected a CRLF-sensitive
+  test fixture after its first failure. No live invocation/financial writes or
+  actual root-cause resolution claimed. Source version remains v3.
+- Updated FINANCE_FLOW_SETUP.md, FINANCE_SETUP.md and README.md. No flow/role/
+  column/site-setting changes; local gates remain disabled. User may apply the
+  pending-page repair and report the retry outcome. Diff whitespace checked.
+
+## 2026-10-30 Distinguish Finance maker ID from site invocation ID
+
+- User supplies make.powerautomate.com details URL: environment
+  61901d93-5934-e60d-bf80-14e618d0e242, maker flow
+  ac94fb2d-b491-3d0c-0ab8-f3431a5c7e57, questioning the earlier route GUID.
+- Confirmed from local source that financeFlowId is appended to the native
+  Power Pages /_api/cloudflow/v1.0/trigger/ route. Microsoft documents the
+  site-associated invocation URL is generated when adding a flow to the site.
+- FINANCE_FLOW_SETUP.md now explicitly distinguishes the two identifiers and
+  requests the CURRENT site's Cloud flows URL before test activation. Earlier
+  site GUID 0b0976ac-a6d3-f111-a05d-70a8a52176fd remains screenshot evidence,
+  not independent proof of the current association with the maker flow.
+- No config substitutions, association changes or cash tests performed. Docs
+  only; no code/permissions/tenant writes. Existing draft inputs/key, if any,
+  remain preserved.
+
+## 2026-10-30 Guide controlled Finance tenant test activation
+
+- User reports the shared-template and final confirmation-response steps done;
+  no actual native response, cash row or refreshed balance has been supplied.
+- FINANCE_FLOW_SETUP.md / FINANCE_SETUP.md now guide temporary live page config
+  for the first controlled test, reusing previously supplied site route GUID
+  0b0976ac-a6d3-f111-a05d-70a8a52176fd if still current. Preserve Finance-only
+  site flow role, verify v3, leave other config intact. Canonical local defaults
+  stay blank/false. No assistant tenant mutation or production activation.
+- Test: designated test employee, note B, Add 100 once, expect one row and B+100;
+  inspect employee/operator/key/reference/type/amount and retain the original
+  pending operation on uncertainty. Saved-but-refresh-failed uses GET only.
+- Clarifies test unlock is needed before posting tests; it does not establish
+  production readiness. Return/retry/concurrency/role-denial tests remain next.
+- Microsoft native site flow integration/role association reference checked;
+  documentation-only diff check, no new code/schema/permissions or runtime test.
+
+## 2026-10-30 Implement separate Finance posting confirmation and balance refresh
+
+- User reports removing in-flow ledger scanning/calculation. Updated canonical
+  pettycash-modules.js to finance-posting-v3. A matching HTTP 200 / posted / key /
+  employee / transaction GUID confirms the durable posting independently of
+  the old balance field; the returned object excludes that field entirely.
+- Finance clears the confirmed draft/key, then reloads the existing employee
+  ledger/history. No returned placeholder/old balance is displayed. Failed or
+  invalid ledger refresh shows Unavailable plus saved confirmation; manual GET
+  refresh preserves that confirmation, does not POST cash again, and permits
+  a fresh draft only after a valid balance is loaded. Same-key retry remains
+  locked for transport/status/identity failures. Same-version duplicate include
+  guard and Finance-only/read-only behavior remain.
+- Extended module unit and browser tests: acceptance without balance, ignored
+  legacy/placeholder balances, wrong response status/IDs/key still rejected,
+  automatic history refresh, failed/invalid refresh and manual GET recovery.
+  Also verified a second, unconfirmed movement retains its own key and error
+  message through ledger refresh; an older saved confirmation cannot replace
+  that pending result. Two separate movements get separate keys and each
+  committed-but-unconfirmed retry still creates only one mocked ledger row.
+  Passed all 127 unit tests, 11 mocked Finance browser states and 4 shared-page
+  states, plus diff whitespace checks. Browser launch required sandbox elevation;
+  runs used intercepted mock APIs only, no tenant reads/writes.
+- Updated FINANCE_FLOW_SETUP.md current final Posting_Confirmed action guide:
+  copy the existing six-output response into Saved_Row_Matches Yes, status
+  posted, current key/employee/saved GUID, Number balance 0 solely for schema
+  compatibility, message Cash movement recorded. Existing rejection schemas
+  stay unchanged. No new sum/variables or Contact balance writes.
+- Updated FINANCE_SETUP.md, BALANCE_MODULE_SETUP.md and README.md. Deployment
+  requires replacing existing Petty Cash Modules template Source script with
+  v3; no page HTML/identity/receipt template, columns, roles or permissions
+  change. Local flow ID and review flag remain blank/false. Tenant final save,
+  output naming/native caller, authorization, concurrent retry and real cash
+  testing/deployment remain unverified. User will configure the final response.
+
+## 2026-10-30 Simplify Finance posting; remove in-flow balance scan
+
+- User accepts the simpler save/confirm then website balance-refresh approach
+  and requests exact flow actions to remove. Prior full-history validation was
+  more than needed to acknowledge one Finance movement.
+- FINANCE_FLOW_SETUP.md records the manual removal order: Each_Ledger_Row and
+  its children, Ledger_Is_Complete and its children, List_Ledger, then the four
+  calculation variable initializers. Keep vActorId, input amount validation,
+  all role/caller/input/key/create/recovery checks and Saved_Row_Matches.
+- FINANCE_SETUP.md and README.md now identify the old full-ledger flow recipe
+  as superseded. No Dataverse rows/columns or permissions are removed.
+- Local source inspection confirms finance-ledger-v2 still requires/displays
+  response.balance. Frontend and success-response adaptation remain pending;
+  never supply posted plus a placeholder zero to the old UI. Posting gates
+  remain disabled. Rejection schemas stay identical and unchanged for now.
+- Documentation-only change; no actual tenant action deletion, frontend code
+  change, successful cash run or balance result is claimed. Diff checked.
+
+## 2026-10-30 Check missing or repeated approved-expense references
+
+- User reports basic ledger-row validation and invalid-state setter added;
+  runtime execution and financial results remain unverified.
+- FINANCE_FLOW_SETUP.md now guides normalized Expense_Request_Id Compose and
+  two sibling conditions in Row_Is_Valid Yes: Expense_Link_Is_Invalid sets
+  vLedgerValid false for an expense with missing/repeated request; Remember_Expense
+  appends only valid expense references to vSeenExpenseRequests.
+- Keeps given/returned movements independent of request links, prevents double
+  expense counting, avoids extra nested conditions and never resets invalid
+  history to valid. Signed summation/presence/final confirmation remain next.
+- Documentation-only change; Microsoft variable reference consulted and diff
+  whitespace checked. No frontend/schema/permission changes, tenant writes,
+  verified run or website posting enablement.
+
+## 2026-10-30 Validate rows before including them in Finance balance
+
+- User reports four calculation variables and sequential loop/validity guard
+  added; no tenant run or balance calculation result supplied.
+- FINANCE_FLOW_SETUP.md now guides Row_Scaled_Text, Row_Cents and Row_Is_Valid
+  inside Ledger_Still_Valid Yes, reusing the existing full row expression for
+  positive exact cents, safe range, matching employee/currency and known type.
+- Invalid rows set vLedgerValid false; no Return/Terminate inside the loop.
+  Later duplicate-expense checks and sum belong in Row_Is_Valid Yes. Conversion
+  errors must fail without confirmation, never substitute a zero amount.
+- Microsoft expression reference consulted; documentation diff checked. No
+  runtime verification, frontend/schema/permissions/tenant writes or posting
+  enablement. Expense checks, summation and final result remain pending.
+
+## 2026-10-30 Initialize Finance ledger calculation state
+
+- User reports complete-history read and its guard done; runtime results and
+  cash posting remain unverified.
+- FINANCE_FLOW_SETUP.md now guides four top-level variable initializations:
+  vBalanceCents Integer 0, vSeenExpenseRequests Array [], vPostedRowSeen Boolean
+  false, vLedgerValid Boolean true. Existing vActorId remains; avoid duplicates
+  and initialization inside conditions/scopes.
+- Added guided sequential Each_Ledger_Row loop after the completeness guard,
+  input List_Ledger.value, with Ledger_Still_Valid condition and empty branches
+  pending row checks. No Terminate inside loop; invalid history is rejected
+  after it. Calculation/confirmation and success response are not complete.
+- Microsoft variable scope and loop concurrency guidance checked. Documentation
+  only, whitespace verification; no tenant run, new columns/permissions,
+  frontend changes or website posting enablement.
+
+## 2026-10-30 Load complete employee ledger in guided Finance build
+
+- User reports Saved_Row_Matches and its rejection path done. No live run,
+  saved transaction, amount change or returned balance has been shown.
+- FINANCE_FLOW_SETUP.md documents List_Ledger below the whole comparison guard:
+  employee-only filter, all transaction types/history, explicit stable ordering,
+  selected ledger fields, no Row count, pagination threshold 100000.
+- Added guided Ledger_Is_Complete check for count below cap AND empty nextLink,
+  cloned unconfirmed response and terminating No branch. Microsoft documents
+  that pagination can omit nextLink at a threshold; both checks are needed.
+- Summation variables/loop, row validation/presence and success response remain
+  pending. Documentation-only change; no Contact writes, website gate changes,
+  new permissions/schema or tenant execution. Verified diff whitespace.
+
+## 2026-10-30 Compare recovered Finance event
+
+- User reports the one-row stopping guard and Saved_Row added. No flow run,
+  stored transaction or balance result is supplied.
+- FINANCE_FLOW_SETUP.md now guides Saved_Row_Matches with the existing full
+  event/operator/currency/amount comparison, followed by a cloned six-output
+  conflict response and Terminate in No. Yes stays empty to preserve sequential
+  guards. No mutation/rollback claims; a zero response balance is a placeholder.
+- Whole-ledger reading and confirmation remain pending. No undefined variables
+  introduced, no frontend/tenant/schema/permission changes, no posting enabled.
+  Microsoft expression reference consulted; documentation-only verification.
+
+## 2026-10-30 Wire one-row recovery guard
+
+- User reports the recovery scope, lookup and One_Saved_Row setup done; no run
+  results or cash posting supplied.
+- Updated FINANCE_FLOW_SETUP.md with a cloned six-output unconfirmed response
+  and Terminate Succeeded in One_Saved_Row No. Balance 0 remains a failure
+  placeholder. Yes stays empty; only after No terminates, add Saved_Row Compose
+  below the whole condition using first(body('Resolve_Key')?['value']). This
+  preserves a sequential success path without adding nested Yes conditions.
+- Saved-event comparison remains next. No variables, schema/permissions,
+  frontend code, tenant writes or website posting gates changed. Documentation
+  checked against Microsoft action-copy and expression references; no runtime
+  verification claimed.
+
+## 2026-10-30 Continue Finance flow after schema repair
+
+- User reports the previous step done and requests continuation. Record the
+  save repair as user-reported; no tenant run, generated reference or cash
+  posting verified.
+- Documented the next guided actions in FINANCE_FLOW_SETUP.md: Resolve_Posting
+  scope after the whole Is_New_Posting condition, run after success/failure/
+  timeout only; Resolve_Key read with escaped key filter and row count 2;
+  One_Saved_Row condition requiring numeric count 1. Branch wiring/comparison
+  remain next; keep website posting disabled and do not test cash yet.
+- Documentation only. Microsoft run-after and List rows references checked;
+  no application, tenant configuration, schema or permission change.
+
+## 2026-10-29 Parse JSON pattern rejected by connector workflow
+
+- User reports ActionSchemaNotSupported for Parse_Posting_Key pattern or
+  patternProperties with OpenApiConnection. The supplied regex schema was
+  incompatible; no successful cash run/autonumber conversion inferred.
+- Replaced regex with required String minLength/maxLength 36 in the posting-key
+  recipe and finance-cash-request.schema.json (also employeeId). Explicitly
+  document this as text length/type validation, not full UUID syntax; native
+  Contact lookups validate IDs. Frontend UUID generation is unchanged.
+- Updated Find_Key and future Resolve_Key filter expressions to double internal
+  apostrophes before quoting the OData string literal. No query/create may run
+  after a failed validation/query. Text keys remain deduplicated by the existing
+  Active unique key plus full event/operator comparison; no financial guard or
+  role grant removed. Removed the unused Parse_Actor regex instruction.
+- Updated FINANCE_FLOW_SETUP.md, FINANCE_SETUP.md and README.md. This repairs
+  schemas/query guidance without new flow actions or frontend/site changes.
+  Actual flow Save/enforcement/read behavior remains pending tenant verification.
+- Local checks passed: 22 shared-module tests; regex-free request schema and all
+  three guide JSON examples; four escaped-filter literal round-trips including
+  apostrophe/query-like text; key type/length boundaries; git diff --check.
+  The expression was checked locally with its string-function subset, not run
+  in Power Automate or against Dataverse. No live Save/run success claimed.
+
+## 2026-10-29 Transaction Reference autonumber format recommended
+
+- User explicitly requests conversion of the existing column to Autonumber and
+  asks for its format. Recommended Custom CT-{SEQNUM:6}, seed 1 if no existing
+  CT references, otherwise above the highest existing CT sequence number.
+  Examples CT-000001/CT-000002; no fixed seed assumption for populated history.
+- Reuse hr_transactionreference; no duplicate column or replacement of
+  crec6_postingkey. Save/publish and reopen editor; connector required-field
+  resolution and generated reference remain unverified. No requirement-level
+  relaxation, action-table switching or cash test instructed.
+- Updated FINANCE_FLOW_SETUP.md. Conversion not yet reported complete; no
+  assistant tenant write, application change or runtime test.
+
+## 2026-10-29 Create action reports Transaction Reference required
+
+- User reports Transaction Reference required in Create_Cash. Exact validation
+  (designer label, save error or runtime) and column settings are not supplied.
+  Prior leave-empty advice relied on the documented primary-name Autonumber;
+  actual data type/requirement must be checked rather than assumed.
+- Request Data type and Required settings for hr_transactionreference in Power
+  Apps Columns. No dummy/manual reference, unverified null bypass, requirement
+  relaxation, type change or cash test instructed.
+- Updated FINANCE_FLOW_SETUP.md current issue and reference mappings to flag
+  the unverified assumption. Documentation only; no code, tenant write or tests.
+
+## 2026-10-29 Fixed PKR ID supplied; cash create action prepared
+
+- User supplied f8719944-3bac-f111-aaab-70a8a52176fd as PKR Currency record GUID.
+  Checked GUID syntax only; no tenant currency/state/precision/access inspection.
+- Replaced currency placeholders in FINANCE_FLOW_SETUP.md create and comparison
+  expressions, updated FINANCE_SETUP.md and resolved stale pending-ID wording.
+  Fixed lookup value transactioncurrencies(f8719944-3bac-f111-aaab-70a8a52176fd);
+  no currency query/count/new constant action added to the guided flow.
+- Next instructed action: Create_Cash Add a new row inside Is_New_Posting Yes,
+  full header/lookup/Choice/amount/key/operator/currency mapping, Retry policy
+  None. Uses existing Input_Amount and Get_Actor.contactid so no unbuilt Parse_Input
+  or Actor_Id Compose is referenced by this guided create. Autonumber and linked
+  request left unset; No branch stays empty pending common recovery/read-back.
+- Configure/save only until remaining backend is complete; no cash test or page
+  enablement yet. Is_New_Posting completion and Create_Cash are not inferred from
+  the ID response. Documentation only; no code/tenant writes or runtime tests.
+
+## 2026-10-29 Amount column screenshot is not the PKR record ID
+
+- User asks if hr_Amount/hr_amount column metadata is the requested currency
+  GUID. Clarified column logical name versus existing PKR Currency row ID
+  (transactioncurrencyid). Actual PKR record ID remains unprovided.
+- Added one-time navigation: Power Platform admin center > Manage > Environments
+  > selected environment > Settings > Business > Currencies, open PKR and copy
+  the record GUID from its URL. No column change, currency creation or runtime
+  PKR query instructed. Is_New_Posting completion/run is still unverified.
+- Updated FINANCE_FLOW_SETUP.md. Documentation only; no app code, tenant
+  mutation, financial write or tests.
+
+## 2026-10-29 Fixed-currency approach accepted; new-key condition next
+
+- User reports all previous steps complete excluding PKR actions. Recorded as
+  reported progress, not query/flow execution verification.
+- Next guided action: Condition Is_New_Posting below Find_Key on parser-success
+  branch; compare row count to numeric 0. Keep branches empty until create/retry
+  handling is configured. Existing key is never sufficient proof of success.
+- Simplified FINANCE_FLOW_SETUP.md: remove runtime PKR query/count from canonical
+  recipe, use a one-time verified currency GUID in create/comparison expressions,
+  and let Is_New_Posting Condition be the create/recovery boundary (no redundant
+  wrapping scope). Updated run-after references and FINANCE_SETUP.md. Historical
+  runtime-query instructions marked superseded. Actual PKR GUID still needed.
+- No frontend/config changes, tenant mutation, cash posting or runtime tests.
+
+## 2026-10-29 Currency complexity questioned; one-time PKR setup recommended
+
+- User asks what PKR lookup does and whether repeated checks are necessary.
+  Explain the Currency column associates an amount with a row currency; no new
+  currency conversion feature is needed for this single-currency portal.
+- Recommended simplification: verify actual active PKR record/precision once,
+  explicitly configure its fixed currency ID for transaction creates and ledger
+  checks, rather than List_PKR/count on every request. Do not rely on an unknown
+  connection default or guess the GUID. Core validation/deduplication remains.
+- Added a discussion note to FINANCE_FLOW_SETUP.md pausing the prior dynamic
+  currency lookup instructions. No flow deletion, frontend/config/permission
+  change, financial write or runtime test. Actual PKR GUID still unprovided.
+
+## 2026-10-29 Cash Transaction ID and operator column names supplied
+
+- User supplied primary GUID hr_cashtransactionid and Recorded By lookup
+  hr_recordedby. Replaced schema placeholders throughout FINANCE_FLOW_SETUP.md;
+  expected lookup read property _hr_recordedby_value is derived, pending actual
+  connector read verification. No duplicate lookup/table creation instructed.
+- Next batch: expand Find_Key's selected columns using confirmed names; add
+  List_PKR for active PKR currencies (bounded 2 rows), then PKR_Count_Is_Valid
+  requiring exactly one match. Leave new guard's branches empty until rejection
+  handling. The PKR record ID and precision are not assumed.
+- Updated FINANCE_SETUP.md and WEBAPI_SITE_SETTINGS.md to record names and keep
+  operator/key backend-only. Find_Key execution and new actions are not inferred
+  from metadata answers. No app/config/permission change, tenant mutation by
+  assistant or financial posting. Documentation only.
+
+## 2026-10-29 Finance key routing reported added; bounded key query next
+
+- User reports Employee_Id successful branch and Reject_Invalid_Key parallel
+  response/Terminate branch added. No branch graph or run inspected.
+- Next instructed action: Dataverse Find_Key List rows below Employee_Id only,
+  Cash Transactions, select crec6_postingkey, filter by validated Posting_Key
+  with quoted OData string, Row count 2. No employee-wide/unfiltered ledger read.
+  Presence is not proof of an identical event; compare full saved data later.
+- Request actual Cash Transaction primary GUID logical name and Recorded By
+  Contact lookup logical name/status before preparing writes. Expand Find_Key
+  later with those mappings; no guessed schema or new key.
+- Updated FINANCE_FLOW_SETUP.md checkpoint and section 9. Documentation only;
+  no query/run verification, financial posting, code/permission/config change.
+
+## 2026-10-29 Finance key parser reported added; explicit failure routing next
+
+- User reports Input_Key, Posting_Key and Parse_Posting_Key added. No parsing or
+  invalid-input behavior tested in tenant.
+- Next batch: Employee_Id Compose from Get_Employee.contactid after parser
+  success ONLY; a sibling parallel Reject_Invalid_Key canonical response on
+  parser failed/timed-out ONLY, followed by Terminate Succeeded within that
+  failure branch. Future financial work goes below Employee_Id, never after a
+  skipped catch or unconditional merge. Retain the six-output schema unchanged.
+- Updated FINANCE_FLOW_SETUP.md with exact expressions, Run after states and
+  branch placement. New routing not yet reported built; no app/permission change,
+  financial write, test execution or posting enablement.
+
+## 2026-10-29 Finance trigger names visibly corrected; key format next
+
+- User screenshot now shows the five requested trigger names on the left with
+  correct input type icons. Right-side input1-input5 are descriptions; no further
+  rename needed. Raw schema/token/runtime mapping still has not been inspected.
+- Next guided batch: Input_Key Compose from postingKey token, normalized
+  Posting_Key Compose, and Parse_Posting_Key with an object containing the key
+  and a required canonical GUID pattern. The object wrapper avoids treating an
+  unquoted GUID as JSON text. No lookup/write before validation succeeds.
+- Updated FINANCE_FLOW_SETUP.md with exact Content/Schema and pending failure
+  handling. Format validation is not deduplication; lookup, unique-key recovery,
+  currency and ledger stages remain incomplete. No app code, permissions, cash
+  posting or runtime verification by assistant.
+
+## 2026-10-29 Finance trigger screenshot reveals names in description boxes
+
+- User reports latest batch done (Valid_Amount No response/Terminate, Notes and
+  Movement_Type) and supplies trigger screenshot. Left names visibly remain
+  Input/Input 1/Number/Input 2/Input 3; intended employeeId/movement/amount/notes/
+  postingkey text appears in the right-hand prompt/description fields.
+- Instruct correction of existing left names to employeeId/movement/amount/notes/
+  postingKey, preserving Text/Text/Number/Text/Text types and input identities.
+  No delete/recreate, Compose action rename or guessed raw-property change.
+  Save/binding/runtime confirmation is still pending; key wiring waits.
+- Updated FINANCE_FLOW_SETUP.md checkpoint and trigger setup instructions to
+  distinguish name versus description and exact camelCase. No app code, tenant
+  mutation by assistant, tests or cash posting.
+
+## 2026-10-29 Finance role association and Valid_Amount reported complete
+
+- User reports Finance-only flow association done and Valid_Amount condition
+  created. No role-denial test, underlying trigger schema or amount execution
+  supplied; website posting gates remain off.
+- Next batch: clone canonical six-output rejection into Valid_Amount No, change
+  message body value only, Terminate Succeeded; then sibling Notes and
+  Movement_Type Compose actions below the whole guard inside actor Yes.
+  Movement_Type uses confirmed Choice values 123140000/123140002 after the
+  earlier allowed-movement guard. New actions are not yet reported added.
+- Request trigger-input screenshot before posting-key wiring because earlier
+  tokens were labeled Input and Input 3; exact website-facing names/mappings
+  remain unverified. Updated FINANCE_FLOW_SETUP.md; no frontend/tenant mutation,
+  tests or financial posting performed by assistant.
+
+## 2026-10-29 Finance flow saves; Finance-only association instructed
+
+- User reports flow saving succeeds. Add cloud flow dialog visibly lists Petty
+  Cash - Finance Cash Movement, no selected roles, and native site trigger GUID
+  0b0976ac-a6d3-f111-a05d-70a8a52176fd. Successful site association/run is not yet
+  reported; no underlying schemas were supplied to identify the prior mismatch.
+- Instructed Add roles > Petty Cash Finance ONLY, then confirm dialog. Preserve
+  the intended employee/other-role exclusion; role binding alone does not certify
+  the unfinished financial backend.
+- Updated FINANCE_FLOW_SETUP.md status. Local financeFlowId remains blank and
+  financeSecurityReviewed false; no frontend edit, tenant mutation by assistant,
+  run verification or cash posting.
+
+## 2026-10-29 Finance rejection card screenshot reviewed
+
+- Screenshot shows the expected six output names; balance has the Number icon,
+  the other five have Text icons. Rejected status, empty transactionId, zero
+  failure placeholder and employee-inactive message are visibly appropriate.
+- postingKey uses token labeled Input 3; employeeId uses Input. Their actual
+  trigger mappings and request input names remain unverified, as do other Return
+  schemas and successful saving. Confirm mappings before using this as the clone
+  source; visible field agreement alone does not certify the whole flow.
+- Updated FINANCE_FLOW_SETUP.md. Documentation only; no code, tenant operation,
+  financial posting or tests performed.
+
+## 2026-10-29 Finance flow save blocked by response schema mismatch
+
+- User reports ActionSchemaInvalid: response schemas sharing HTTP 200 must match.
+  Exact offending action/property is uninspected; amount-batch completion is not
+  inferred from this error. Pause further flow construction until Save succeeds.
+- Confirmed local pettycash-modules.js already validates positive finite amounts,
+  up to two decimals/safe cents, movement and notes. Frontend validation remains
+  present; server validation protects the actual financial write boundary.
+- Updated FINANCE_FLOW_SETUP.md: canonical six-output response, classic-designer
+  Copy to my clipboard to replace other Return cards, change message body values
+  only, preserve branch/Terminate wiring; inspect only inputs.schema if unresolved.
+  Requirement comes from the supplied save error; no culprit/repair verified yet.
+- Documentation only. No frontend rewrite, tenant mutation, financial write,
+  posting enablement or runtime test performed by assistant.
+
+## 2026-10-29 Finance basic-input condition reported added; exact cents next
+
+- User reports the three input Compose actions and Basic_Input_Is_Valid added.
+  No actual payload/condition execution inspected.
+- Next batch: Basic's No rejected response/Terminate; then sibling Compose
+  Amount_Scaled_Text and Amount_Cents below the whole Basic condition (still
+  within actor Yes), followed by Valid_Amount checking positive safe integer
+  cents and exact decimal equality. Leave the new guard's branches empty until
+  the next instruction. This avoids nesting every new validation in its own Yes.
+- Updated FINANCE_FLOW_SETUP.md with the guided source Input_Amount and placement.
+  UUIDs, field limits, currency, duplicate recovery and exceptions remain unbuilt.
+  Documentation only; no runtime tests, cash writes or posting enablement.
+
+## 2026-10-29 Finance operator rejection reported done; basic input batch next
+
+- User reports the actor No rejection/Terminate added, confirms their understanding
+  of employee versus operator active checks, and now requests a few steps per turn.
+- Next instructed batch in Actor_Is_Active > If yes: Input_Movement, Input_Amount,
+  Input_Notes Compose actions using trigger tokens, then Basic_Input_Is_Valid
+  Condition (two allowed movements, positive Number amount, trimmed notes 1-100).
+  Its branches stay empty at this checkpoint; invalid branch/remaining validation
+  follow. Exact cents, UUIDs, column limits, PKR and idempotency remain unbuilt.
+- Updated FINANCE_FLOW_SETUP.md with the expression and reuse instructions.
+  No app code, flow run verification, financial write or posting enablement.
+  Documentation only; no runtime tests claimed.
+
+## 2026-10-29 Finance operator active condition reported added; rejection next
+
+- User reports Actor_Is_Active added; no condition execution inspected.
+- Next instructed action pair in Actor_Is_Active > If no: Return value(s) with
+  the same six-field response (status rejected, operator-inactive message), then
+  Terminate Succeeded. Empty transactionId and balance 0 are failure placeholders,
+  never a saved transaction/balance. Actor Yes remains empty for the next step.
+- Updated FINANCE_FLOW_SETUP.md checkpoint. Documentation only; no new code,
+  permissions, financial writes, run verification or posting enablement.
+
+## 2026-10-29 Finance operator lookup reported added; active condition next
+
+- User reports Get_Actor added under Employee_Is_Active > If yes. No run/result
+  or trusted-caller-to-Contact mapping inspected.
+- Next guided action: Actor_Is_Active Condition directly after Get_Actor, inside
+  the same Yes branch; raw body('Get_Actor')?['statecode'] equals numeric 0.
+  Branches stay empty at this checkpoint. Operator rejection/stop follows next;
+  future permitted actions go in the new Yes branch.
+- Updated FINANCE_FLOW_SETUP.md checkpoint. Documentation only; no application
+  code, permissions, financial writes, tests or posting enablement changed.
+
+## 2026-10-29 Finance inactive rejection reported added; operator lookup next
+
+- User reports the inactive-employee No response and Terminate added. No run or
+  rejection response inspected.
+- Next guided action: inside Employee_Is_Active > If yes, Dataverse Get a row
+  by ID named Get_Actor, Contacts, Row ID from vActorId, select contactid,statecode.
+  This is the trusted operator lookup, not employeeId; active/mapping checks
+  follow. Role authorization still depends on the site-associated Finance role.
+- Updated FINANCE_FLOW_SETUP.md checkpoint. No code/permission changes, tenant
+  financial writes, tests rerun or posting enablement.
+
+## 2026-10-29 Finance active condition reported added; No branch response next
+
+- User reports Employee_Is_Active added. Next guided instruction: in No, add
+  Return value(s) to Power Pages (status rejected, inactive message), then
+  Terminate Succeeded after responding. Leave Yes empty at this checkpoint;
+  permitted processing will be added there. No execution/denial verified.
+- Standardized the build guide's response recipe to six output names/types:
+  Text status/postingKey/employeeId/transactionId/message and Number balance.
+  Failures use balance 0 only as a placeholder; existing frontend refuses a
+  non-posted response. Success adds an empty message, which the helper ignores.
+  This is our response design, not a verified tenant schema restriction.
+- Updated FINANCE_FLOW_SETUP.md only; no application code, tenant write, new
+  privilege, financial posting, run verification or tests rerun.
+
+## 2026-10-29 Finance employee lookup reported added; active condition next
+
+- User reports Get_Employee added; no lookup execution/result inspected.
+- Next instruction: Condition Employee_Is_Active compares raw numeric
+  body('Get_Employee')?['statecode'] to numeric 0 (Contact Active), not the
+  formatted label or Status Reason. Leave branches empty at this checkpoint;
+  rejection/termination in No and permitted processing in Yes follow next.
+- Updated FINANCE_FLOW_SETUP.md checkpoint. No enforcement verified, financial
+  writes, code/permission changes or posting enablement. Documentation only.
+
 ## 2026-10-29 Finance caller variable reported added; employee lookup next
 
 - User reports completion of Initialize variable vActorId using trigger User ID.

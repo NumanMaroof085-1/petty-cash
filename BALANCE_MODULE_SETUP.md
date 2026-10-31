@@ -1,6 +1,6 @@
 # Balance and employee portal module setup
 
-## Current Finance module (2026-10-29)
+## Current Finance module (2026-10-30)
 
 The user chose the NEW **Petty Cash Finance** web role. Use FINANCE_SETUP.md and
 Finance Cash Management.html for the current page/configuration/permissions and
@@ -8,6 +8,14 @@ posting contract. The older Accounts page, Petty Cash Accounts authorization
 and accountsFlowId/accountsSecurityReviewed instructions below are historical,
 superseded by financeFlowId/financeSecurityReviewed and Finance-only access.
 No flow, role, permission or cash movement was deployed by the assistant.
+The local Finance helper is finance-posting-v3: the flow confirms a saved
+movement, then the website refreshes its existing ledger balance/history.
+The flow no longer scans all historical rows for a balance. Its existing
+Number balance output remains a schema-compatibility placeholder and is never
+displayed by v3. Failed balance refresh preserves saved confirmation and offers
+GET refresh, not another posting. Publish the full updated shared script before
+enabling Finance posting. Earlier returned-balance/Accounts instructions below
+are historical; FINANCE_SETUP.md and the top of FINANCE_FLOW_SETUP.md govern.
 The current page can perform authorized read-only checks once published;
 cash posting remains disabled until the secured backend is configured/tested.
 All signed-ledger business rules, idempotence and completeness requirements
@@ -127,8 +135,9 @@ checks do not replace a two-employee Request/Line Item/ledger isolation test.
 
 Pages use safe DOM text for employee names, errors, and manager comments.
 Refresh reads saved values; it is not a push/live-stream update. Power Pages
-server-side caching may delay another process's writes. After an accounts
-posting, the UI uses the trusted flow's returned balance immediately.
+server-side caching may delay another process's writes. After a confirmed Finance
+posting, the UI refreshes balance/history separately; it does not display the
+flow's legacy balance field or resubmit a saved movement when refresh fails.
 
 ### Web File upload fallback replaced
 

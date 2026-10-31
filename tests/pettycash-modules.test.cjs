@@ -45,7 +45,7 @@ test('the shared user-context template preserves input IDs, escapes values, and 
   assert.doesNotMatch(source, /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/i,
     'Never hardcode an employee GUID');
 });
-function harness({ config = {}, fetcher, missingToken = false, finance = true, signedIn = true,
+function harness({ config = {}, fetcher, missingToken = false, finance = true, signedIn = true, source = script,
   origin = 'https://portal.example.test' } = {}) {
   const calls = [];
   const root = { location: { origin }, PC_MODULE_CONFIG: config,
@@ -58,11 +58,11 @@ function harness({ config = {}, fetcher, missingToken = false, finance = true, s
       calls.push({ url, ...options });
       const result = fetcher ? await fetcher(url, options, calls.length) : { status: 200, body: { value: [] } };
       return { status: result.status, ok: result.status >= 200 && result.status < 300,
-        async text() { return result.body === null ? '' : JSON.stringify(result.body); } };
+        async text() { return result.rawBody !== undefined ? result.rawBody : result.body === null ? '' : JSON.stringify(result.body); } };
     }
   };
-  vm.runInNewContext(script, { window: root, URL, URLSearchParams, Intl, Number, Object, Array, Set, Promise });
-  return { api: root.PettyCashModules, calls };
+  vm.runInNewContext(source, { window: root, URL, URLSearchParams, Intl, Number, Object, Array, Set, Promise });
+  return { api: root.PettyCashModules, calls, root };
 }
 function row(type, amount, request = null) {
   return { hr_transactiontype: type, hr_amount: amount, _hr_employee_value: employee, _hr_linkedrequest_value: request };
@@ -90,6 +90,22 @@ test('balance reads the entire employee-filtered ledger including later pages', 
   assert.equal(await h.api.readBalance(employee), -200);
   assert.match(decodeURIComponent(h.calls[0].url), new RegExp('_hr_employee_value eq ' + employee));
   assert.equal(h.calls.length, 2);
+});
+
+test('ledger balance is not capped at the first 100 transactions', async () => {
+  const firstPage = Array.from({ length: 100 }, () => row(123140000, 1));
+  const allRows = [...firstPage, row(123140000, 500)];
+  const h = harness({ fetcher(url) {
+    const query = new URL(url, 'https://portal.example.test').searchParams;
+    // Model $top as an overall result limit, not a requested page size.
+    const top = query.get('$top');
+    if (top !== null) return { status: 200, body: { value: allRows.slice(0, Number(top)) } };
+    return { status: 200, body: query.has('$skiptoken') ? { value: allRows.slice(100) }
+      : { value: firstPage, '@odata.nextLink': '/_api/hr_cashtransactions?$skiptoken=page2' } };
+  } });
+  assert.equal(await h.api.readBalance(employee), 600);
+  assert.equal(h.calls.length, 2);
+  assert.equal(new URL(h.calls[0].url, 'https://portal.example.test').searchParams.has('$top'), false);
 });
 test('employee IDs and every ledger row are checked before displaying a balance', async () => {
   const h = harness({ fetcher() { return { status: 200, body: { value: [{ ...row(123140000, 100), _hr_employee_value: other }] } }; } });
@@ -125,16 +141,18 @@ test('cash posting is disabled by default and accepts only given or returned cas
 test('Finance flow uses site-authenticated eventData transport, not direct ledger or balance writes', async () => {
   const h = harness({ config: { financeFlowId: flow, financeSecurityReviewed: true }, fetcher(url, options) {
     assert.equal(url, '/_api/cloudflow/v1.0/trigger/' + flow);
+    assert.equal(options.headers['X-Requested-With'], 'XMLHttpRequest');
     const input = JSON.parse(new URLSearchParams(options.body).get('eventData'));
     assert.equal(input.movement, 'cash_returned');
     assert.equal(input.amount, 100);
     assert.equal(input.employeeId, employee);
     assert.equal(input.postingKey, transaction);
     assert.ok(!('actorId' in input));
-    return { status: 200, body: { status: 'posted', postingKey: input.postingKey, employeeId: employee, transactionId: transaction, balance: -100 } };
+    return { status: 200, body: { status: 'posted', postingKey: input.postingKey, employeeId: employee, transactionId: transaction } };
   } });
   const result = await h.api.postMovement({ employeeId: employee, movement: 'cash_returned', amount: 100, notes: 'Returned cash' });
-  assert.equal(result.balance, -100);
+  assert.equal(result.transactionId, transaction);
+  assert.equal(Object.hasOwn(result, 'balance'), false);
   assert.equal(h.api.pendingPostingKey, null);
   assert.equal(h.calls.length, 1);
 });
@@ -152,6 +170,24 @@ test('missing CSRF token prevents cash posting', async () => {
   const h = harness({ missingToken: true, config: { financeFlowId: flow, financeSecurityReviewed: true } });
   await assert.rejects(h.api.postMovement({ employeeId: employee, movement: 'cash_given', amount: 1, notes: 'Advance' }), /session/);
   assert.equal(h.calls.length, 0);
+});
+
+test('non-JSON posting responses preserve HTTP status and operation key without guessing sign-in or leaking HTML', async () => {
+  for (const status of [500, 200]) {
+    const h = harness({ config: { financeFlowId: flow, financeSecurityReviewed: true }, fetcher() {
+      return { status, rawBody: '<html><body>session-secret <script>private()</script></body></html>' };
+    } });
+    const value = { employeeId: employee, movement: 'cash_given', amount: 100, notes: 'Advance' };
+    await assert.rejects(h.api.postMovement(value), error => {
+      assert.equal(error.status, status);
+      assert.match(error.message, new RegExp('HTTP ' + status));
+      assert.match(error.message, /flow run history/);
+      assert.doesNotMatch(error.message, /sign-in session|session-secret|<html>|private\(/);
+      return true;
+    });
+    assert.equal(h.api.pendingPostingKey, transaction);
+    assert.equal(h.calls.length, 1, 'An error must not trigger an automatic cash retry');
+  }
 });
 test('Finance page and canonical configuration match and keep posting disabled by default', () => {
   const example = fs.readFileSync('pettycash-module-config.example.js', 'utf8');
@@ -213,13 +249,79 @@ test('Finance employee list requires active records and usernames, and follows a
 });
 
 test('malformed posting confirmations never clear the operation key or claim success', async () => {
-  for (const change of [{ balance: '100' }, { balance: 0.001 }, { employeeId: other }, { transactionId: 'invalid' }, { postingKey: other }]) {
+  for (const change of [{ status: 'unconfirmed' }, { status: 'conflict' }, { employeeId: other }, { transactionId: 'invalid' },
+    { transactionId: undefined }, { postingKey: other }]) {
     const h = harness({ config: { financeFlowId: flow, financeSecurityReviewed: true }, fetcher() {
       return { status: 200, body: { status: 'posted', postingKey: transaction, employeeId: employee, transactionId: transaction, balance: 100, ...change } };
     } });
     await assert.rejects(h.api.postMovement({ employeeId: employee, movement: 'cash_given', amount: 100, notes: 'Advance' }));
     assert.equal(h.api.pendingPostingKey, transaction);
   }
+});
+
+test('confirmed postings ignore legacy balance fields and permit a new movement after confirmation', async () => {
+  for (const balance of [undefined, 0, '100', 0.001, null]) {
+    const h = harness({ config: { financeFlowId: flow, financeSecurityReviewed: true }, fetcher() {
+      return { status: 200, body: { status: 'posted', postingKey: transaction, employeeId: employee, transactionId: transaction, balance } };
+    } });
+    const value = { employeeId: employee, movement: 'cash_given', amount: 100, notes: 'Advance' };
+    const result = await h.api.postMovement(value);
+    assert.equal(Object.hasOwn(result, 'balance'), false, 'Never expose a placeholder as a confirmed balance');
+    assert.equal(h.api.pendingPostingKey, null);
+    await h.api.postMovement({ ...value, amount: 50, notes: 'Separate cash movement' });
+    assert.equal(h.calls.length, 2, 'A confirmed operation does not lock the next draft');
+  }
+});
+
+test('Power Pages lowercase output names confirm the same event and mismatched lowercase keys remain pending', async () => {
+  for (const key of [transaction, other]) {
+    const h = harness({ config: { financeFlowId: flow, financeSecurityReviewed: true }, fetcher() {
+      return { status: 200, body: { status: 'posted', postingkey: key, employeeid: employee, transactionid: transaction, balance: 0 } };
+    } });
+    const operation = h.api.postMovement({ employeeId: employee, movement: 'cash_given', amount: 100, notes: 'Advance' });
+    if (key === transaction) {
+      const result = await operation;
+      assert.equal(result.transactionId, transaction);
+      assert.equal(result.employeeId, employee);
+      assert.equal(h.api.pendingPostingKey, null);
+    } else {
+      await assert.rejects(operation, /did not confirm/);
+      assert.equal(h.api.pendingPostingKey, transaction);
+    }
+  }
+});
+
+test('console transport repair preserves an already pending operation, CSRF and body without sending a request on install', async () => {
+  const oldSource = script.replace(/\r\n/g, '\n').replace(',\n          "X-Requested-With": "XMLHttpRequest"', '')
+    .replace('body[name] ?? body[name.toLowerCase()]', 'body[name]');
+  assert.doesNotMatch(oldSource, /"X-Requested-With": "XMLHttpRequest"/);
+  const h = harness({ source: oldSource, config: { financeFlowId: flow, financeSecurityReviewed: true } });
+  const requests = []; let savedRows = 0;
+  h.root.fetch = async (url, options) => {
+    const headers = new Headers(options.headers);
+    const input = JSON.parse(new URLSearchParams(options.body).get('eventData'));
+    requests.push({ url, input });
+    assert.equal(headers.get('__RequestVerificationToken'), 'token');
+    assert.match(headers.get('Content-Type'), /application\/x-www-form-urlencoded/);
+    if (headers.get('X-Requested-With') !== 'XMLHttpRequest') return new Response('<html>500</html>', { status: 500 });
+    savedRows++;
+    return new Response(JSON.stringify({ status: 'posted', postingkey: input.postingKey,
+      employeeid: input.employeeId, transactionid: transaction, balance: 0 }), { status: 200 });
+  };
+  const value = { employeeId: employee, movement: 'cash_given', amount: 100, notes: 'Original pending movement' };
+  await assert.rejects(h.api.postMovement(value), /HTTP 500/);
+  assert.equal(savedRows, 0);
+  const pendingKey = h.api.pendingPostingKey;
+  const repair = fs.readFileSync('scripts/repair_open_finance_page.js', 'utf8');
+  vm.runInNewContext(repair, { window: h.root, Headers, Response });
+  vm.runInNewContext(repair, { window: h.root, Headers, Response });
+  assert.equal(requests.length, 1, 'Installing or repeating the repair never submits cash');
+  assert.equal(h.api.pendingPostingKey, pendingKey);
+  const result = await h.api.postMovement(value);
+  assert.equal(result.transactionId, transaction);
+  assert.equal(h.api.pendingPostingKey, null);
+  assert.equal(savedRows, 1);
+  assert.deepEqual(requests[0], requests[1], 'Retry must retain the exact original endpoint, values and key');
 });
 
 test('Finance cash posting refuses insecure origins and keeps direct table writes unavailable', async () => {

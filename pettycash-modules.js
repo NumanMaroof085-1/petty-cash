@@ -5,7 +5,7 @@
 (function (root) {
   "use strict";
   // Repeated template includes must not reset an in-flight movement or bind twice.
-  if (root.PettyCashModules && root.PettyCashModules.version === "finance-ledger-v2") return;
+  if (root.PettyCashModules && root.PettyCashModules.version === "finance-posting-v3") return;
   const config = Object.assign({ financeFlowId: "", financeSecurityReviewed: false,
     requestStatus: { Pending: 123140000, Approved: 123140001, Rejected: 123140002 }
   }, root.PC_MODULE_CONFIG || {});
@@ -42,9 +42,14 @@
     const text = await response.text();
     let body;
     try { body = text ? JSON.parse(text) : null; }
-    catch (_) { throw new Error("The server returned an unexpected response. Check your sign-in session."); }
+    catch (_) {
+      const error = new Error("The server returned a non-JSON response (HTTP " + response.status + ")." +
+        (parsed.pathname.startsWith("/_api/cloudflow/") ? " Check the flow run history before retrying." : " Check the API response."));
+      error.status = response.status;
+      throw error;
+    }
     if (!response.ok) {
-      const error = new Error(body && body.error && body.error.message || "The API request failed.");
+      const error = new Error(body && body.error && body.error.message || "The API request failed (HTTP " + response.status + ").");
       error.status = response.status;
       throw error;
     }
@@ -93,7 +98,7 @@
     const rows = await collection("/_api/hr_cashtransactions?$select=" +
       "hr_transactionreference,hr_transactiontype,hr_amount,hr_notespurpose,_hr_employee_value,_hr_linkedrequest_value,createdon" +
       "&$filter=" + encodeURIComponent("_hr_employee_value eq " + id) +
-      "&$orderby=createdon asc,hr_transactionreference asc&$top=100", "hr_cashtransactions");
+      "&$orderby=createdon asc,hr_transactionreference asc", "hr_cashtransactions");
     if (rows.some(row => guid(row._hr_employee_value) !== id)) throw new Error("Another employee's cash transaction was returned. Check table permissions.");
     return rows;
   }
@@ -184,17 +189,20 @@
     try {
       // Power Pages' documented trigger transport uses form-encoded eventData.
       const result = await api("/_api/cloudflow/v1.0/trigger/" + guid(config.financeFlowId), {
-        method: "POST", headers: { "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8" },
+        method: "POST", headers: { "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+          "X-Requested-With": "XMLHttpRequest" },
         body: new URLSearchParams({ eventData: JSON.stringify({ ...input, postingKey }) }).toString()
       });
       const body = result.body;
-      if (result.status !== 200 || !body || body.status !== "posted" || body.postingKey !== postingKey ||
-          guid(body.employeeId) !== input.employeeId || !guidPattern.test(body.transactionId) ||
-          !isMoney(body.balance)) {
+      // Power Pages may lowercase the response output names on the wire.
+      const field = name => body && (body[name] ?? body[name.toLowerCase()]);
+      if (result.status !== 200 || !body || field("status") !== "posted" || field("postingKey") !== postingKey ||
+          guid(field("employeeId")) !== input.employeeId || !guidPattern.test(field("transactionId"))) {
         throw new Error("The flow did not confirm a completed posting. Check posting key " + postingKey + ".");
       }
       pendingMovement = null;
-      return body;
+      // Balance is read separately. Ignore legacy/placeholder response balances.
+      return { status: "posted", postingKey, employeeId: input.employeeId, transactionId: guid(field("transactionId")) };
     } catch (error) {
       // Keep the same key after EVERY failure. A retry must be idempotent on the server.
       error.message += " Keep this page open. Posting key: " + postingKey + ".";
@@ -249,6 +257,10 @@
     const submit = get("pcPostCash"), fields = get("pcFinanceFields"), refresh = get("pcRefreshEmployee");
     const amount = get("pcCashAmount"), movement = get("pcMovement"), notes = get("pcCashReason"), confirm = get("pcConfirmCash");
     let people = [], currentBalance = null, loadedId = "", loading = false, saving = false, generation = 0;
+    let lastSavedMovement = null;
+    function savedMessage(suffix) {
+      message.textContent = "Cash movement recorded. Transaction ID: " + lastSavedMovement.transactionId + ". " + suffix;
+    }
     function value() { return { employeeId: select.value, movement: movement.value, amount: amount.value, notes: notes.value }; }
     function meaning(balance) {
       return balance > 0 ? "This employee holds company cash." : balance < 0 ? "The company owes this employee " + money(Math.abs(balance)) + "." : "No company cash held or reimbursement outstanding for this employee.";
@@ -286,6 +298,7 @@
       get("pcFinanceBalanceMeaning").textContent = "Choose an employee to view their cash ledger.";
       historyMessage(requestedId ? "Loading ledger…" : "Choose an employee."); update();
       if (!requestedId) return;
+      if (!pendingMovement && lastSavedMovement && lastSavedMovement.employeeId === requestedId) savedMessage("Refreshing balance and history…");
       try {
         const rows = await cashTransactions(requestedId), balance = sumTransactions(rows);
         if (requestGeneration !== generation || select.value !== requestedId) return;
@@ -301,10 +314,14 @@
           body.appendChild(row);
         }
         if (!rows.length) historyMessage("No cash transactions: balance starts at zero.");
+        if (!pendingMovement && lastSavedMovement && lastSavedMovement.employeeId === requestedId) savedMessage("Balance and history refreshed.");
       } catch (error) {
         if (requestGeneration !== generation || select.value !== requestedId) return;
         get("pcEmployeeBalance").textContent = "Unavailable"; get("pcFinanceBalanceMeaning").textContent = error.message;
         historyMessage("The ledger could not be loaded. No partial balance is displayed.");
+        if (!pendingMovement && lastSavedMovement && lastSavedMovement.employeeId === requestedId) {
+          savedMessage("Balance unavailable. Use Refresh employee balance; this movement is already saved.");
+        }
       } finally { if (requestGeneration === generation) { loading = false; update(); } }
     }
     try {
@@ -336,11 +353,9 @@
         try {
           const operation = postMovement(value()); update();
           const result = await operation;
-          currentBalance = result.balance; loadedId = result.employeeId;
-          get("pcEmployeeBalance").textContent = money(result.balance); get("pcFinanceBalanceMeaning").textContent = meaning(result.balance);
-          message.textContent = "Cash movement recorded. Transaction reference: " + result.transactionId + ". Balance confirmed by the backend; refresh for the latest ledger rows.";
-          historyMessage("Movement confirmed. Refresh employee balance to reload the ledger history.");
+          lastSavedMovement = result;
           amount.value = ""; notes.value = ""; confirm.checked = false;
+          await loadLedger();
         } catch (error) { message.textContent = error.message; }
         finally { saving = false; update(); }
       };
@@ -352,7 +367,7 @@
     }
   }
   root.PettyCashModules = Object.freeze({ readBalance, readSavedBalance, cashTransactions, sumTransactions, myRequests, employees, balanceMeaning, money,
-    version: "finance-ledger-v2", validateMovement, projectedBalance, postMovement, flowReady,
+    version: "finance-posting-v3", validateMovement, projectedBalance, postMovement, flowReady,
     get pendingPostingKey() { return pendingMovement && pendingMovement.postingKey; } });
   function initialize() {
     const page = root.document.querySelector("[data-pc-page]");

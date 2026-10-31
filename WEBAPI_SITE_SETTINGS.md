@@ -1,10 +1,11 @@
 # Power Pages Web API field settings
 
-Finance flow build guide: FINANCE_FLOW_SETUP.md proposes a backend-only Recorded
-By Contact lookup to identify the Finance operator. This does not require a new
+Finance flow build guide: the user supplied hr_recordedby as the backend-only
+Recorded By Contact lookup and hr_cashtransactionid as the primary GUID. This does not require a new
 portal API field, table privilege or site setting. Keep the posting key/operator
 lookup out of the browser allowlist; use the Dataverse flow connection to save
-them. The lookup is not yet reported created, and the flow is not deployed here.
+them. Names are user-supplied; connector behavior and financial flow execution
+remain unverified. No table/flow was created by the assistant.
 
 2026-10-29 Finance page: use FINANCE_SETUP.md for the new Petty Cash Finance-only
 Global Contact/ledger READ grants. The existing public Contact union includes
