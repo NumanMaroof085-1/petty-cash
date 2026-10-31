@@ -16,7 +16,7 @@ const ledgerRow = (employeeId, type, amount, reference = 'CT-TEST') => ({ _hr_em
   const output = path.join(root, 'documentation', 'qa', 'finance'); fs.mkdirSync(output, { recursive: true });
   const browser = await chromium.launch({ headless: true, executablePath: 'C:/Program Files/Google/Chrome/Application/chrome.exe' });
   try {
-    for (const mode of ['readonly', 'retry', 'posted', 'refresh-failed', 'invalid-refresh', 'employee', 'admin-only', 'accounts-only', 'signed-out', 'bad-ledger', 'race']) {
+    for (const mode of ['readonly', 'retry', 'posted', 'refresh-failed', 'invalid-refresh', 'self-posting', 'self-posting-legacy', 'employee', 'admin-only', 'accounts-only', 'signed-out', 'bad-ledger', 'race']) {
       const page = await browser.newPage({ viewport: { width: 1180, height: 1000 } });
       const calls = [], errors = [], posted = new Map(); let firstUnconfirmed = false, nextUnconfirmed = false, firstA = true, refreshFailureSent = false;
       let releaseFirst, firstStartedResolve, firstDoneResolve;
@@ -26,7 +26,8 @@ const ledgerRow = (employeeId, type, amount, reference = 'CT-TEST') => ({ _hr_em
       const allowed = !['employee', 'admin-only', 'accounts-only', 'signed-out'].includes(mode);
       const configured = mode !== 'readonly';
       const ledgers = new Map([[employee, [ledgerRow(employee, 123140000, 1000), ledgerRow(employee, 123140001, 1200, 'CT-EXPENSE')]],
-        [other, [ledgerRow(other, 123140000, 500, 'CT-OTHER')]]]);
+        [other, [ledgerRow(other, 123140000, 500, 'CT-OTHER')]],
+        [actor, [ledgerRow(actor, 123140000, 250, 'CT-SELF')]]]);
       page.on('pageerror', error => errors.push(error.message));
       const context = fs.readFileSync(path.join(root, 'Petty Cash User Context.html'), 'utf8')
         .replace(/\{\{ user.id \| escape \}\}/g, mode === 'signed-out' ? '' : actor)
@@ -37,6 +38,7 @@ const ledgerRow = (employeeId, type, amount, reference = 'CT-TEST') => ({ _hr_em
         .replace("{% if user.roles contains 'Petty Cash Admin' %}true{% else %}false{% endif %}", mode === 'admin-only' ? 'true' : 'false');
       const helper = fs.readFileSync(path.join(root, 'pettycash-modules.js'), 'utf8');
       const fragment = fs.readFileSync(path.join(root, 'Finance Cash Management.html'), 'utf8')
+        .replace(/    <p id="pcFinanceSelfPostingNotice"[^\n]*\n/, mode === 'self-posting-legacy' ? '' : '$&')
         // Reproduce Studio's independent inline hiding and repeated template include.
         .replace('id="pcFinanceForm" hidden', 'id="pcFinanceForm" hidden style="display:none"')
         .replace('id="pcFinanceHistory"', 'style="display:none" id="pcFinanceHistory"')
@@ -52,7 +54,8 @@ const ledgerRow = (employeeId, type, amount, reference = 'CT-TEST') => ({ _hr_em
         calls.push({ method: request.method(), url: url.href });
         if (url.pathname === '/_api/contacts') return route.fulfill({ json: { value: [
           { contactid: employee, fullname: 'Same name', adx_identity_username: 'employee.one', statecode: 0 },
-          { contactid: other, fullname: 'Same name', adx_identity_username: 'employee.two', statecode: 0 }] } });
+          { contactid: other, fullname: 'Same name', adx_identity_username: 'employee.two', statecode: 0 },
+          { contactid: actor, fullname: 'Finance test user', adx_identity_username: 'finance.user', statecode: 0 }] } });
         if (url.pathname === '/_api/hr_cashtransactions') {
           const id = url.searchParams.get('$filter').split(' ').at(-1);
           if (posted.size && !refreshFailureSent && ['refresh-failed', 'invalid-refresh'].includes(mode)) {
@@ -94,6 +97,41 @@ const ledgerRow = (employeeId, type, amount, reference = 'CT-TEST') => ({ _hr_em
         assert.equal(calls.filter(call => new URL(call.url).pathname === '/_api/contacts').length, 1,
           'Duplicate helper includes must not initialize the directory twice');
         assert.match(await page.locator('#pcEmployee').textContent(), /employee.one/);
+        if (mode.startsWith('self-posting')) {
+          await page.locator('#pcEmployee').selectOption(actor);
+          await page.waitForFunction(() => document.querySelector('#pcEmployeeBalance').textContent.includes('250'));
+          assert.equal(await page.locator('#pcFinanceSelfPostingNotice').isVisible(), true);
+          assert.equal(await page.locator('#pcFinanceFields').evaluate(fieldset => fieldset.disabled), true);
+          assert.equal(await page.locator('#pcCashAmount').isDisabled(), true);
+          assert.equal(await page.locator('#pcPostCash').isDisabled(), true);
+          assert.match(await page.locator('#pcFinanceHistoryBody').textContent(), /CT-SELF/);
+          assert.equal(await page.locator('#pcEmployee').isDisabled(), false, 'Own history stays viewable and another employee can be selected');
+          for (const movement of ['cash_given', 'cash_returned']) {
+            const error = await page.evaluate(async ({ actor, movement }) => {
+              try {
+                await window.PettyCashModules.postMovement({ employeeId: actor, movement, amount: 100, notes: 'Attempt via helper' });
+                return 'Unexpectedly accepted';
+              } catch (error) { return error.message; }
+            }, { actor, movement });
+            assert.match(error, /Another Finance user/);
+          }
+          assert.equal(await page.evaluate(() => window.PettyCashModules.pendingPostingKey), null);
+          await page.locator('#pcRefreshEmployee').click();
+          await page.waitForFunction(() => !document.querySelector('#pcRefreshEmployee').disabled);
+          await page.addScriptTag({ content: helper });
+          assert.equal(await page.locator('#pcFinanceSelfPostingNotice').count(), 1);
+          assert.ok(calls.every(call => call.method === 'GET'), 'Self viewing/blocked posting must never write');
+          await page.locator('#pcEmployee').selectOption(employee);
+          await page.waitForFunction(() => document.querySelector('#pcEmployeeBalance').textContent.includes('200'));
+          assert.equal(await page.locator('#pcFinanceSelfPostingNotice').isVisible(), false);
+          assert.equal(await page.locator('#pcFinanceFields').evaluate(fieldset => fieldset.disabled), false);
+          assert.equal(await page.locator('#pcCashAmount').isDisabled(), false);
+          await page.locator('#pcCashAmount').fill('50'); await page.locator('#pcCashReason').fill('Cash for another employee');
+          await page.locator('#pcConfirmCash').check();
+          assert.equal(await page.locator('#pcPostCash').isDisabled(), false);
+          assert.deepEqual(errors, []); await page.close(); console.log('Verified Finance: ' + mode + ' (mock APIs only).');
+          continue;
+        }
         await page.locator('#pcEmployee').selectOption(employee);
         if (mode === 'race') {
           await firstStarted; await page.locator('#pcEmployee').selectOption(other);

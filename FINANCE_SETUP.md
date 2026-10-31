@@ -1,10 +1,34 @@
 # Finance cash management
 
+Latest 2026-10-31 report: user added the Finance self-posting condition and
+published the new script. Record installation as user-reported; native denial
+tests remain unverified. User also confirms approval-created cash rows lack
+posting keys. MANAGER_APPROVAL_FLOW.md now recommends stable expense-<request
+GUID> keys, same-request expense lookup/compare, safe legacy backfill, and
+avoiding repeated incremental Contact-summary changes. Balance display itself
+uses type/amount/employee and duplicate expense Linked Request, not posting keys.
+
+2026-10-31 update: user reports the latest pre-v4 shared script published and
+the separate manager approval flow created. Screenshot inventory and limits
+are in [MANAGER_APPROVAL_FLOW.md](MANAGER_APPROVAL_FLOW.md). Approval-trigger
+readiness, deterministic expense posting key/currency, loop cardinality and
+Contact summary consistency are not independently verified.
+
+The newly requested self-posting rule is implemented locally in
+finance-posting-v4. Own history/Refresh remain available; both own Add and own
+Returned are blocked in controls and the helper. Old Finance HTML receives
+the explanatory notice dynamically, so preserve live config and replace only
+the existing shared template script. User now reports adding the native
+Is_Self_Posting condition from [FINANCE_SELF_POSTING_SETUP.md](FINANCE_SELF_POSTING_SETUP.md).
+Its installation is reported complete; native denial checks are pending. No
+role/column/site-setting changes. Local checks: 132 unit tests, 13 Finance
+browser states and 4 shared-page states pass (mock APIs only).
+
 See [FINANCE_FLOWCHART.md](FINANCE_FLOWCHART.md) for the current flowchart,
 action-name map, balance explanation and completion/handoff checklist.
-Core functionality is user-reported working. Self-posting control, latest
-source publication and final live checks remain separate from beginning the
-manager approval module; do not treat the whole Finance rollout as signed off.
+Core functionality is user-reported working. Self-posting condition and v4
+publication are user-reported installed; final live checks remain pending. The user has created
+the separate manager approval flow. Finance rollout is not signed off yet.
 
 Current balance status (2026-10-30): user confirms the Finance API returns all
 three transactions and a subsequent hard refresh restores correct history and
@@ -56,7 +80,7 @@ calculation variables. Keep native
 Finance role/caller and input checks, unique posting key and saved-event
 comparison. No tenant rows, columns or permissions are deleted.
 The old full-ledger-in-flow recipe is superseded for this work. Local helper
-finance-posting-v3 accepts a matching posting confirmation independently of the
+finance-posting-v4 accepts a matching posting confirmation independently of the
 balance field, clears the completed draft, then refreshes balance/history from
 the ledger. A failed refresh preserves the saved confirmation and offers GET
 refresh, never cash resubmission. The legacy Number balance output stays 0 only
@@ -102,7 +126,7 @@ one employee selector/status/form. The form has hidden=false while its inline
 style still has display:none. This confirms independent inline hiding; it does
 not establish where the second rendered section originates.
 
-The current helper version is finance-posting-v3. After the Finance role check,
+The current helper version is finance-posting-v4. After the Finance role check,
 it explicitly displays the Finance form and history, leaving posting gates
 unchanged. A repeated include of the same version preserves the existing helper,
 handlers and pending posting key instead of initializing again.
@@ -115,7 +139,7 @@ If a second heading remains, inspect the page's other content blocks and assigne
 Web Template for a second Finance fragment/include; the duplicate's exact source
 has not been inspected. Do not delete the page or change permissions to fix this.
 
-After publishing and reloading, verify version finance-posting-v3, one Finance
+After publishing and reloading, verify version finance-posting-v4, one Finance
 section, one employee selector and a visible form/history. The employee directory
 and balance/history should work; cash posting remains disabled until the secured
 flow is connected and tested. These local changes do not enable financial writes.
@@ -245,7 +269,7 @@ closing tag. Do not use Markdown code fences, escaped &lt;script&gt;, a visual
 text editor or append a duplicate copy. This is a script-publication issue,
 not proof that Finance permissions or ledger reads work. After save/sync/reload,
 the visible code should disappear and window.PettyCashModules?.version should
-return finance-posting-v3. No additional permission or posting enablement is
+return finance-posting-v4. No additional permission or posting enablement is
 needed to correct the wrapper. Further live read checks remain pending.
 
 1. Update **Petty Cash User Context** Web Template Source with complete
@@ -254,7 +278,7 @@ needed to correct the wrapper. Further live read checks remain pending.
    signed-in IDs/Admin role inputs are preserved. pcAccountsAllowed remains a
    legacy marker only and never authorizes Finance.
 2. Update **Petty Cash Modules** Source with one script tag, complete
-   pettycash-modules.js and closing script tag. Module version finance-posting-v3.
+   pettycash-modules.js and closing script tag. Module version finance-posting-v4.
 3. Publish complete **Finance Cash Management.html** as that page's HTML. It
    includes User Context, then its embedded configuration, then Modules exactly
    once. Do not put user-role Liquid into editable attribute values or load the
@@ -275,7 +299,7 @@ Old accountsFlowId/accountsSecurityReviewed no longer enable posting. Do not
 replace the blank value with a public/signed HTTP flow URL. Use only the GUID of
 the site-associated Power Pages flow, before the Modules include.
 
-## 4. Posting backend: required next deployment stage, not implemented here
+## 4. Posting backend contract and remaining checks
 
 Use [FINANCE_FLOW_SETUP.md](FINANCE_FLOW_SETUP.md) for the complete manual build
 recipe. The user supplied Cash Transaction primary GUID hr_cashtransactionid

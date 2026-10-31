@@ -1,5 +1,12 @@
 # Balance and employee portal module setup
 
+2026-10-31: finance-posting-v4 now blocks own-account Add/Returned locally while
+retaining own balance/history. User reports installing the native condition from
+FINANCE_SELF_POSTING_SETUP.md; native denial testing is not yet confirmed. User
+reports creating the approval flow; screenshot-derived configuration is in
+MANAGER_APPROVAL_FLOW.md. Its Contact summary update is not used by website
+ledger calculations. No new balance columns/tables or permissions added.
+
 ## Current Finance module (2026-10-30)
 
 The user chose the NEW **Petty Cash Finance** web role. Use FINANCE_SETUP.md and
@@ -8,7 +15,7 @@ posting contract. The older Accounts page, Petty Cash Accounts authorization
 and accountsFlowId/accountsSecurityReviewed instructions below are historical,
 superseded by financeFlowId/financeSecurityReviewed and Finance-only access.
 No flow, role, permission or cash movement was deployed by the assistant.
-The local Finance helper is finance-posting-v3: the flow confirms a saved
+The local Finance helper is finance-posting-v4: the flow confirms a saved
 movement, then the website refreshes its existing ledger balance/history.
 The flow no longer scans all historical rows for a balance. Its existing
 Number balance output remains a schema-compatibility placeholder and is never

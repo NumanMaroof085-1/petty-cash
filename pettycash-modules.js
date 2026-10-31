@@ -5,11 +5,12 @@
 (function (root) {
   "use strict";
   // Repeated template includes must not reset an in-flight movement or bind twice.
-  if (root.PettyCashModules && root.PettyCashModules.version === "finance-posting-v3") return;
+  if (root.PettyCashModules && root.PettyCashModules.version === "finance-posting-v4") return;
   const config = Object.assign({ financeFlowId: "", financeSecurityReviewed: false,
     requestStatus: { Pending: 123140000, Approved: 123140001, Rejected: 123140002 }
   }, root.PC_MODULE_CONFIG || {});
   const guidPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+  const selfPostingMessage = "Another Finance user must record cash movements for your account. You can still view your balance and history.";
   function guid(value) {
     const clean = String(value || "").replace(/[{}]/g, "").trim().toLowerCase();
     if (!guidPattern.test(clean)) throw new Error("A valid employee or record ID is required.");
@@ -173,10 +174,11 @@
   function flowReady() { return config.financeSecurityReviewed === true && guidPattern.test(config.financeFlowId); }
   async function postMovement(value) {
     if (!flowReady()) throw new Error("Cash posting is disabled until the secured Finance flow is configured and reviewed.");
-    requireFinance();
+    const actorId = requireFinance();
     if (new URL(root.location.origin).protocol !== "https:") throw new Error("Finance posting requires HTTPS.");
     if (posting) throw new Error("A cash movement is already being submitted.");
     const input = validateMovement(value), fingerprint = JSON.stringify(input);
+    if (input.employeeId === actorId) throw new Error(selfPostingMessage);
     if (pendingMovement && pendingMovement.fingerprint !== fingerprint) {
       throw new Error("The previous cash movement has an unconfirmed result. Keep its details unchanged and check its posting key before starting another.");
     }
@@ -257,6 +259,7 @@
     const submit = get("pcPostCash"), fields = get("pcFinanceFields"), refresh = get("pcRefreshEmployee");
     const amount = get("pcCashAmount"), movement = get("pcMovement"), notes = get("pcCashReason"), confirm = get("pcConfirmCash");
     let people = [], currentBalance = null, loadedId = "", loading = false, saving = false, generation = 0;
+    let actorId = "", selfNotice = get("pcFinanceSelfPostingNotice");
     let lastSavedMovement = null;
     function savedMessage(suffix) {
       message.textContent = "Cash movement recorded. Transaction ID: " + lastSavedMovement.transactionId + ". " + suffix;
@@ -271,18 +274,20 @@
     }
     function update() {
       const pending = Boolean(pendingMovement), ready = flowReady();
+      const selfSelected = Boolean(actorId) && select.value === actorId;
       const known = loadedId === select.value && currentBalance !== null && people.some(person => guid(person.contactid) === select.value);
-      fields.disabled = !ready || !known || loading || saving || pending;
+      fields.disabled = !ready || !known || loading || saving || pending || selfSelected;
+      if (selfNotice) selfNotice.hidden = !selfSelected;
       select.disabled = saving || pending;
       refresh.disabled = !select.value || loading || saving;
       let valid = false;
       try { validateMovement(value()); valid = true; } catch (_) { /* Incomplete draft, not a posting error. */ }
-      submit.disabled = !ready || saving || loading || !known || (!pending && (!valid || !confirm.checked));
+      submit.disabled = !ready || saving || loading || !known || selfSelected || (!pending && (!valid || !confirm.checked));
       submit.textContent = pending ? "Retry same cash movement" : "Record cash movement";
       get("pcFinancePostingReference").hidden = !pending;
       get("pcFinancePostingKey").textContent = pending ? pendingMovement.postingKey : "";
       get("pcMovementImpact").textContent = "—"; get("pcProjectedBalance").textContent = "—";
-      if (known && !pending) {
+      if (known && !pending && !selfSelected) {
         try {
           const projected = projectedBalance(currentBalance, movement.value, amount.value);
           get("pcMovementImpact").textContent = (projected.change > 0 ? "+" : "−") + money(Math.abs(projected.change));
@@ -325,8 +330,16 @@
       } finally { if (requestGeneration === generation) { loading = false; update(); } }
     }
     try {
-      requireFinance();
+      actorId = requireFinance();
       if (!form) throw new Error("Publish the updated Finance Cash Management page HTML.");
+      // Existing published Finance HTML can use the new rule without resetting its configuration.
+      if (!selfNotice) {
+        selfNotice = node("p", selfPostingMessage, "pc-finance-note");
+        selfNotice.id = "pcFinanceSelfPostingNotice";
+        selfNotice.setAttribute("role", "status");
+        selfNotice.hidden = true;
+        form.insertBefore(selfNotice, fields);
+      }
       // Studio may retain inline display:none independently of the hidden attribute.
       // Reveal only these two containers, after the Finance role check above.
       for (const container of [form, get("pcFinanceHistory")]) {
@@ -367,7 +380,7 @@
     }
   }
   root.PettyCashModules = Object.freeze({ readBalance, readSavedBalance, cashTransactions, sumTransactions, myRequests, employees, balanceMeaning, money,
-    version: "finance-posting-v3", validateMovement, projectedBalance, postMovement, flowReady,
+    version: "finance-posting-v4", validateMovement, projectedBalance, postMovement, flowReady,
     get pendingPostingKey() { return pendingMovement && pendingMovement.postingKey; } });
   function initialize() {
     const page = root.document.querySelector("[data-pc-page]");

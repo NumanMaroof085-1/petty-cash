@@ -1,10 +1,18 @@
 # Finance cash movement: current flow
 
-Updated 2026-10-30. This documents the simpler Finance flow built in this
+Updated 2026-10-31. This documents the simpler Finance flow built in this
 conversation, including the frontend work before and after the flow. It is
 not the superseded recipe that calculated the entire ledger inside Power
 Automate. Action names reflect the guided build; no exported tenant definition
 has been independently inspected.
+
+Latest change: frontend finance-posting-v4 blocks both own-account movements;
+user now reports the native Is_Self_Posting condition and new script installed.
+The chart includes that reported branch after Actor_Is_Active Yes, before
+input/create actions. Native self-call denial has not been independently tested. See
+[self-posting setup](FINANCE_SELF_POSTING_SETUP.md) for the exact change.
+The separate manager approval flow has now been user-created; see
+[its screenshot inventory](MANAGER_APPROVAL_FLOW.md).
 
 ## Flowchart
 
@@ -23,6 +31,7 @@ flowchart TD
         Trigger["When Power Pages calls a flow"]
         Employee{"Selected employee exists and is active?"}
         Actor{"Calling Finance Contact exists and is active?"}
+        Self{"Is_Self_Posting: employee is the Finance caller?"}
         Input{"Movement, amount and reason valid?"}
         Key{"Posting-key JSON and length valid?"}
         Rejected["Return rejected and stop"]
@@ -42,7 +51,9 @@ flowchart TD
         Employee -->|No| Rejected
         Employee -->|Yes| Actor
         Actor -->|No| Rejected
-        Actor -->|Yes| Input
+        Actor -->|Yes| Self
+        Self -->|Yes| Rejected
+        Self -->|No| Input
         Input -->|No| Rejected
         Input -->|Yes| Key
         Key -->|No| Rejected
@@ -81,6 +92,7 @@ flowchart TD
 | --- | --- | --- |
 | Caller identity | Trigger User ID into `vActorId`; `Get_Actor`, `Actor_Is_Active` | Use the signed-in operator, rather than a caller ID supplied by the browser. |
 | Employee eligibility | `Get_Employee`, `Employee_Is_Active` | Target an existing active employee. |
+| Self-posting restriction | `Is_Self_Posting`, `Reject_Self_Posting` and Terminate | Reject both own-account movements using native employee/caller Contact IDs. User reports installed; native denial testing remains. |
 | Submitted values | `Input_Movement`, `Input_Amount`, `Input_Notes`, `Basic_Input_Is_Valid`, `Amount_Scaled_Text`, `Amount_Cents`, `Valid_Amount`, `Notes`, `Movement_Type` | Permit only cash given/returned, positive amounts with exact cents and a valid reason. The cents helpers validate the submitted amount, not the whole ledger. |
 | Posting key | `Input_Key`, `Posting_Key`, `Parse_Posting_Key`, `Employee_Id` | Normalize the operation key, validate its JSON/type/length and use the native employee GUID. The parser does not enforce full UUID syntax. |
 | Initial lookup | `Find_Key`, `Is_New_Posting` | Attempt one create only when no existing key is found. |
@@ -128,8 +140,9 @@ Refreshing a balance must not post another cash movement.
 ## Completion and handoff
 
 The core Finance page and simpler cash-movement flow are implemented, and the
-user reports working posting and correct history/balance. This is sufficient
-to begin the manager approval module; it is not final production sign-off.
+user reports working posting and correct history/balance. The manager approval
+flow is now separately user-created. Self-posting guard and v4 publication are
+user-reported installed; controlled verification remains before Finance sign-off.
 
 | Item | Status |
 | --- | --- |
@@ -137,19 +150,21 @@ to begin the manager approval module; it is not final production sign-off.
 | Native Finance flow invocation, validation, create/read-back and response | Guided build completed by user; posting now reported working. Full exported definition not independently audited. |
 | Website computes signed ledger balance separately | Implemented; correct display user-confirmed after hard refresh. |
 | Required AJAX header and lowercase response names | Fixed locally; user reports the flow now runs. Keep the permanent shared template current. |
-| Ledger query no longer limited to first 100 rows | Fixed and tested locally; publication of this latest correction not separately confirmed. |
-| Prevent operator posting to their own account | Proposed, not implemented. User asked about self-increases; recommendation to block both directions still needs a clear policy choice. |
+| Ledger query no longer limited to first 100 rows | Fixed and tested locally; user reports the latest pre-v4 script published on 2026-10-31. New v4 publication remains pending. |
+| Prevent operator posting to their own account | Frontend v4 blocks both directions while preserving own viewing. User reports native Is_Self_Posting condition and new script installed; native denial/no-write checks remain unverified. |
 | Cash Returned, same-key replay and non-Finance denial | Covered in local mocked tests; explicitly verify in the tenant before normal use. Concurrency/uncertain-result scenarios also need live verification. |
-| Manager approval and automatic Expense Approved ledger row | Next module; not implemented by this Finance flow. |
+| Manager approval and automatic Expense Approved ledger row | Separate flow user-created on 2026-10-31; screenshot configuration recorded in MANAGER_APPROVAL_FLOW.md. Full readiness/deduplication/currency/summary behavior not audited. |
 
-Local baseline: 131 unit tests and 11 mocked Finance browser scenarios passed.
-This chart/documentation update changes no code, permissions, flow or data.
+Current local baseline: 132 unit tests, 13 mocked Finance browser scenarios and
+4 shared-page browser states passed. This diagram does not create tenant actions
+or establish server-side self-posting denial.
 
-The manager approval flow should consume complete expense requests, route them
+The user-created manager approval flow should consume complete expense requests, route them
 to the assigned manager, record the decision, and write one linked Expense
 Approved transaction on approval. It should use the same ledger/sign convention
 and prevent duplicate expense posting. Pending/rejected requests must not alter
-the balance. The detailed approval design/build is separate work.
+the balance. The screenshot inventory records the current build and items
+needing verification; no approval-flow edits were performed with the self rule.
 
 ## Related files and references
 

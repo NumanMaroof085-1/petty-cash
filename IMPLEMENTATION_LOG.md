@@ -5,6 +5,83 @@ same change. Record exact files, functionality, schema names, permissions, site
 settings, tests, and deployment state. Never describe a proposed tenant change
 as deployed merely because local code or documentation exists.
 
+## 2026-10-31 Guide existing approved-expense lookup and creation gate
+
+- User asks to implement the first approval recommendation and reports adding
+  a condition before the approval action. MANAGER_APPROVAL_FLOW.md now guides
+  write-time placement in approval outcome True, before/outside For each 1.
+- Add Find_Existing_Expense on Cash Transactions filtered by the triggering
+  request's Linked Request GUID and Expense Approved type 123140001, row count
+  2, relevant comparison columns selected, pagination off. It also catches
+  existing unkeyed expenses.
+- No_Existing_Expense compares length(value) to numeric 0. Yes contains the
+  existing approved For each 1/actions; no approved writes may remain after the
+  shared join. No temporarily terminates Cancelled OUTSIDE a loop pending
+  existing-row verification, rather than blindly declaring success.
+- Stable expense posting key still required for concurrent runs; installation
+  is not reported. Contact-summary action is not assumed removed. Native run,
+  matching existing expense comparison and final behavior remain pending.
+- Microsoft List rows field/filter guidance checked; docs only, no new table,
+  column, frontend, tenant action/write or test execution. Diff checked.
+
+## 2026-10-31 Self-posting installation reported; recommend approval posting keys
+
+- User reports Finance condition and new script installed. Updated self-posting
+  guide/flowchart/setup status accordingly; native denial tests remain unverified.
+- User confirms approval-created cash transactions have no posting keys.
+  Verified source: balance reader does not select posting key; it totals amounts
+  by type and detects duplicate approved expenses using Linked Request.
+- MANAGER_APPROVAL_FLOW.md now recommends setting crec6_postingkey through fx
+  to concat('expense-', toLower(triggerBody()?['hr_pettycashrequestid'])) for
+  the request trigger, reusing the same request-derived key on every replay.
+  Existing Active Text key is shared; Finance's UUID/length-36 parser unchanged.
+- Recommended same-request expense lookup/compare before create to catch old
+  unkeyed rows, and preserving unique-key protection for concurrent runs. Legacy
+  rows still count; backfill existing row only after one-row-per-request review,
+  never recreate/reapprove expenses to fill keys or silently remove duplicates.
+- Flagged that current Contact-summary subtraction occurs before cash insert;
+  duplicate-key failure cannot undo that earlier side effect. Recommend removing
+  the unused incremental summary action or reconciling it separately. No tenant
+  action/data changed. Currency, receipt readiness and exact expressions remain
+  separate verification items.
+- Microsoft alternate-key uniqueness/null behavior and expression references
+  checked. Documentation only; no new code/schema/permission changes or runtime
+  tests. Recommended approval edits are not reported implemented.
+
+## 2026-10-31 Implement Finance self-posting restriction and record approval flow
+
+- User reports the latest pre-v4 script published, shares the separately built
+  manager approval flow and requests self-posting work next. Applied the prior
+  recommended policy to both Add and Cash Returned; own viewing stays allowed.
+- Canonical pettycash-modules.js is finance-posting-v4. UI disables own cash
+  fields/Post and estimates with an explanatory notice; own ledger/history/
+  Refresh and selecting others stay available. postMovement rejects normalized
+  employee/actor equality before nonce/token/POST. No client bypass flag.
+- Finance Cash Management.html contains pcFinanceSelfPostingNotice. Helper
+  creates it on legacy deployed HTML, so a template-only deployment preserves
+  the user's existing live config. Default local gates stay blank/false.
+- Added FINANCE_SELF_POSTING_SETUP.md: one native Is_Self_Posting condition at
+  the start of Actor_Is_Active Yes; cloned early rejected response uses trigger
+  tokens (later Compose outputs unavailable), Terminate in Yes, No empty,
+  existing validation below whole condition. This server step is instructed,
+  not deployed/verified. No new table/column/role/site setting.
+- Tests pass: all 132 unit tests, 13 mocked Finance browser states and 4 shared
+  pages. Covers both self directions through helper, own read/refresh, switching
+  to another employee, legacy HTML, repeated includes and existing retries.
+  Corrected the initial test's fieldset isDisabled matcher to inspect the actual
+  disabled property and child input; production behavior was already correct.
+- Added MANAGER_APPROVAL_FLOW.md from user screenshots: manager/request/employee
+  reads, receipt download/Compose/approval, approved status + summary update +
+  Expense Approved transaction, rejected status. Six visible transaction fields
+  recorded; expressions, currency/key, trigger details and runtime are unverified.
+  Highlighted request-header-before-lines/receipt readiness, one expense per
+  request, stable dedupe/currency and summary consistency as later review items.
+  No user approval actions deleted/rebuilt; website still uses ledger only.
+- Updated FINANCE_FLOWCHART.md, FINANCE_FLOW_SETUP.md, FINANCE_SETUP.md,
+  BALANCE_MODULE_SETUP.md and README.md. Frontend/guide completion is distinct
+  from pending v4 deployment/native self-denial checks. No tenant writes by
+  assistant, no messages/emails sent or financial movements executed.
+
 ## 2026-10-30 Document current Finance flowchart and manager handoff
 
 - User requests a flowchart for understanding and asks whether Finance is

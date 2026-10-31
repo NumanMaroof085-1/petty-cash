@@ -1,5 +1,39 @@
 # Finance cash movement flow setup
 
+Latest 2026-10-31 report: user installed Is_Self_Posting and the new shared
+script. Native self-denial tests are not independently verified. Approval
+posting-key recommendations are in MANAGER_APPROVAL_FLOW.md; no Finance parser
+or frontend change is required for the approval flow's stable expense keys.
+
+## 2026-10-31: self-posting restriction implementation and approval-flow update
+
+User reports the latest pre-v4 script published and provides screenshots of
+their separately built manager approval flow. See MANAGER_APPROVAL_FLOW.md for
+the observed actions/fields and remaining verification; no approval actions
+are changed here. It updates a Contact summary and adds Expense Approved
+history, but the website still derives balances from Cash Transactions.
+
+The requested next task is implemented locally in finance-posting-v4: own
+balance/history remain viewable, while BOTH Add and Cash Returned controls and
+direct postMovement calls reject own-account movements before creating a key
+or sending a POST. Another employee can still be selected and posted normally.
+See [FINANCE_SELF_POSTING_SETUP.md](FINANCE_SELF_POSTING_SETUP.md) for the exact
+one-condition server change and deployment. The frontend alone is not security.
+
+Required manual server step: in Actor_Is_Active Yes, BEFORE Input_Movement,
+insert Is_Self_Posting comparing native Get_Employee.contactid against native
+Get_Actor.contactid. Yes: clone an EARLY six-output rejection using trigger
+postingKey/employeeId tokens, then Terminate Succeeded. No: empty. Existing
+validation/create/recovery continues below the whole condition. Do not refer
+to later Posting_Key/Employee_Id Compose outputs from this early rejection.
+
+Publish the full v4 shared script in the existing template, preserving live
+Finance config; old HTML gets the notice dynamically. Canonical Finance HTML
+also includes it but need not replace/reset the working live page. No new
+columns/roles/site settings, Contact balance writes or approval-flow edits.
+132 unit tests, 13 mocked Finance browser states and 4 shared-page states pass.
+Server condition/deployment/native self denial remain user/manual and unverified.
+
 For the current simpler flow, start with [FINANCE_FLOWCHART.md](FINANCE_FLOWCHART.md).
 It separates the flow's save/confirm work from the website's balance calculation
 and lists the remaining Finance controls/tests before production sign-off.

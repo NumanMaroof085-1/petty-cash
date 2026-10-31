@@ -172,6 +172,16 @@ test('missing CSRF token prevents cash posting', async () => {
   assert.equal(h.calls.length, 0);
 });
 
+test('Finance users cannot post either direction to themselves, even through the helper directly', async () => {
+  const h = harness({ config: { financeFlowId: flow, financeSecurityReviewed: true } });
+  for (const movement of ['cash_given', 'cash_returned']) {
+    await assert.rejects(h.api.postMovement({ employeeId: '{' + other.toUpperCase() + '}', movement,
+      amount: 100, notes: 'Own account movement' }), /Another Finance user/);
+    assert.equal(h.api.pendingPostingKey, null, 'A blocked self movement must not create a pending operation');
+    assert.equal(h.calls.length, 0, 'Self posting must be rejected before any API call');
+  }
+});
+
 test('non-JSON posting responses preserve HTTP status and operation key without guessing sign-in or leaking HTML', async () => {
   for (const status of [500, 200]) {
     const h = harness({ config: { financeFlowId: flow, financeSecurityReviewed: true }, fetcher() {
