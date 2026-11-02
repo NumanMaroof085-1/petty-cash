@@ -1,0 +1,51 @@
+<!-- Existing Footer Web Template. Editable content and locale accessibility links retained. -->
+<footer id="pcSiteFooter" role="contentinfo" class="footer">
+  <div class="footer-bottom d-print-none">
+    <div class="container pc-footer-inner">
+          <div class="pc-footer-copy">
+              {% editable snippets 'Footer' type: 'html' %}
+          </div>
+          {% substitution %}
+          {% assign pc_footer_home = sitemarkers['Home'].url | default: '/' %}
+          <nav class="pc-footer-links" aria-label="Footer navigation"><a href="{{ pc_footer_home | escape }}">Home</a>{% if user %}<a href="/My-Requests/">My Requests</a>{% endif %}</nav>
+          {% endsubstitution %}
+        <div id="accessibilityLinkContainer"></div>
+    </div>
+  </div>
+</footer>
+
+<script type="text/javascript">
+  window.addEventListener('load', function() {
+    const accessibilityLinkContainer = document.getElementById("accessibilityLinkContainer");
+    switch(window.navigator.language) {
+      case "fr":
+        if (accessibilityLinkContainer != null) {
+          const accessibilityText="Accessibilité : partiellement conforme";
+          const frenchAccessibilityAnchor = document.createElement("a");
+          frenchAccessibilityAnchor.id = "frenchAccesssibleLink";
+          frenchAccessibilityAnchor.target = "_blank";
+          frenchAccessibilityAnchor.rel = "noopener noreferrer";
+          frenchAccessibilityAnchor.href = "https://go.microsoft.com/fwlink/?linkid=2163806";
+          frenchAccessibilityAnchor.title = accessibilityText;
+          frenchAccessibilityAnchor.innerText = accessibilityText;
+          accessibilityLinkContainer.appendChild(frenchAccessibilityAnchor);
+        }
+        break;
+      case "it":
+        if (accessibilityLinkContainer != null) {
+          const accessibilityText="Accessibilità: parzialmente conforme";
+          const italianAccessibilityAnchor = document.createElement("a");
+          italianAccessibilityAnchor.id = "italianAccesssibleLink";
+          italianAccessibilityAnchor.target = "_blank";
+          italianAccessibilityAnchor.rel = "noopener noreferrer";
+          italianAccessibilityAnchor.href = "https://go.microsoft.com/fwlink/?linkid=2208177";
+          italianAccessibilityAnchor.title = accessibilityText;
+          italianAccessibilityAnchor.innerText = accessibilityText;
+          accessibilityLinkContainer.appendChild(italianAccessibilityAnchor);
+        }
+        break;
+      default:
+        if (accessibilityLinkContainer) accessibilityLinkContainer.remove();
+    }
+  });
+ </script>

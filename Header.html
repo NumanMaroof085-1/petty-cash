@@ -1,0 +1,323 @@
+<!-- Existing Header Web Template. Original native menus/auth/brand retained.
+     Generated assets: scripts/build_shell_template.cjs. -->
+<!-- PC SHELL STYLES -->
+<style data-pc-shell="v1">
+/* Header/footer only. Embedded into Header.html; the working page styles stay scoped. */
+#pcSiteHeader,#pcSiteFooter{box-sizing:border-box;font-family:'Segoe UI',system-ui,-apple-system,sans-serif;color:#172b35}
+#pcSiteHeader *,#pcSiteHeader *::before,#pcSiteHeader *::after,#pcSiteFooter *,#pcSiteFooter *::before,#pcSiteFooter *::after{box-sizing:border-box}
+#pcSiteHeader.navbar{width:100%;padding:16px 28px;margin:0;border:0;border-bottom:1px solid #e4ebeb;background:#fff!important;min-height:78px;z-index:100}
+#pcSiteHeader .pc-header-inner{display:flex;align-items:center;flex-wrap:nowrap;gap:24px;width:100%;max-width:1120px;min-height:44px;margin:0 auto;padding:0}
+#pcSiteHeader .navbar-brand{float:none;flex:none;padding:0;margin:0;min-width:0;line-height:1.3;font-size:18px;font-weight:650;letter-spacing:-.4px;max-width:270px;color:#172b35}
+#pcSiteHeader .navbar-brand a,#pcSiteHeader .navbar-brand .xrm-attribute-value{display:flex;align-items:center;gap:10px;color:#172b35;text-decoration:none}
+#pcSiteHeader .navbar-brand img{object-fit:contain;width:auto;max-width:46px;max-height:36px;margin:0}
+#pcSiteHeader .navbar-brand :is(span,p){font:inherit;color:inherit;margin:0}
+#pcSiteHeader .navbar-collapse{flex:1 1 auto;min-width:0;width:auto!important;overflow:visible;box-shadow:none;padding:0;border:0}
+#pcSiteHeader .menu-bar{float:none;display:flex;justify-content:flex-end}
+#pcSiteHeader .navbar-nav{display:flex;align-items:center;flex-wrap:wrap;justify-content:flex-end;gap:3px;margin:0;padding:0;list-style:none}
+#pcSiteHeader .nav-item{float:none;margin:0}
+#pcSiteHeader .divider-vertical{display:none}
+#pcSiteHeader .nav-link{display:flex;align-items:center;justify-content:center;gap:8px;padding:10px 11px!important;min-height:40px;border:1px solid transparent;border-radius:8px;font:600 12px/1.5 'Segoe UI',system-ui,sans-serif;color:#52656f!important;background:transparent;text-decoration:none;white-space:nowrap;transition:color .15s,background .15s}
+#pcSiteHeader .nav-link:hover,#pcSiteHeader .nav-link:focus-visible{background:#f0f6f4;color:#066658!important}
+#pcSiteHeader .nav-link[aria-current=page],#pcSiteHeader .weblink.active>.nav-link{background:#e9f4ee;color:#076e60!important}
+#pcSiteHeader .navbar-icon{width:39px;min-width:39px;padding:10px!important}
+#pcSiteHeader .navbar-icon svg{width:17px;height:17px}
+#pcSiteHeader .pc-sign-in{background:#087f72!important;color:#fff!important;padding:10px 18px!important;margin-left:6px}
+#pcSiteHeader .pc-sign-in:hover{background:#066658!important;color:#fff!important}
+#pcSiteHeader .pc-profile-trigger{border-color:#e2e9e8;background:#fafcfa;padding:6px 10px 6px 6px!important;margin-left:7px}
+#pcSiteHeader .pc-user-avatar{display:flex;align-items:center;justify-content:center;flex:none;width:29px;height:29px;border-radius:8px;background:#dfeee6;color:#1a6452;font-size:12px;font-weight:700}
+#pcSiteHeader .username{display:block;min-width:0;max-width:125px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:12px;color:#344e56}
+#pcSiteHeader .caret{display:none}
+#pcSiteHeader .dropdown-menu{border:1px solid #dfe7e7;border-radius:12px;padding:7px;box-shadow:0 12px 35px #17362a14;background:#fff;margin-top:8px;min-width:190px;right:0;left:auto;z-index:200}
+#pcSiteHeader .dropdown-item{display:block;padding:10px 12px;border-radius:7px;color:#354d57;font:13px/1.5 'Segoe UI',system-ui,sans-serif;text-decoration:none;overflow-wrap:anywhere;white-space:normal}
+#pcSiteHeader .dropdown-item:hover,#pcSiteHeader .dropdown-item:focus-visible{background:#edf5f1;color:#066658}
+#pcSiteHeader .dropdown-divider{margin:6px 0;border-color:#e7eceb}
+#pcSiteHeader .dropdown-search{min-width:280px;padding:15px}
+#pcSiteHeader .dropdown-search input{border:1px solid #c8d8d1;border-radius:7px;font:14px 'Segoe UI',sans-serif;min-height:38px;max-width:100%;background:#fff;color:#172b35;padding:9px}
+#pcSiteHeader .dropdown-search button{background:#087f72;color:#fff;border:0;border-radius:7px;min-height:38px;padding:8px 12px}
+#pcSiteHeader .navbar-toggler{display:none;align-items:center;justify-content:center;width:42px;height:40px;border:1px solid #d4e2dd;border-radius:9px;background:#fff;color:#172b35;margin:0;padding:10px;flex:none;box-shadow:none}
+#pcSiteHeader .navbar-toggler-icon{display:block;position:relative;width:18px;height:2px;background:#305a4e;background-image:none}
+#pcSiteHeader .navbar-toggler-icon::before,#pcSiteHeader .navbar-toggler-icon::after{content:'';position:absolute;left:0;width:18px;height:2px;background:#305a4e}
+#pcSiteHeader .navbar-toggler-icon::before{top:-6px}#pcSiteHeader .navbar-toggler-icon::after{top:6px}
+#pcSiteHeader :is(a,button,input):focus-visible,#pcSiteFooter a:focus-visible{outline:3px solid #087f7280;outline-offset:3px}
+#pcSiteHeader .skip-to-content a{position:absolute;left:20px;top:-100px;z-index:300;padding:10px 16px;background:#087f72;color:#fff;border-radius:8px;font-size:13px;text-decoration:none}
+#pcSiteHeader .skip-to-content a:focus{top:10px}
+#pcSiteHeader .visually-hidden{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+#pcSiteFooter{border-top:1px solid #e4ebeb;margin:38px 0 0;background:#fafcfb;font-size:12px}
+#pcSiteFooter .footer-bottom{padding:22px 28px;background:transparent;color:#60717a}
+#pcSiteFooter .pc-footer-inner{display:flex;align-items:center;justify-content:space-between;gap:18px;max-width:1120px;margin:0 auto;padding:0;width:100%;flex-wrap:wrap}
+#pcSiteFooter .pc-footer-copy{flex:1;min-width:0;overflow-wrap:anywhere}
+#pcSiteFooter .pc-footer-copy p{font:12px/1.7 'Segoe UI',system-ui,sans-serif;margin:0;color:#60717a}
+#pcSiteFooter .pc-footer-links{display:flex;align-items:center;gap:20px;flex-wrap:wrap}
+#pcSiteFooter a{font:12px/1.6 'Segoe UI',system-ui,sans-serif;color:#526a61;text-decoration:none}
+#pcSiteFooter a:hover{color:#066658;text-decoration:underline}
+#pcSiteFooter #accessibilityLinkContainer:empty{display:none}
+@media(min-width:1200px){#pcSiteHeader .navbar-collapse.collapse{display:block!important;height:auto!important}#pcSiteHeader .navbar-toggler{display:none!important}}
+@media(max-width:1199.98px){
+  #pcSiteHeader.navbar{padding:15px 24px;min-height:74px}
+  #pcSiteHeader .pc-header-inner{flex-wrap:wrap;gap:0;justify-content:space-between}
+  #pcSiteHeader .navbar-brand{max-width:calc(100% - 64px)}
+  #pcSiteHeader .navbar-toggler{display:inline-flex}
+  #pcSiteHeader .navbar-collapse{flex-basis:100%;width:100%!important;overflow-y:auto;max-height:calc(100vh - 105px)}
+  #pcSiteHeader .navbar-collapse.collapse:not(.show){display:none}
+  #pcSiteHeader .menu-bar{display:block;margin-top:17px;padding:12px 0 3px;border-top:1px solid #e4ece7}
+  #pcSiteHeader .navbar-nav{display:flex;flex-direction:column;align-items:stretch;gap:4px;justify-content:flex-start;width:100%}
+  #pcSiteHeader .nav-link{justify-content:flex-start;padding:11px 13px!important;min-height:43px;font-size:13px}
+  #pcSiteHeader .dropdown-toggle::after{margin-left:auto}
+  #pcSiteHeader .navbar-icon{width:auto}
+  #pcSiteHeader .pc-profile-trigger{margin:7px 0 0;padding:7px!important}
+  #pcSiteHeader .username{max-width:none}
+  #pcSiteHeader .pc-sign-in{margin:8px 0 0;justify-content:center}
+  #pcSiteHeader .dropdown-menu{position:static!important;float:none;margin:5px 0 8px;box-shadow:none;max-width:100%;transform:none!important}
+}
+@media(max-width:540px){
+  #pcSiteHeader.navbar{padding:13px 16px;min-height:70px}
+  #pcSiteHeader .navbar-brand{font-size:17px}
+  #pcSiteHeader .navbar-brand img{max-height:32px;max-width:37px}
+  #pcSiteFooter .footer-bottom{padding:22px 20px}
+  #pcSiteFooter .pc-footer-inner{align-items:flex-start;flex-direction:column;gap:12px}
+  #pcSiteFooter .pc-footer-links{gap:18px}
+}
+@media(prefers-reduced-motion:reduce){#pcSiteHeader *{transition:none!important;scroll-behavior:auto!important}}
+@media print{#pcSiteHeader,#pcSiteFooter{display:none!important}}
+</style>
+<!-- /PC SHELL STYLES -->
+{% substitution %}
+{% assign defaultlang = settings['LanguageLocale/Code'] | default: 'en-us' %}
+{% assign homeurl = website.adx_partialurl %}
+<div id="pcSiteHeader" class="pc-site-header navbar-expand-xl navbar navbar-dark static-top" role="banner">
+    <div class="skip-to-content"><a href="#mainContent">{{ resx.Skip_To_Content | default: "Skip to main content" }}</a></div><div class="container custom-container pc-header-inner">
+
+
+        <div class="navbar-brand navbar-header">
+             {% editable snippets 'Mobile Header' type: 'html' %}
+        </div>
+        <button type="button" class="navbar-toggler collapsed custom-navbar-toggler" title="{{ snippets["Header/Toggle Navigation"] | default: resx['Toggle_Navigation'] | h }}" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" onclick="setHeight();">
+            <span class="visually-hidden">{{ snippets["Header/Toggle Navigation"] | default: resx['Toggle_Navigation'] | h }}</span>
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div id="navbar" class="navbar-collapse collapse" style="width: min-content;">
+            {% assign primary_nav = weblinks["Default"] %}
+            {% if primary_nav %}
+            <nav aria-label="{{ resx.Main_Navigation | default: "Main Navigation" }}" class="ms-auto menu-bar {% if primary_nav.editable %}xrm-entity xrm-editable-adx_weblinkset{% endif %}" data-weblinks-maxdepth="2">
+                <ul class="nav navbar-nav weblinks">
+                    {% for link in primary_nav.weblinks %}
+                    {% assign pc_link_visible = true %}
+                    {% assign pc_link_path = link.url | downcase %}
+                    {% if pc_link_path contains '/finance-cash-management' %}
+                    {% unless user.roles contains 'Petty Cash Finance' %}{% assign pc_link_visible = false %}{% endunless %}
+                    {% elsif pc_link_path contains '/admin-users' %}
+                    {% unless user.roles contains 'Petty Cash Admin' %}{% assign pc_link_visible = false %}{% endunless %}
+                    {% endif %}
+                    {% if pc_link_visible %}
+                    {% assign pc_nav_label = link.name %}
+                    {% case link.name %}
+                    {% when 'New Petty Cash Request' %}{% assign pc_nav_label = 'New request' %}
+                    {% when 'Finance Cash Management' %}{% assign pc_nav_label = 'Finance' %}
+                    {% when 'Admin Users' %}{% assign pc_nav_label = 'Users' %}
+                    {% endcase %}
+                    {% unless forloop.first %}
+                    <li class="nav-item divider-vertical" aria-hidden="true"></li>
+                    {% endunless %}
+                    {% if link.display_page_child_links %}
+                    {% if link.url != null %}
+                    {% assign sublinks = sitemap[link.url].children %}
+                    {% endif %}
+                    {% else %}
+                    {% assign sublinks = link.weblinks %}
+                    {% endif %}
+                    <li class=" nav-item weblink {% if sublinks.size > 0 %} dropdown{% endif %}">
+                        <a aria-label="{{ link.name | escape }}" {% if sublinks.size > 0 -%} href="#" role="button" class="dropdown-toggle nav-link" data-bs-toggle="dropdown" {%- else -%} href="{{ link.url | escape }}" aria-roledescription="link" class="nav-link" {%- endif -%} {%- if link.Open_In_New_Window %} target="_blank" {% endif -%} {%- if link.nofollow %} rel="nofollow" {% endif -%} {%- if link.tooltip %} title="{{ link.tooltip | escape }}" {% endif %}>
+                            {%- if link.image -%}
+                            {%- if link.image.url  -%}
+                            {%- if link.image.url.first == '.' -%}
+                            <span class="{{ link.image.url | split:'.' | join }}" aria-hidden="true"></span>
+                            {%- endif -%}
+                            {%- else -%}
+                            <img src="{{ link.image.url | escape }}" alt="{{ link.image.alternate_text | default:link.tooltip | escape }}" {% if link.image.width %}width="{{ link.image.width | escape }}" {% endif %} {% if link.image.height %}height="{{ link.image.height | escape }}" {% endif %} />
+                            {%- endif -%}
+                            {%- endif -%}
+                            {%- unless link.display_image_only -%}
+                            {{ pc_nav_label | escape }}
+                            {%- endunless -%}
+                        </a>
+                        {% if sublinks.size > 0 %}
+                        <ul class="dropdown-menu">
+                            {% if link.name %}
+                            <li>
+                                <a class="dropdown-item" aria-label="{{ link.name | escape }}" aria-roledescription="link" href="{{ link.url }}" {% if link.Open_In_New_Window %} target="_blank" {% endif %} {% if link.nofollow %}rel="nofollow" {% endif %} {% if link.tooltip %}title="{{ link.tooltip | escape }}" {% endif %}>{{ link.name | escape }}</a>
+                            </li>
+                            <div class="dropdown-divider"></div>
+                            {% endif %}
+                            {% for sublink in sublinks %}
+                            <li>
+                                <a class="dropdown-item" aria-label="{{ sublink.name | default:sublink.title | escape }}" aria-roledescription="link" href="{{ sublink.url }}" {% if sublink.Open_In_New_Window %} target="_blank" {% endif %} {% if sublink.nofollow %}rel="nofollow" {% endif %} {% if sublink.tooltip %}title="{{ sublink.tooltip | escape }}" {% endif %}>
+                                    {{ sublink.name | default:sublink.title | escape }}
+                                </a>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                    </li>
+                    {% endif %}
+                    {% endfor %}
+                    {% assign search_enabled = settings['Search/Enabled'] | boolean | default:true %}
+                    {% if search_enabled %}
+                    <li class=" nav-item divider-vertical" aria-hidden="true"></li>
+                    <li class=" nav-item dropdown">
+                        <a id="search" class=" nav-link navbar-icon" href="#" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-label="{{ snippets["Header/Search/ToolTip"] | default:resx["Search_DefaultText"] | escape }}">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/></svg>
+                        </a>
+                        <div class="dropdown-menu dropdown-search">
+                            {% include 'Search', search_id:'q' %}
+                        </div>
+                    </li>
+                    {% endif %}
+
+                    {% if website.languages.size > 1 %}
+                    <li class=" nav-item divider-vertical" aria-hidden="true"></li>
+                    <li class=" nav-item dropdown">
+                        <a class=" nav-link dropdown-toggle" aria-roledescription="link" href="#" data-bs-toggle="dropdown" aria-label="{{ website.selected_language.name | escape }}" aria-haspopup="true" aria-expanded="false" title="{{ website.selected_language.name | escape }}">
+                            <span class="drop_language">{{ website.selected_language.name | escape }}</span>
+                        </a>
+                        {% include 'Languages Dropdown' %}
+                    </li>
+                    {% endif %}
+
+                    {% assign profile_enabled = settings['Profile/Enabled'] | boolean | default: true %}
+                    {% if profile_enabled %}
+                    <li class=" nav-item divider-vertical" aria-hidden="true"></li>
+                    {% if user %}
+                    <li class=" nav-item dropdown">
+                        {% assign username = user.fullname | escape %}
+                        <a href="#" class="nav-link dropdown-toggle pc-profile-trigger" aria-roledescription="link" title="{{username | default: resx["Default_Profile_name"] }}" data-bs-toggle="dropdown" role="button" aria-expanded="false">
+                            <span class="pc-user-avatar" aria-hidden="true">•</span>
+                            <span class="username">{{ username | default: resx['Default_Profile_name'] }}</span>
+                            <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            {% assign show_profile_nav = settings["Header/ShowAllProfileNavigationLinks"] | boolean | default: true %}
+                            {% if show_profile_nav %}
+                            {% assign profile_nav = weblinks["Profile Navigation"] %}
+                            {% if profile_nav %}
+                            {% for link in profile_nav.weblinks %}
+                            <li>
+                                <a class="dropdown-item" aria-label="{{ link.name | escape }}" aria-roledescription="link" href="{{ link.url | escape }}" title="{{ link.name | escape }}">{{ link.name | escape }}</a>
+                            </li>
+                            {% endfor %}
+                            {% endif %}
+                            {% else %}
+                            <li><a class="dropdown-item" aria-label="{{ snippets["Profile Link Text"] | default:resx["Profile_Text"] | escape }}" aria-roledescription="link" href="{{ sitemarkers['Profile'].url | escape }}">{{ snippets["Profile Link Text"] | default: resx["Profile_Text"] | escape }}</a></li>
+                            {% endif %}
+                            <li class="dropdown-divider" role="separator" aria-hidden="true"></li>
+                            <li>
+                                <a class="dropdown-item" aria-label="{{ snippets["links/logout"] | default:resx["Sign_Out"] | escape }}" aria-roledescription="link" href="{% if homeurl%}/{{ homeurl }}{% endif %}{{ website.sign_out_url_substitution }}" title="{{ snippets["links/logout"] | default:resx["Sign_Out"] | escape }}">
+                                    {{ snippets["links/logout"] | default:resx["Sign_Out"] | escape }}
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link pc-sign-in" aria-label="{{ snippets["links/login"] | default:resx["Sign_In"] | escape }}" aria-roledescription="link" href="{% if homeurl%}/{{ homeurl }}{% endif %}{{ website.sign_in_url_substitution }}">
+                            {{ snippets["links/login"] | default:resx["Sign_In"] | escape }}
+                        </a>
+                    </li>
+                    {% endif %}
+                    {% endif %}
+                </ul>
+                {% editable primary_nav %}
+            </nav>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endsubstitution %}
+{% substitution %}
+{% assign current_page = page.id %}
+{% assign sr_page = sitemarkers["Search"].id %}
+{% assign forum_page = sitemarkers["Forums"].id %}
+{% if current_page %}
+  {% if current_page == sr_page or current_page == forum_page %}
+    {% assign section_class = "section-landing-search" %}
+    {% if current_page == forum_page %}
+      {% assign section_class = "section-landing-forums" %}
+    {% endif %}
+<section class="page_section {{ section_class | h }} color-inverse">
+    <div class="row sectionBlockLayout sectionFixedStyle" style="display: flex; flex-wrap: wrap; text-align: center;">
+        <div class="container" style="display: flex; flex-wrap: wrap;">
+            <div class="col-lg-12 columnBlockLayout" style="display: flex; flex-direction: column; justify-content: center;">
+                {% if current_page == sr_page %}
+                <h1 id="mainContent">{% editable snippets 'Search/Title' default: resx["Discover_Contoso"] %}</h1>
+                {% include 'Search' search_id:'search_control' %}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endif %}
+{% endif %}
+{% endsubstitution %}
+<!-- PC SHELL SCRIPT -->
+<script>
+/* Navigation decoration only. Native Bootstrap and Power Pages own authentication/menus. */
+(function (root) {
+  'use strict';
+  const document = root.document;
+  function setHeight() {
+    const navbar = document.getElementById('navbar'), header = document.getElementById('pcSiteHeader');
+    if (navbar) {
+      const top = navbar.getBoundingClientRect().top;
+      const headerTop = header?.getBoundingClientRect().top || 0;
+      navbar.style.maxHeight = Math.max(120, root.innerHeight - (top > headerTop ? top : headerTop + 78) - 24) + 'px';
+    }
+  }
+  // Existing Bootstrap toggle's inline handler calls this named function.
+  root.setHeight = setHeight;
+  function initialize() {
+    const header = document.getElementById('pcSiteHeader');
+    if (!header || header.dataset.initialized === 'true') return;
+    header.dataset.initialized = 'true';
+    const avatar = header.querySelector('.pc-user-avatar'), username = header.querySelector('.username');
+    if (avatar && username) avatar.textContent = (Array.from(username.textContent.trim())[0] || '•').toLocaleUpperCase();
+    const currentPath = root.location.pathname.replace(/\/+$/, '').toLowerCase() || '/';
+    for (const link of header.querySelectorAll('li.weblink > a, li.weblink .dropdown-menu a')) {
+      if (!link.getAttribute('href') || link.getAttribute('href').startsWith('#')) continue;
+      const url = new URL(link.href, root.location.origin);
+      if (url.origin === root.location.origin && (url.pathname.replace(/\/+$/, '').toLowerCase() || '/') === currentPath) {
+        link.setAttribute('aria-current', 'page');
+        link.closest('li.weblink')?.classList.add('active');
+      }
+    }
+    const skip = header.querySelector('.skip-to-content a');
+    const target = document.getElementById('mainContent') || document.querySelector('main') || document.querySelector('[data-pc-page]');
+    if (skip && target) {
+      if (!target.id) target.id = 'pcMainContent';
+      if (!target.hasAttribute('tabindex')) target.setAttribute('tabindex', '-1');
+      skip.setAttribute('href', '#' + target.id);
+    }
+    header.addEventListener('keydown', event => {
+      if (event.key !== 'Escape') return;
+      const navbar = document.getElementById('navbar');
+      if (!navbar || !navbar.classList.contains('show')) return;
+      if (navbar.querySelector('.dropdown-menu.show')) return; // Native dropdown handles its own Escape first.
+      const instance = root.bootstrap?.Collapse?.getInstance(navbar);
+      if (instance) instance.hide();
+      else navbar.classList.remove('show');
+      const toggle = header.querySelector('[data-bs-target="#navbar"]');
+      if (toggle) { toggle.setAttribute('aria-expanded', 'false'); toggle.focus(); }
+    });
+    setHeight();
+  }
+  root.addEventListener('resize', setHeight);
+  root.addEventListener('load', function () {
+    // Retain the original legacy-browser search behavior without replacing other onload handlers.
+    if (root.navigator.appName === 'Microsoft Internet Explorer' || root.navigator.userAgent.indexOf('Trident') > 0) {
+      document.getElementById('search')?.setAttribute('href', '');
+    }
+  });
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initialize);
+  else initialize();
+})(window);
+</script>
+<!-- /PC SHELL SCRIPT -->

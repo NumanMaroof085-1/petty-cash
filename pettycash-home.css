@@ -1,0 +1,75 @@
+.pc-home{max-width:1120px;background:transparent;border:0;padding:12px 0 0;margin-top:38px}
+.pc-home .pc-home-top{display:flex;align-items:center;justify-content:space-between;gap:20px;margin:0 0 26px}
+.pc-home .pc-home-top p{margin:0;color:var(--pc-muted);font-size:13px}
+.pc-home .pc-home-top h2{font-size:30px;letter-spacing:-.8px;margin:0 0 5px}
+.pc-home .pc-home-hero{display:grid;grid-template-columns:1.2fr 1fr;gap:28px;align-items:stretch;margin:0 0 36px}
+.pc-home .pc-home-intro{padding:25px 12px 22px 0;display:flex;flex-direction:column;align-items:flex-start;justify-content:center}
+.pc-home .pc-home-intro h3{font-size:46px;line-height:1.15;letter-spacing:-1.8px;font-weight:650;margin:0 0 18px;max-width:520px}
+.pc-home .pc-home-intro h3 em{font-style:normal;color:var(--pc-brand)}
+.pc-home .pc-home-intro>p{font-size:15px;line-height:1.8;color:var(--pc-muted);max-width:430px;margin-bottom:24px}
+.pc-home .pc-home-intro .pc-eyebrow{font-size:11px;line-height:1.6;margin:0 0 12px;color:var(--pc-brand)}
+.pc-home .pc-home-actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.pc-home .pc-home-actions .pc-button{min-height:46px;padding:12px 18px;font-size:13px}
+.pc-home .pc-home-wallet{position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:space-between;min-height:270px;padding:28px 30px;border-radius:22px;background:#183e3c;color:#fff}
+.pc-home .pc-home-wallet::after{position:absolute;content:'';width:220px;height:220px;border:1px solid #ffffff0c;border-radius:50%;top:-70px;right:-50px;box-shadow:0 0 0 35px #ffffff03,0 0 0 70px #ffffff03;pointer-events:none}
+.pc-home .pc-home-wallet-head{display:flex;align-items:center;justify-content:space-between;gap:14px;margin:0 0 22px;font-size:12px;font-weight:600;color:#c3ddd5}
+.pc-home .pc-home-wallet svg{width:27px;height:27px;color:#a5cfc2}
+.pc-home #pcHomeBalance{position:relative;font-size:40px;line-height:1.3;letter-spacing:-1.1px;font-weight:650;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.pc-home #pcHomeBalanceMeaning{position:relative;font-size:12px;color:#c3ddd5;margin:8px 0 26px;overflow-wrap:anywhere}
+.pc-home .pc-home-pending{display:flex;justify-content:space-between;align-items:center;gap:15px;border-top:1px solid #ffffff26;padding-top:16px;font-size:12px;color:#c3ddd5}
+.pc-home .pc-home-pending strong{color:#fff;font-size:18px;font-weight:600;font-variant-numeric:tabular-nums}
+.pc-home .pc-home-tools{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px;margin-bottom:32px}
+.pc-home .pc-home-tool{display:flex;flex-direction:column;align-items:flex-start;position:relative;gap:8px;padding:22px;border:1px solid var(--pc-line);border-radius:15px;background:#fff;color:var(--pc-ink);text-decoration:none;transition:border-color .16s,box-shadow .16s,transform .16s}
+.pc-home .pc-home-tool:hover{border-color:#98bfb3;box-shadow:0 7px 24px #17362a0b;transform:translateY(-2px);text-decoration:none;color:var(--pc-ink)}
+.pc-home .pc-home-tool:focus-visible{outline:3px solid #087f7280;outline-offset:3px}
+.pc-home .pc-home-tool-icon{display:flex;align-items:center;justify-content:center;width:36px;height:36px;border:1px solid #d5e8e1;border-radius:10px;background:#edf6f1;color:var(--pc-brand);margin-bottom:8px}
+.pc-home .pc-home-tool-icon svg{width:18px;height:18px}
+.pc-home .pc-home-tool strong{font-size:15px;font-weight:650}
+.pc-home .pc-home-tool>span:last-child{font-size:12px;color:var(--pc-muted)}
+.pc-home .pc-home-tool::after{position:absolute;content:'↗';top:22px;right:22px;font-size:17px;color:#7d9690}
+.pc-home .pc-home-bottom{display:grid;grid-template-columns:minmax(0,1fr) 270px;gap:20px;align-items:start}
+.pc-home .pc-home-recent{margin:0;min-width:0}
+.pc-home .pc-home-view-all{color:var(--pc-brand);font-size:12px;font-weight:600;white-space:nowrap;text-decoration:none}
+.pc-home .pc-home-view-all:hover{text-decoration:underline}
+.pc-home .pc-home-recent table{min-width:460px}
+.pc-home .pc-home-recent td:first-child{font-weight:600}
+.pc-home .pc-home-process{padding:24px;border:1px solid var(--pc-line);border-radius:18px;background:#f6f9f7}
+.pc-home .pc-home-process h3{font-size:15px;margin-bottom:24px}
+.pc-home .pc-home-process ol{list-style:none;margin:0;padding:0;counter-reset:home-step}
+.pc-home .pc-home-process li{position:relative;margin:0;padding:0 0 24px 38px;color:var(--pc-muted);font-size:12px;counter-increment:home-step}
+.pc-home .pc-home-process li:last-child{padding-bottom:0}
+.pc-home .pc-home-process li::before{content:counter(home-step);position:absolute;left:0;top:-2px;display:flex;align-items:center;justify-content:center;width:25px;height:25px;border-radius:50%;background:#fff;border:1px solid #ccdfd6;color:var(--pc-brand);font-size:11px;font-weight:650}
+.pc-home .pc-home-process strong{display:block;color:var(--pc-ink);font-size:13px;margin-bottom:4px;font-weight:600}
+.pc-home .pc-home-guest{max-width:760px;margin:50px auto 20px;text-align:center}
+.pc-home .pc-home-guest h2{font-size:58px;line-height:1.12;letter-spacing:-2px;margin:0 0 22px}
+.pc-home .pc-home-guest h2 span{color:var(--pc-brand)}
+.pc-home .pc-home-guest>p:not(.pc-eyebrow){max-width:450px;margin:0 auto 26px;color:var(--pc-muted);font-size:16px;line-height:1.8}
+.pc-home .pc-home-guest .pc-button{padding:12px 26px;min-height:46px}
+.pc-home .pc-home-features{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;margin:48px 0 36px}
+.pc-home .pc-home-feature{border:1px solid var(--pc-line);border-radius:15px;padding:26px;background:#fff}
+.pc-home .pc-home-feature h3{font-size:16px;margin:0 0 8px}
+.pc-home .pc-home-feature p{font-size:13px;color:var(--pc-muted);margin:0;line-height:1.8}
+@media(max-width:900px){.pc-home .pc-home-hero{gap:22px}.pc-home .pc-home-intro h3{font-size:38px}.pc-home .pc-home-bottom{grid-template-columns:1fr}.pc-home .pc-home-process{display:none}.pc-home .pc-home-wallet{padding:26px}}
+@media(max-width:640px){
+  .pc-home{padding:22px 16px 8px;margin:0 auto;width:100%}
+  .pc-home .pc-home-top{align-items:flex-start}.pc-home .pc-home-top h2{font-size:24px}.pc-home .pc-home-top p{font-size:12px}
+  .pc-home .pc-home-top button{min-height:36px;padding:8px 11px;font-size:11px;flex:none}
+  .pc-home .pc-home-hero{grid-template-columns:1fr;gap:12px;margin-bottom:28px}
+  .pc-home .pc-home-intro{padding:10px 0 15px}.pc-home .pc-home-intro h3{font-size:35px;letter-spacing:-1.1px;max-width:350px}
+  .pc-home .pc-home-intro>p{font-size:14px;max-width:330px;margin-bottom:20px}
+  .pc-home .pc-home-wallet{min-height:245px;padding:24px;border-radius:18px}.pc-home #pcHomeBalance{font-size:35px}
+  .pc-home .pc-home-tools{grid-template-columns:1fr 1fr;gap:10px;margin-bottom:24px}.pc-home .pc-home-tool{padding:17px;min-width:0}
+  .pc-home .pc-home-tool strong{font-size:13px}.pc-home .pc-home-tool>span:last-child{font-size:11px}.pc-home .pc-home-tool::after{top:17px;right:17px}
+  .pc-home .pc-home-recent table,.pc-home .pc-home-recent tbody{display:block;min-width:0}
+  .pc-home .pc-home-recent .pc-table-scroll{overflow:visible;border:0;border-radius:0}
+  .pc-home .pc-home-recent thead{position:absolute;width:1px;height:1px;clip:rect(0,0,0,0);overflow:hidden}
+  .pc-home #pcHomeRequests tr{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;padding:15px;border:1px solid var(--pc-line);border-radius:10px;margin-bottom:10px}
+  .pc-home #pcHomeRequests td{display:block;border:0;padding:0;min-width:0;font-size:12px}
+  .pc-home #pcHomeRequests td:nth-child(2){text-align:right;color:var(--pc-muted);font-size:11px}
+  .pc-home #pcHomeRequests td:nth-child(3){text-align:left;font-size:15px;white-space:normal;overflow-wrap:anywhere}
+  .pc-home #pcHomeRequests td:nth-child(4){text-align:right}
+  .pc-home #pcHomeRequests td.pc-empty{grid-column:1/-1}
+  .pc-home .pc-home-guest{margin:28px auto 0}.pc-home .pc-home-guest h2{font-size:43px;letter-spacing:-1.4px}.pc-home .pc-home-guest>p:not(.pc-eyebrow){font-size:14px;max-width:320px}
+  .pc-home .pc-home-features{grid-template-columns:1fr;gap:12px;margin-top:36px}.pc-home .pc-home-feature{padding:22px}
+}
+@media(prefers-reduced-motion:reduce){.pc-home .pc-home-tool{transition:none}.pc-home .pc-home-tool:hover{transform:none}}

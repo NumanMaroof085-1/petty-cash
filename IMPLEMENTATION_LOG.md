@@ -5,6 +5,48 @@ same change. Record exact files, functionality, schema names, permissions, site
 settings, tests, and deployment state. Never describe a proposed tenant change
 as deployed merely because local code or documentation exists.
 
+## 2026-11-01 Restyle supplied Header/Footer and add the Home workspace
+
+- User authorizes Header, Footer and Home UI work and provides Header.html and
+  Footer.html after a source request. Preserved exact originals in ignored local
+  documentation/backups/2026-11-01-shell before editing. Login page UI untouched.
+- Header.html retains editable Mobile Header branding, managed Default links and
+  children, existing Dashboard, native account/sign-in/out/profile links, Search,
+  languages and search/forum landing code. Added scoped CSS, shorter menu labels,
+  safe DOM-derived initial, active path, mobile Escape/focus and adaptive height.
+  Role-sensitive navigation is substitution-wrapped; Finance/Admin links have
+  explicit web-role presentation guards. Existing Bootstrap attributes retained.
+- Footer.html retains the editable Footer snippet and French/Italian accessibility
+  links, adds compact Home/My Requests navigation and safe new-tab relationships.
+  Header/Footer use additive load listeners rather than replacing window.onload.
+- Added pettycash-shell.css/js and build_shell_template.cjs, embedded in Header
+  so the user publishes complete Header/Footer templates without Web Files.
+- Added Home.html (one include), Petty Cash Home.html (new Web Template), canonical
+  pettycash-home.css/js and build_home_template.cjs. Signed-in home uses existing
+  ledger/request helpers for balance, recent-100 pending count and three recent
+  rows; Finance/Admin cards depend on exact web roles. Anonymous view has native
+  sign-in and no private dashboard/context/API reads. Independent error handling,
+  safe literal fields, refresh/duplicate-init guards and responsive cards included.
+- No existing four-page HTML, Finance flow configuration, shared modules, receipt
+  code, data schema, table/column permission, role, site setting or flow edits.
+  New tenant configuration required only for Petty Cash Home template/include;
+  existing Header/Footer Source and Home Copy are replaced on publication.
+- Added SITE_SHELL_HOME_SETUP.md with exact publication, native behavior retained,
+  source/build inventory, backup paths and validation limits. Existing brand and
+  footer snippet content are preserved, not overwritten with fixture branding.
+- Local QA: 141 unit checks (132 prior + nine new); 12 mocked shell/home browser
+  scenarios at six widths, plus shell integration around the four working pages.
+  Covers web-role branches, anonymous no-read state, balance/history failures,
+  cross-user response rejection, hostile names, menu/keyboard/active path, native
+  URL retention, load-listener coexistence and fr/it accessibility links. First
+  Admin fixture omitted email and correctly remained disabled; corrected test
+  data without relaxing production checks. Templates/build sync and diff checked.
+- Reviewed desktop/phone screenshots with synthetic data/logo. Local Liquid and
+  Bootstrap fixtures are limited, not native engines; real authentication/cache/
+  permissions and live styling still require user publication/verification.
+- Microsoft native URL, substitution, managed-link and Liquid reference checked.
+  No tenant connection, financial posting, profile creation or deployment performed.
+
 ## 2026-10-31 Preserve working Finance page configuration after UI publication
 
 - User reports read-only mode after setting the flow ID; live Console explicitly

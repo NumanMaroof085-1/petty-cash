@@ -4,6 +4,17 @@ Power Pages saves employee expense requests, products, and receipts through its
 session-authenticated Dataverse Web API. Power Automate should handle manager
 approval and accounting integration after a complete submission is available.
 
+## Header, footer and home — 2026-11-01
+
+The supplied Header/Footer templates are restyled and a new Home workspace is
+ready locally. Publish Header.html and Footer.html into their existing Web
+Templates, create **Petty Cash Home** from its complete HTML, and replace the
+existing Home page content with Home.html's one include. See
+[SITE_SHELL_HOME_SETUP.md](SITE_SHELL_HOME_SETUP.md) for exact steps and QA limits.
+The four application pages and their working Finance configuration are unchanged.
+Existing branding, managed navigation and native account controls are retained;
+Home adds read-only balance/recent-request views and role-specific quick actions.
+
 ## UI refresh — 2026-10-31
 
 New request, My Requests, Finance and Admin now share a simpler responsive design.
@@ -12,9 +23,17 @@ My Requests adds local search/status filters and counts. See
 local screenshots and checks. **Preserve the working Finance page's live
 PC_MODULE_CONFIG when publishing its redesigned HTML.** No new Web Files,
 templates, columns, permissions or flows are required. Login/header/footer/home
-are unchanged. This UI refresh is local and has not been published by the assistant.
+were outside that four-page change; the separate revision above covers the shell
+and Home. Login remains unchanged. Neither UI revision was published by the assistant.
 
 ## Files
+
+- `Header.html` / `Footer.html`: complete restyled versions of the user-supplied existing Web Templates, preserving managed navigation, editable branding, account controls and locale accessibility links.
+- `Home.html`: one include for the existing Home page; `Petty Cash Home.html`: complete new Home Web Template with signed-in balance/history and anonymous welcome.
+- `pettycash-shell.css` / `pettycash-shell.js`: header/footer styles and navigation-only enhancement, embedded by `scripts/build_shell_template.cjs`.
+- `pettycash-home.css` / `pettycash-home.js`: Home design and read-only data refresh, embedded by `scripts/build_home_template.cjs`; no new posting/configuration path.
+- `SITE_SHELL_HOME_SETUP.md`: publication, configuration, preserved behavior, backups and native-vs-mocked QA limits.
+- `tests/pettycash-shell-home.test.cjs` / `scripts/verify_shell_home.cjs`: nine new source/fixture checks and 12 browser scenarios, plus integration around the existing pages. `scripts/liquid_fixture.cjs` and `shell_fixtures.cjs` are local-only synthetic renderers, not Power Pages engines.
 
 - `New Petty Cash Request.html`: the Power Pages page fragment, including its script and shared template includes.
 - `pettycash-api.js`: the same client script, kept separately for development.
