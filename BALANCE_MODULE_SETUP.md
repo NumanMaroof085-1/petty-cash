@@ -1,5 +1,11 @@
 # Balance and employee portal module setup
 
+> **Historical implementation/setup record.** Current handover instructions are
+> [HANDOVER.md](HANDOVER.md), [FINANCE_SETUP.md](FINANCE_SETUP.md) and the current
+> UI guides. Petty Cash Finance replaces the old Accounts role/page recipe below.
+> Current Modules version is finance-posting-v5 and context web-template-v2-finance.
+> Do not deploy the retired Accounts HTML or mix old/new backend contracts.
+
 2026-10-31: finance-posting-v4 now blocks own-account Add/Returned locally while
 retaining own balance/history. User reports installing the native condition from
 FINANCE_SELF_POSTING_SETUP.md; native denial testing is not yet confirmed. User

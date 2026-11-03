@@ -17,12 +17,13 @@ function fixture(items = [{ name: '', quantity: '1', price: '' }]) {
   let rows = [];
   function row(item = { name: '', quantity: '1', price: '' }) {
     const result = new Element('tr');
-    const fields = Object.fromEntries(['name', 'qty', 'price'].map(name => [name, new Element('input')]));
+    const fields = Object.fromEntries(['name', 'qty', 'price', 'unit'].map(name => [name, new Element(name === 'unit' ? 'select' : 'input')]));
     fields.name.value = item.name; fields.qty.value = item.quantity; fields.price.value = item.price;
+    fields.unit.value = item.unit || '';
     for (const field of Object.values(fields)) field.closest = () => result;
     const total = { innerText: '0.00' };
     result.querySelector = selector => ({ '.name-input': fields.name, '.qty-input': fields.qty,
-      '.price-input': fields.price, '.row-total': total }[selector]);
+      '.price-input': fields.price, '.unit-input': fields.unit, '.row-total': total }[selector]);
     result.remove = () => { rows = rows.filter(existing => existing !== result); };
     result.fields = fields; result.dataset.pcTouched = item.touched ? 'true' : 'false';
     return result;
@@ -63,6 +64,23 @@ test('suggestion card precedes Itemized Details and initially renders user-provi
   assert.ok(html.indexOf('id="pcSuggestionCard"') < html.indexOf('<!-- Section 2: Itemized Details -->'));
   assert.match(html, /id="pcSuggestionStatus" role="status" aria-live="polite"/);
 });
+
+test('unit-only edits are preserved when a suggestion chooses its insertion row', () => {
+  const h = fixture([{ name: '', quantity: '1', price: '', unit: 'Kilogram' }]);
+  h.use('Petrol');
+  assert.equal(h.rows.length, 2);
+  assert.equal(h.rows[0].fields.name.value, '');
+  assert.equal(h.rows[0].fields.unit.value, 'Kilogram');
+  assert.equal(h.rows[1].fields.name.value, 'Petrol');
+  assert.equal(h.rows[1].fields.unit.value, '');
+});
+
+test('repeated item suggestions keep the selected unit unchanged', () => {
+  const h = fixture([{ name: 'Petrol', quantity: '2', price: '100', unit: 'Liter' }]);
+  h.use('Petrol'); assert.equal(h.rows.length, 1);
+  assert.equal(h.rows[0].fields.unit.value, 'Liter');
+  assert.equal(h.document.activeElement, h.rows[0].fields.qty);
+});
 test('first untouched blank row is filled, defaults preserved and quantity receives focus', () => {
   const h = fixture(); const original = h.rows[0];
   h.use('Petrol');
@@ -84,7 +102,7 @@ test('populated, edited or non-default rows are never overwritten; a fresh row i
   h.use('Food');
   assert.equal(h.rows.length, 5); assert.equal(h.rows[4].fields.name.value, 'Food');
   assert.deepEqual(h.rows.slice(0, 4).map(row => Object.values(row.fields).map(field => field.value)),
-    [['Manual', '2', '90'], ['', '5', ''], ['', '1', ''], ['', '1', '0']]);
+    [['Manual', '2', '90', ''], ['', '5', '', ''], ['', '1', '', ''], ['', '1', '0', '']]);
 });
 test('repeated clicks focus an existing case/whitespace-normalized item without changing any values', () => {
   const h = fixture([{ name: '  cHICKen  ', quantity: '3', price: '250' }]); h.category('Kitchen/Food');

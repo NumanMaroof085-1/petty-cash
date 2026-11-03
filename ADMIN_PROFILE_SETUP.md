@@ -75,7 +75,7 @@ are user-admin deployment instructions, not assistant-applied tenant changes.
 3. Save/sync/Preview and reload. Authorized admins should see seven usable fields
    and the profile-only readiness message. The script rejects old password-form
    HTML with an explicit paired-deployment error instead of acting on it.
-4. Check window.PettyCashAdmin.version returns **admin-profiles-v2**. Optionally
+4. Check window.PettyCashAdmin.version returns **admin-profiles-v3**. Optionally
    await PettyCashAdmin.checkSetup(): profileOnly=true, passwordSetupRequired=true,
    loginProvisioned=false; it reads only and does not verify server write rights.
 5. Create a unique test profile once and verify username, zero summary and lookup
@@ -99,7 +99,9 @@ not change previously saved Contacts or their credentials.
 
 ## Verification and boundaries
 
-87 unit tests pass (31 Admin). Mock browser checks pass seven states: enabled,
+The current combined local baseline is 141 unit checks; see
+documentation/handover/verification.json for the documentation-audit rerun.
+Mock browser checks cover seven states: enabled,
 disabled, non-admin, unconfigured, old HTML, rejected POST and verification retry;
 desktop/mobile profile layouts reviewed. Tests assert no password controls or
 credential payloads, profile/username/zero/binds, disabled default guards, duplicate

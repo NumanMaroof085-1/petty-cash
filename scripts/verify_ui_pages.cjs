@@ -82,8 +82,10 @@ const requests = [makeRequest(1, 123140000, 'PCR-000128', '', 2400),
       if (mode === 'request') {
         await page.waitForFunction(() => document.querySelector('#pcEmployeeBalanceValue').textContent.includes('8,150'));
         await page.getByRole('button', { name: 'Use suggested item Petrol', exact: true }).click();
+        await page.locator('.unit-input').selectOption('Liter');
         await page.locator('.qty-input').fill('2'); await page.locator('.price-input').fill('350');
         await page.getByRole('button', { name: 'Use suggested item Hotel', exact: true }).click();
+        await page.locator('.unit-input').nth(1).selectOption('Day');
         await page.locator('.price-input').nth(1).fill('1700');
         assert.equal(await page.locator('#lblGrandTotal').textContent(), '2400.00');
         await page.locator('#txtJustification').fill('Travel and accommodation for the client site visit.');

@@ -15,7 +15,7 @@ const schema = {
     'hr_approvalstatus', 'hr_erpsyncstatus',
     '_hr_submittedby_value', '_hr_department_value', '_hr_assignedmanager_value'],
   hr_pettycashlineitems: ['hr_pettycashlineitemid', 'hr_itemname', 'hr_quantity',
-    'hr_unitprice', 'hr_totalprice', 'hr_category', 'hr_othercategory', '_hr_parentrequest_value']
+    'hr_unit', 'hr_unitprice', 'hr_totalprice', 'hr_category', 'hr_othercategory', '_hr_parentrequest_value']
 };
 
 function harness(options = {}) {
@@ -57,6 +57,7 @@ function harness(options = {}) {
   ]).map(item => ({
     querySelector(selector) {
       return { '.name-input': { value: item.name }, '.qty-input': { value: String(item.quantity) },
+        '.unit-input': { value: item.unit === undefined ? 'Piece' : item.unit },
         '.price-input': { value: String(item.unitPrice) }, '.row-total': { innerText: '' } }[selector];
     }
   }));
@@ -186,11 +187,65 @@ test('complete request retains every field, binds all lookups, and verifies chil
   for (const write of writes.slice(1)) {
     assert.equal(write.body.hr_category, 123140005);
     assert.equal(write.body.hr_othercategory, 'Safety supplies');
+    assert.equal(write.body.hr_unit, 'Piece');
     assert.equal(write.body.hr_totalprice, Number((write.body.hr_quantity * write.body.hr_unitprice).toFixed(2)));
   }
   assert.equal(h.calls.filter(c => c.method === 'PUT').length, 1);
   assert.match(h.messages.at(-1), /Success!/);
   for (const call of h.calls) assert.equal(call.headers.__RequestVerificationToken, 'csrf');
+});
+
+test('each line retains its own unit and positive fractional quantities keep the existing total calculation', async () => {
+  const h = harness({ items: [
+    { name: 'Petrol', quantity: 1.5, unit: 'Liter', unitPrice: 280 },
+    { name: 'Chicken', quantity: 0.5, unit: 'Kilogram', unitPrice: 600 }
+  ] });
+  await h.submit();
+  const lines = h.calls.filter(call => call.method === 'POST' && call.body.hr_itemname);
+  assert.deepEqual(lines.map(call => [call.body.hr_unit, call.body.hr_quantity, call.body.hr_totalprice]),
+    [['Liter', 1.5, 420], ['Kilogram', 0.5, 300]]);
+  assert.equal(h.calls.find(call => call.method === 'POST').body.hr_totalamount, 720);
+  assert.match(h.messages.at(-1), /Success!/);
+});
+
+test('missing or unlisted units block submission before receipt preparation or API calls', async () => {
+  for (const unit of ['', 'Unknown unit', '<img src=x>']) {
+    const h = harness({ items: [{ name: 'Petrol', quantity: 1, unit, unitPrice: 100 }] });
+    await h.submit();
+    assert.match(h.messages.at(-1), /choose a valid unit/);
+    assert.equal(h.calls.length, 0);
+    assert.equal(h.preparationCalls.length, 0);
+  }
+});
+
+test('missing unit field exposure prevents creating the request header', async () => {
+  const h = harness({ missingColumn: 'hr_unit' }); await h.submit();
+  assert.match(h.messages.at(-1), /hr_unit/);
+  assert.equal(h.calls.filter(call => call.method === 'POST').length, 0);
+});
+
+test('a saved line missing its unit cannot report success or be recreated on retry', async () => {
+  const h = harness({ omittedLineField: 'hr_unit' }); await h.submit(); await h.submit();
+  assert.match(h.messages.at(-1), /hr_unit/);
+  assert.equal(h.calls.filter(call => call.method === 'POST').length, 2);
+  assert.equal(h.calls.filter(call => call.method === 'PUT').length, 0);
+});
+
+test('a unit edit on a partly saved request must be restored before resuming', async () => {
+  const items = [{ name: 'Petrol', quantity: 1, unit: 'Liter', unitPrice: 100 }];
+  let failed = false;
+  const h = harness({ items, intercept(call, { error }) {
+    if (call.method === 'PUT' && !failed) { failed = true; return error(500, 'Upload interrupted'); }
+  } });
+  await h.submit();
+  items[0].unit = 'Kilogram'; await h.submit();
+  assert.match(h.messages.at(-1), /Restore its original form values/);
+  assert.equal(h.calls.filter(call => call.method === 'POST').length, 2);
+  assert.equal(h.calls.filter(call => call.method === 'PUT').length, 1);
+  items[0].unit = 'Liter'; await h.submit();
+  assert.match(h.messages.at(-1), /Success!/);
+  assert.equal(h.calls.filter(call => call.method === 'POST').length, 2);
+  assert.equal(h.calls.filter(call => call.method === 'PUT').length, 2);
 });
 
 test('a complete save reads only the employee Contact while retaining and verifying the manager binding', async () => {

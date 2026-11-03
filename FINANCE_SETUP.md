@@ -1,5 +1,12 @@
 # Finance cash management
 
+**Handover baseline: 2 November 2026.** Use [HANDOVER.md](HANDOVER.md) for the
+current source/configuration and [HANDOVER_CHECKLIST.md](HANDOVER_CHECKLIST.md)
+for native acceptance. Shared version is finance-posting-v5. The page contains
+its confirmed site invocation GUID and reviewed=true setting; the generic
+example stays disabled. Older dated checkpoints below retain their historical
+status and do not establish a currently disabled page or a new deployment need.
+
 2026-10-31 read-only configuration correction: the live Console returned an
 empty flow ID and Boolean false after the UI publication. Local Finance HTML now
 retains the user-confirmed invocation GUID 0b0976ac-a6d3-f111-a05d-70a8a52176fd

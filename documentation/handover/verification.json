@@ -1,0 +1,469 @@
+{
+  "audit_date": "2026-11-03",
+  "scope": "Local source and documentation. No native tenant, export, authentication or permission audit.",
+  "source_commit_before_documentation_changes": "194ca2568791d772976f6244977ad5d426d970ee",
+  "node_version": "v24.22.1",
+  "local_checks": {
+    "documentation_links_checked": 36,
+    "generated_templates_consistent": true,
+    "configured_finance_page_matches_recorded_invocation": true,
+    "unit_tests": 148,
+    "passed": 148,
+    "failed": 0
+  },
+  "browser_evidence": "Prior mocked suites documented in setup guides. Not rerun or represented as native acceptance by this documentation audit.",
+  "word_documents": "Original DOCX files are older references; not reissued or freshly rendered for company handover.",
+  "native_exports_reviewed": false,
+  "user_reported_completion": {
+    "confirmed_on": "2026-11-02",
+    "manager_approval_duplicate_protection": true,
+    "header_footer_home_published": true,
+    "evidence": "User reply to the two handover status questions; not a native export/run review."
+  },
+  "native_tenant_operations_performed": false,
+  "product_units_user_confirmation": {
+    "confirmed_on": "2026-11-03",
+    "saved_to_unit_column": true,
+    "setup_checks_passed": [
+      "request columns",
+      "product columns",
+      "department target"
+    ],
+    "evidence": "User report and diagnostic screenshot; specific fractional/email acceptance not inferred."
+  },
+  "company_acceptance": "Pending native exports, ownership, approval-flow review and live acceptance checklist.",
+  "manifest": [
+    {
+      "file": "ADMIN_CREDENTIAL_SETUP.md",
+      "bytes": 21661,
+      "sha256": "cf6f03d5aefc1ed5b253c4687f78bce98081eaa9a1e2ae5113f3a27bbc25994c",
+      "classification": "source_or_documentation"
+    },
+    {
+      "file": "ADMIN_PROFILE_SETUP.md",
+      "bytes": 7136,
+      "sha256": "25812ed36d7f1a8d58dde5d964c60a0ccac93cccaef87100cd859de98d7143d8",
+      "classification": "source_or_documentation"
+    },
+    {
+      "file": "ADMIN_USER_SETUP.md",
+      "bytes": 28808,
+      "sha256": "57f3513915af7a14c95fa6569760e247a2baaee42dfe32db4b018a28050a7a72",
+      "classification": "source_or_documentation"
+    },
+    {
+      "file": "Accounts Cash Management.html",
+      "bytes": 2184,
+      "sha256": "2ad492d40dac0422d7fad5ee511389e0a441716403c6b5b825193cb7a0ff5d7a",
+      "classification": "retired_page"
+    },
+    {
+      "file": "Admin Users.html",
+      "bytes": 24657,
+      "sha256": "3d9abad36449eefc899a0bdd6cc201b3f26788367040b9177792f32aa842c077",
+      "classification": "source_or_documentation"
+    },
+    {
+      "file": "BALANCE_MODULE_SETUP.md",
+      "bytes": 27695,
+      "sha256": "b14972e8b43cabacdef19f7f605d29f781d4571e1074e2027ac4a5fa23561d2c",
+      "classification": "source_or_documentation"
+    },
+    {
+      "file": "Configuration document.docx",
+      "bytes": 11659,
+      "sha256": "35681bad0cd30ad8f4cb52b804c835ac10a1f606ba96ddfb981d2e8f5a61d56d",
+      "classification": "historical_word_reference"
+    },
+    {
+      "file": "DATAVERSE_SETUP.md",
+      "bytes": 15680,
+      "sha256": "4a6425d7f6741f928093c3c0592d69a9bcd61c5f5ca5e1df77f08c748d7d77e5",
+      "classification": "source_or_documentation"
+    },
+    {
+      "file": "DOCUMENTATION_AUDIT.md",
+      "bytes": 4750,
+      "sha256": "87ba0800cd14e865e16e1aa9a90235da8e568876a673b411b44174c1a1e2c169",
+      "classification": "source_or_documentation"
+    },
+    {
+      "file": "FINANCE_FLOWCHART.md",
+      "bytes": 11292,
+      "sha256": "e2e976519f92f20af0470e2b87f8b75a49838abb034dce09d15910b8b88226b4",
+      "classification": "source_or_documentation"
+    },
+    {
+      "file": "FINANCE_FLOW_SETUP.md",
+      "bytes": 99004,
+      "sha256": "bd775b0499ffbc635ddc6c336e044b20d3014ab5115b9438f427b8c7962500c6",
+      "classification": "source_or_documentation"
+    },
+    {
+      "file": "FINANCE_SELF_POSTING_SETUP.md",
+      "bytes": 6171,
+      "sha256": "31984ae78c41b2611883c489d85596c74c0fe6fd6b8174ae8d80bc04f093878b",
+      "classification": "source_or_documentation"
+    },
+    {
+      "file": "FINANCE_SETUP.md",
+      "bytes": 28229,
+      "sha256": "f613793906be6d8e79223c4e12245b2f3e54fb8da3ef2eece54165aea6574a82",
+      "classification": "source_or_documentation"
+    },
+    {
+      "file": "Finance Cash Management.html",
+      "bytes": 25962,
+      "sha256": "5365f0be49d36476e932902e191afd3e3593657eae9e1d7b1f45db40829fa72d",
+      "classification": "source_or_documentation"
+    },
+    {
+      "file": "Footer.html",
+      "bytes": 2616,
+      "sha256": "0dbd9d498522f8f688383d856a7277d6d669eb1f4499246ef51dc0f44b23acc2",
+      "classification": "source_or_documentation"
+    },
+    {
+      "file": "HANDOVER.md",
+      "bytes": 17575,
+      "sha256": "28a552a360361facb2bdd869536a9bd064bbbd8e87618faa3768fed95abee552",
+      "classification": "source_or_documentation"
+    },
+    {
+      "file": "HANDOVER_CHECKLIST.md",
+      "bytes": 6863,
+      "sha256": "d4403842b4ed08b50182ce8d0f659755c7e710fa303ea4e64e51ed3c4fe425e9",
+      "classification": "source_or_documentation"
+    },
+    {
+      "file": "Header.html",
+      "bytes": 24147,
+      "sha256": "40ff40986a87c3ffc24ab8d202d31bde673977403f640c15d0cf66193b285fb7",
+      "classification": "source_or_documentation"
+    },
+    {
+      "file": "Home.html",
+      "bytes": 126,
+      "sha256": "15a67697c3b697962f2e3f8b04bd619cfc282327404ab7dddb884962241dde1e",
+      "classification": "source_or_documentation"
+    },
+    {
+      "file": "IMPLEMENTATION_LOG.md",
+      "bytes": 130440,
+      "sha256": "6c01b8d1858dd8f779e7d30437a331f8d1e1a478a3d61da13ab8d95bce6138d2",
+      "classification": "source_or_documentation"
+    },
+    {
+      "file": "ITEM_SUGGESTIONS_SETUP.md",
+      "bytes": 6380,
+      "sha256": "0bad34c8be5ff8c08986e8c2157af916f68be2cbdce97c9dcaeff74944c2cc1a",
+      "classification": "source_or_documentation"
+    },
+    {
+      "file": "MANAGER_APPROVAL_FLOW.md",
+      "bytes": 11236,
+      "sha256": "8e78797165ac934a76afe3bd4cf2a0f274426353cb3486cc219ae8afdec1aff0",
+      "classification": "source_or_documentation"
+    },
+    {
+      "file": "My Petty Cash Requests.html",
+      "bytes": 23733,
+      "sha256": "098bfbaf091289d6b88bc285a7566066348b5bab56b94bf81811fb33e0d386b3",
+      "classification": "source_or_documentation"
+    },
+    {
+      "file": "New Petty Cash Request.html",
+      "bytes": 80347,
+      "sha256": "00c0d51cae19c332714dc8d2fe6998a36e0a8b6b2285b3f2ecf486b720c97ec5",
+      "classification": "source_or_documentation"
+    },
+    {
+      "file": "OPERATIONS_RUNBOOK.md",
+      "bytes": 9016,
+      "sha256": "6765741cfec205852ffff6d43ca727d0c00a2249ae43e35e946532aaf02506fc",
+      "classification": "source_or_documentation"
+    },
+    {
+      "file": "PRODUCT_UNITS_SETUP.md",
+      "bytes": 4828,
+      "sha256": "36bc2c8d671ea52fbafde8e6b03b21d7b0dd734343096829baac6d6b6cd4a841",
+      "classification": "source_or_documentation"
+    },
+    {
+      "file": "Petty Cash App - Database Schema.docx",
+      "bytes": 13863,
+      "sha256": "4cecce3b2a9fb81b734edf8bbad8e2ec1b710ebc1cea55fb5dec1cb13bf2c48d",
+      "classification": "historical_word_reference"
+    },
+    {
+      "file": "Petty Cash Home.html",
+      "bytes": 38598,
+      "sha256": "528aea3666ddd665597a27f14559f590248b88bd768aa494cf2d7c5fe9806c61",
+      "classification": "source_or_documentation"
+    },
+    {
+      "file": "Petty Cash Receipts.html",
+      "bytes": 436448,
+      "sha256": "23c637b9598d17fd114dbd665116c133cd71772d0e898eb9c5394615c3e43e6d",
+      "classification": "source_or_documentation"
+    },
+    {
+      "file": "Petty Cash Request System - Project Overview.docx",
+      "bytes": 653345,
+      "sha256": "c14715e362aa2cda2143dc2b582a9458d62b9a5a43e2c9d9b298a8266d937103",
+      "classification": "historical_word_reference"
+    },
+    {
+      "file": "Petty Cash User Context.html",
+      "bytes": 1071,
+      "sha256": "83e4a42ee1ab91fb9899ce40c9d961bf1bda8a7f725131b93a7feb0966d246d6",
+      "classification": "source_or_documentation"
+    },
+    {
+      "file": "README.md",
+      "bytes": 19948,
+      "sha256": "12885bf15b0fce2a9fcdde72fcc6e5b058b3220274df2d3dfb3d28d68b3c2a87",
+      "classification": "source_or_documentation"
+    },
+    {
+      "file": "RECEIPT_PDF_SETUP.md",
+      "bytes": 8265,
+      "sha256": "35c413defffdd74d9fce824f0e6c3bc25d7a2b81408c6c1faeffbe3bb2ce2d0c",
+      "classification": "source_or_documentation"
+    },
+    {
+      "file": "SITE_SHELL_HOME_SETUP.md",
+      "bytes": 10770,
+      "sha256": "8392fc9f730dfbb48bd0002e2e4c68d8b6907ad1a6c20ca7118a71161d84acc9",
+      "classification": "source_or_documentation"
+    },
+    {
+      "file": "UI_REFRESH_SETUP.md",
+      "bytes": 8387,
+      "sha256": "39b3dad2e28b17fe09ecc89af1dbb22bbcdcadb0d63fbe7beb5e64725122349c",
+      "classification": "source_or_documentation"
+    },
+    {
+      "file": "WEBAPI_SITE_SETTINGS.md",
+      "bytes": 16160,
+      "sha256": "558d04269ea226453ee8b5dcd3742b65cb0f251af5c9c82b6603a19ca5e5db31",
+      "classification": "source_or_documentation"
+    },
+    {
+      "file": "documentation/README.md",
+      "bytes": 3937,
+      "sha256": "dd3f2086f0505dcd7dbe6922d2e3103128a091160ff42ea8955c9e20cf037823",
+      "classification": "source_or_documentation"
+    },
+    {
+      "file": "finance-cash-request.schema.json",
+      "bytes": 705,
+      "sha256": "c7f65fd110e978ebe555913bbd7ce21ebdb732ab2cf44ea7fa5af5db49f16c36",
+      "classification": "source_or_documentation"
+    },
+    {
+      "file": "pettycash-admin-config.example.js",
+      "bytes": 694,
+      "sha256": "9c228e9b77251d7956501e2fea998c685230e28046324c85051ae10a6d2c4542",
+      "classification": "source_or_documentation"
+    },
+    {
+      "file": "pettycash-admin.js",
+      "bytes": 17927,
+      "sha256": "61fc810e89b659763b86b844c1fcdd139ea33da1dd60426c43acd35d0c353907",
+      "classification": "source_or_documentation"
+    },
+    {
+      "file": "pettycash-api.js",
+      "bytes": 51037,
+      "sha256": "6ae5a0ab7aa0bcf05b627f3f321a99f82dfa39ebbf38a42def8bc6f1c2b6d383",
+      "classification": "source_or_documentation"
+    },
+    {
+      "file": "pettycash-home.css",
+      "bytes": 8243,
+      "sha256": "7b57293c63cb2c90ab5b3944e3ec363a4bb220da0bea42bac7af52d67662069b",
+      "classification": "source_or_documentation"
+    },
+    {
+      "file": "pettycash-home.js",
+      "bytes": 3755,
+      "sha256": "e25b5104e9275fa09a3e3c6a368406a7fc87e5b942d8f313c3e69cbdaa4e07de",
+      "classification": "source_or_documentation"
+    },
+    {
+      "file": "pettycash-module-config.example.js",
+      "bytes": 411,
+      "sha256": "24a95861e4953adf4d2a9009d6ff81c6500c0c58db5891938022231d836bae77",
+      "classification": "source_or_documentation"
+    },
+    {
+      "file": "pettycash-modules.js",
+      "bytes": 27606,
+      "sha256": "1cad68c6abbc5fc3cbc018f28b0e6c29c5eb156849ef6e3578303c8cc0caa944",
+      "classification": "source_or_documentation"
+    },
+    {
+      "file": "pettycash-receipts.js",
+      "bytes": 16030,
+      "sha256": "d4d2db4a6e301fc3cf1467ab487c72582992904dbcd5817b48522782bc82d78a",
+      "classification": "source_or_documentation"
+    },
+    {
+      "file": "pettycash-shell.css",
+      "bytes": 7973,
+      "sha256": "5640cb78108a1ec0fcfe55a3416099182130658e97dfe47058353cffaf8dbddc",
+      "classification": "source_or_documentation"
+    },
+    {
+      "file": "pettycash-shell.js",
+      "bytes": 3274,
+      "sha256": "47c1f23bd21747e630f577971dea26a8bb9c96387f32ba71055bcf3bccbbc51e",
+      "classification": "source_or_documentation"
+    },
+    {
+      "file": "pettycash-ui.css",
+      "bytes": 20989,
+      "sha256": "121a1b7f60bd6eaa3a5a97e7465d5fdab291b5ce0c09f4fa8f408b108290f26e",
+      "classification": "source_or_documentation"
+    },
+    {
+      "file": "scripts/build_home_template.cjs",
+      "bytes": 1368,
+      "sha256": "286f7f18d57e45d336e6a0e922a67f9cf5770e1a5b704186808be6f7965c2220",
+      "classification": "source_or_documentation"
+    },
+    {
+      "file": "scripts/build_receipt_template.cjs",
+      "bytes": 3035,
+      "sha256": "2d512343a13c885063113a26c9c41d4c47c7121ce4275fb2a34907c2ed83b84a",
+      "classification": "source_or_documentation"
+    },
+    {
+      "file": "scripts/build_request_page.cjs",
+      "bytes": 1013,
+      "sha256": "4a2b4ae99f81224fcd103bb7ff1f13e2dd3a77b01dcb79a299449d832b85bfab",
+      "classification": "source_or_documentation"
+    },
+    {
+      "file": "scripts/build_shell_template.cjs",
+      "bytes": 1308,
+      "sha256": "9ae4ce9c0e991950b96ac8236fe43f5b26a99e9b23dd51aaf02fb0395014a750",
+      "classification": "source_or_documentation"
+    },
+    {
+      "file": "scripts/build_ui_styles.cjs",
+      "bytes": 1113,
+      "sha256": "98f282f6d006e92efed0084d08f06354a498d46eafe64372eda10b74145918f3",
+      "classification": "source_or_documentation"
+    },
+    {
+      "file": "scripts/liquid_fixture.cjs",
+      "bytes": 7533,
+      "sha256": "c0995f02a09f0b4c88f52924af40764a4716811125e3d2f8a276836e585c996c",
+      "classification": "source_or_documentation"
+    },
+    {
+      "file": "scripts/shell_fixtures.cjs",
+      "bytes": 3677,
+      "sha256": "2d9f709339e541283ccd1b49fcff9bfa20d93b5d0e1654cd3d29a4560729d815",
+      "classification": "source_or_documentation"
+    },
+    {
+      "file": "scripts/verify_admin_page.cjs",
+      "bytes": 9414,
+      "sha256": "02f6e39f86d576329c56040c1428f6db9360950066738ca20de5cfae9164b906",
+      "classification": "source_or_documentation"
+    },
+    {
+      "file": "scripts/verify_finance_page.cjs",
+      "bytes": 19412,
+      "sha256": "bbaaee0d882e786482c1a4f9b8dd9053fb1d4c4881876d1a7217aa4f81543d7c",
+      "classification": "source_or_documentation"
+    },
+    {
+      "file": "scripts/verify_handover.cjs",
+      "bytes": 6757,
+      "sha256": "8ed750668748acf0b0da4b4d88ec4bd313a70e4c1c47238bebef7212d5333ff5",
+      "classification": "source_or_documentation"
+    },
+    {
+      "file": "scripts/verify_item_suggestions.cjs",
+      "bytes": 14244,
+      "sha256": "60d0537a957115d08b8d82351160b55e48b66df8a3979e155ecb2a34979cfec7",
+      "classification": "source_or_documentation"
+    },
+    {
+      "file": "scripts/verify_module_pages.cjs",
+      "bytes": 8222,
+      "sha256": "ac2f3d8bae249011d46ef442137777a237f3bc94573d77ce936fa6fadffd67a3",
+      "classification": "source_or_documentation"
+    },
+    {
+      "file": "scripts/verify_receipt_upload.cjs",
+      "bytes": 12687,
+      "sha256": "94e1c8e35e858f99c927c75ca3a9a4d59ceb18af16a2cfe222a99963fcbf1694",
+      "classification": "source_or_documentation"
+    },
+    {
+      "file": "scripts/verify_shell_home.cjs",
+      "bytes": 15989,
+      "sha256": "977997f970f68941e4927aa55857d26e8bf8e45b4972fb91734fd7ec694740d1",
+      "classification": "source_or_documentation"
+    },
+    {
+      "file": "scripts/verify_ui_pages.cjs",
+      "bytes": 14386,
+      "sha256": "5fe8a1985a25c56f13a2dce8be37a0c70f50c7a749ee4efe311b277f488146fa",
+      "classification": "source_or_documentation"
+    },
+    {
+      "file": "tests/pettycash-admin.test.cjs",
+      "bytes": 23121,
+      "sha256": "a10896f520660512fb58ff4f1d5d103078615155681cb5a815b18c849d432697",
+      "classification": "source_or_documentation"
+    },
+    {
+      "file": "tests/pettycash-api.test.cjs",
+      "bytes": 39560,
+      "sha256": "de6ea8d75632b5741d308ba6204050e41ca2241c44c1374bf6b4a179d4116161",
+      "classification": "source_or_documentation"
+    },
+    {
+      "file": "tests/pettycash-modules.test.cjs",
+      "bytes": 22644,
+      "sha256": "33b26190e86a7287c056bbea1e1b22a9056d1acbab0c1fd02a76923d5a6c4aae",
+      "classification": "source_or_documentation"
+    },
+    {
+      "file": "tests/pettycash-receipts.test.cjs",
+      "bytes": 10702,
+      "sha256": "2bc6568d73be9e3f8146b750438b19766121c31f68709fb3f8067c9ecd3821b2",
+      "classification": "source_or_documentation"
+    },
+    {
+      "file": "tests/pettycash-shell-home.test.cjs",
+      "bytes": 4245,
+      "sha256": "bc85af85b408c18dd94e25bd7b775d66459fb46fcc95ef06fa4b4a89ed83442d",
+      "classification": "source_or_documentation"
+    },
+    {
+      "file": "tests/pettycash-suggestions.test.cjs",
+      "bytes": 11300,
+      "sha256": "7ad4cdb22e4e18ac24518b9aed96a8883d204471e748630ae3595fb4bb7a80c5",
+      "classification": "source_or_documentation"
+    },
+    {
+      "file": "vendor/jspdf-4.2.1.umd.min.js",
+      "bytes": 420165,
+      "sha256": "e6551fcdc32f09d6853b2c5126d18d01d9447e0da618a41a11ebeee0f6c20d54",
+      "classification": "source_or_documentation"
+    },
+    {
+      "file": "vendor/jspdf-LICENSE.txt",
+      "bytes": 1142,
+      "sha256": "dc388ec35ff463288cdde3588a36fd4ed12a45deff053243b37309acc9ef583b",
+      "classification": "source_or_documentation"
+    }
+  ]
+}

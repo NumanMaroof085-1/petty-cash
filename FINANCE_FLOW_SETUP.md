@@ -1,5 +1,12 @@
 # Finance cash movement flow setup
 
+> **Development/build history — not a single current deployment recipe.**
+> Read [HANDOVER.md](HANDOVER.md) and [FINANCE_SETUP.md](FINANCE_SETUP.md) first.
+> Current source is finance-posting-v5 with this site's confirmed page config.
+> The older Work/Finalize scopes, in-flow ledger calculation, old version/status
+> notes and disabled-page defaults below are superseded. Maintain the actual
+> native exported flow; this file is not an export or verified final definition.
+
 Latest 2026-10-31 report: user installed Is_Self_Posting and the new shared
 script. Native self-denial tests are not independently verified. Approval
 posting-key recommendations are in MANAGER_APPROVAL_FLOW.md; no Finance parser

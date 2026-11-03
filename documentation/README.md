@@ -1,6 +1,32 @@
 # Documentation correction status
 
-The three root Word documents are corrected and finalized. Their complete
+## Current company handover baseline
+
+As of 2 November 2026, the maintained entry point is
+[HANDOVER.md](../HANDOVER.md), with
+[OPERATIONS_RUNBOOK.md](../OPERATIONS_RUNBOOK.md),
+[HANDOVER_CHECKLIST.md](../HANDOVER_CHECKLIST.md) and
+[DOCUMENTATION_AUDIT.md](../DOCUMENTATION_AUDIT.md).
+Local verification/source hashes are in handover/verification.json.
+
+The new product Unit dropdown and `hr_unit` column/API publication are covered in
+[PRODUCT_UNITS_SETUP.md](../PRODUCT_UNITS_SETUP.md). These implementation details
+are part of the current Markdown baseline, not the historical Word schema.
+
+The three root Word documents, corrected copies and PDFs below are **historical
+references**, not the final implementation specification. Their text still
+includes the old hr_postingkey/Accounts proposal and omits later features.
+They have not been reissued or newly render-approved for company handover.
+Do not hand them over as current standalone schema/configuration instructions.
+
+## Historical Word correction milestone
+
+The following is the record of the earlier correction and visual-review work,
+not a current deployment or handover sign-off. Older backup/QA paths may not be
+present in every checkout; do not infer current verification from this narrative.
+
+At the earlier correction milestone, the three root Word documents were corrected
+and finalized for that revision only. Their complete
 Office-exported PDFs were rasterized with bundled Poppler and all 13 pages
 were visually inspected on 2026-10-12. The reviewed copies remain in `corrected/`.
 Backups of the exact pre-edit originals are in `backups/2026-10-12/`.

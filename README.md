@@ -1,10 +1,29 @@
 # Petty Cash Request System
 
+## Company handover start here
+
+**Current documentation baseline: 2 November 2026.** Use
+[HANDOVER.md](HANDOVER.md) for the current architecture, data/role/configuration
+inventory and deployment map; [OPERATIONS_RUNBOOK.md](OPERATIONS_RUNBOOK.md) for
+normal use/support; [HANDOVER_CHECKLIST.md](HANDOVER_CHECKLIST.md) for required
+native exports, ownership and acceptance; and
+[DOCUMENTATION_AUDIT.md](DOCUMENTATION_AUDIT.md) for corrections and limitations.
+
+The documentation collection is organized for handover, but final company
+acceptance is pending. Source fragments and diagrams are not native website/
+Dataverse/flow exports. Older Word documents and build/troubleshooting narratives
+below are historical and must not override the current handover guide.
+
 Power Pages saves employee expense requests, products, and receipts through its
-session-authenticated Dataverse Web API. Power Automate should handle manager
-approval and accounting integration after a complete submission is available.
+session-authenticated Dataverse Web API. The user reports Finance posting working
+and a manager approval flow built separately. Complete native definitions and
+acceptance evidence remain required; ERP integration is not established.
 
 ## Header, footer and home — 2026-11-01
+
+User confirmed publication on 2 November 2026, and separately confirmed manager
+approval duplicate protection complete. Native export/acceptance review remains
+part of the handover checklist; the instructions below also cover maintenance.
 
 The supplied Header/Footer templates are restyled and a new Home workspace is
 ready locally. Publish Header.html and Footer.html into their existing Web
@@ -26,9 +45,20 @@ templates, columns, permissions or flows are required. Login/header/footer/home
 were outside that four-page change; the separate revision above covers the shell
 and Home. Login remains unchanged. Neither UI revision was published by the assistant.
 
+## Product units — 2026-11-02
+
+New request now requires a unit for every product line and saves it to the
+user-confirmed `hr_unit` text column. Add `hr_unit` to the line-item Web API
+fields before publishing the updated request HTML. See
+[PRODUCT_UNITS_SETUP.md](PRODUCT_UNITS_SETUP.md) for the 23 common units,
+configuration, fractional quantities and deployment checks. This change is
+implemented and tested locally. On 3 November the user confirmed successful live
+unit saving and supplied a screenshot with all setup checks passing.
+
 ## Files
 
 - `Header.html` / `Footer.html`: complete restyled versions of the user-supplied existing Web Templates, preserving managed navigation, editable branding, account controls and locale accessibility links.
+- `HANDOVER.md`, `OPERATIONS_RUNBOOK.md`, `HANDOVER_CHECKLIST.md`, `DOCUMENTATION_AUDIT.md`: current company handover set; `documentation/handover/verification.json` records the local audit/source snapshot.
 - `Home.html`: one include for the existing Home page; `Petty Cash Home.html`: complete new Home Web Template with signed-in balance/history and anonymous welcome.
 - `pettycash-shell.css` / `pettycash-shell.js`: header/footer styles and navigation-only enhancement, embedded by `scripts/build_shell_template.cjs`.
 - `pettycash-home.css` / `pettycash-home.js`: Home design and read-only data refresh, embedded by `scripts/build_home_template.cjs`; no new posting/configuration path.
@@ -37,6 +67,8 @@ and Home. Login remains unchanged. Neither UI revision was published by the assi
 
 - `New Petty Cash Request.html`: the Power Pages page fragment, including its script and shared template includes.
 - `pettycash-api.js`: the same client script, kept separately for development.
+- `scripts/build_request_page.cjs`: mirrors the canonical request script into its HTML; supports `--check`.
+- `PRODUCT_UNITS_SETUP.md`: line-item `hr_unit` text column, dropdown behavior, Web API setup and publication steps.
 - `ITEM_SUGGESTIONS_SETUP.md`: frontend category-name shortcuts, non-destructive row selection, editable starter lists, save/retry locks and request-HTML-only deployment.
 - `Petty Cash Receipts.html`: complete generated Source for the new Petty Cash Receipts Web Template; pinned PDF library and receipt module already wrapped.
 - `pettycash-receipts.js`: up to 10 ordered JPG/PNG images combined locally into one previewable PDF, or one unchanged existing PDF; limits and safe preparation cache.
@@ -68,11 +100,14 @@ and Home. Login remains unchanged. Neither UI revision was published by the assi
 - `ADMIN_USER_SETUP.md`: current Admin permissions/metadata/deployment checklist and unresolved native login/email provisioning.
 - `ADMIN_CREDENTIAL_SETUP.md`: historical failed credential experiment and supported Management test results; superseded by ADMIN_PROFILE_SETUP.md. Do not re-enable that path.
 - `IMPLEMENTATION_LOG.md`: dated inventory of every new page/function/column/configuration requirement and its deployment state.
-- `scripts/correct_project_docs.py`: localized Word corrections with source backups and comments; prepares candidates for visual verification.
-- `scripts/finalize_project_docs.py`: guards publication with backup/hash, PDF-content, and rendered-page checks for this documentation revision.
-- The three root Word documents are corrected and visually verified against all 13 pages of the user's Office exports. Pre-edit copies remain in `documentation/backups/2026-10-12`. Use the Markdown guides for exact deployment steps and implementation status.
+- `scripts/correct_project_docs.py` / `scripts/finalize_project_docs.py`: historical tools for the old Word correction milestone; their expectations include superseded key/role names. Do not use them as a current release/finalization procedure.
+- The three root Word documents and copies under `documentation/corrected/` are older references. A prior 13-page Office-export review did not approve the later Finance/Admin/receipt/UI/Home changes. They must be reissued and freshly reviewed if the company requires current Word deliverables; otherwise use HANDOVER.md.
 
-## Current implementation
+## Earlier request integration notes
+
+The narrative below records earlier implementation stages. Current handover
+status and Finance behavior are defined in HANDOVER.md; historical references
+to undelivered Accounts modules/blank configs are not current instructions.
 
 Balance viewing uses only the signed-in Contact GUID and the authorized cash
 ledger, independently of department/manager profile readiness. Deploy the
@@ -145,7 +180,7 @@ These tests make no network requests. They verify field preservation, read-back
 checks, sign-in requirements, duplicate-click handling, partial-save retries,
 receipt failures, mapping overrides, and synchronization of the two scripts.
 
-## Deployment
+## Historical deployment notes
 
 All three pages first include `{% include 'Petty Cash User Context' %}`, then
 load the shared script through `{% include 'Petty Cash Modules' %}`. Create the

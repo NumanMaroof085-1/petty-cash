@@ -5,6 +5,86 @@ same change. Record exact files, functionality, schema names, permissions, site
 settings, tests, and deployment state. Never describe a proposed tenant change
 as deployed merely because local code or documentation exists.
 
+## 2026-11-03 Confirm live product-unit save
+
+- User confirms the request works and saves to the Unit column. Supplied
+  checkSetup screenshot shows request columns, product columns and department
+  target all passing. Recorded basic live publication/save as user-confirmed.
+- Updated unit guide, README and handover status/checklist. Specific fractional
+  example, native schema export and approval-email display are not inferred.
+- Documentation-only update; no page, flow, permission or financial row changed.
+
+## 2026-11-02 Add required product units
+
+- User supplies the new line-item column logical name `hr_unit` after requesting
+  a common-unit dropdown. Configured as Text, maximum 30; native type/API
+  publication is not independently verified. Existing records are not backfilled.
+- Added 23 common units to every initial/added/reset product row, empty and
+  required by default. Price is per selected unit; no conversion or inferred
+  suggestion units. Existing decimal quantity semantics retained and HTML controls
+  now accept positive fractions. Totals, receipt pipeline and ledger unchanged.
+- Request validates units before writes, includes them in line payload/preflight/
+  read-back and retry fingerprint. Suggestions preserve unit-only drafts and units
+  on repeated/edited items. Updated desktop five-column and responsive card layout.
+- Canonical pettycash-api.js is mirrored with new scripts/build_request_page.cjs
+  into New Petty Cash Request.html. Rebuilt embedded shared CSS locally; other
+  page/Home behavior/configuration remains unchanged. Only request HTML needs
+  publication for this feature, after adding hr_unit to the existing line-item
+  Web API fields (and existing restrictive column Create/Read profiles if used).
+- Added PRODUCT_UNITS_SETUP.md; updated Web API union, handover, operations,
+  checklist and local audit/build sync. Approval email may display hr_unit via
+  a separately maintained native flow edit; no flow edit is claimed here.
+- 148 local unit checks pass, including missing/invalid units, missing API field,
+  wrong saved unit, fractional multi-item totals, retry changes and suggestions.
+  Request/receipt/suggestion/UI browser suites use mocked APIs; tenant deployment
+  and a controlled live unit save still require confirmation.
+
+## 2026-11-02 Record user confirmed approval guard and shell publication
+
+- User replies yes its done to the bundled question about manager approval
+  duplicate-protection completion and Header/Footer/Home publication. Recorded
+  both as user-confirmed complete; no final expressions/method, export, individual
+  acceptance runs or broader security/concurrency results are inferred.
+- Updated handover/status checklist, approval guide, shell setup, README and
+  documentation audit. Renamed the old approval guided step historical so it
+  is not mistaken for the current unfinished tenant state. Separate native
+  export/ownership/acceptance requirements remain open.
+- Refreshed local verification manifest, including the dated user report;
+  documentation links, generated templates and 141 unit checks pass. No product
+  code, tenant configuration, records or native flow was changed.
+
+## 2026-11-02 Audit and organize company handover documentation
+
+- User requests confirmation that documentation is ready for company handover.
+  Audited current code/configuration, Markdown guides, original DOCX text and
+  repository delivery assets. Source commit at audit start: 194ca25. No product,
+  tenant, flow, permission, financial row or credential was changed.
+- Added HANDOVER.md as current authority; OPERATIONS_RUNBOOK.md for staff/support;
+  HANDOVER_CHECKLIST.md for exports/ownership/native acceptance; DOCUMENTATION_AUDIT.md
+  for findings and distinctions between source tests/user reports/live evidence.
+- Corrected current Contact/Department Web API unions, Admin v3 check and Finance
+  flowchart status; marked older Accounts/credential/build investigations as history.
+  Removed an unsupported exact wildcard-deprecation date while retaining the
+  explicit-column requirement verified against Microsoft's current documentation.
+- README and documentation/README now distinguish old Word correction milestones
+  from current implementation. Read-only extraction confirms all three root DOCX
+  files retain hr_postingkey and omit the current key/Finance/Home baseline; they
+  are not silently altered or represented as current company Word deliverables.
+- Recorded open external assets: native website/schema/flow solution exports,
+  owner/connection/licensing/support/restore assignments and signed acceptance.
+  Approval readiness/dedupe/recovery, Contact-summary consistency, password-reset
+  resolution, secret-field cleanup and server-side permission tests remain
+  unverified. ERP delivery is not inferred from its status column.
+- Added scripts/verify_handover.cjs to validate local links/contracts/build sync,
+  run the 141 unit checks and record source/doc SHA256 evidence in
+  documentation/handover/verification.json. It does not certify native readiness.
+  Existing browser suites depend on this developer's runtime/Chrome paths; this
+  portability limit is documented rather than claiming company-machine QA.
+- Requested current approval-guard and Header/Footer/Home publication status from
+  the user while continuing the audit. Until evidence arrives, no undocumented
+  live completion is inferred. Markdown handover is prepared; native/company
+  sign-off remains a separate open checklist.
+
 ## 2026-11-01 Restyle supplied Header/Footer and add the Home workspace
 
 - User authorizes Header, Footer and Home UI work and provides Header.html and

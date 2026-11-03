@@ -67,23 +67,30 @@ const manager = '33333333-3333-4333-8333-333333333333';
     const ui = await open('ui'), page = ui.page;
     const use = name => page.getByRole('button', { name: 'Use suggested item ' + name, exact: true });
     const rows = page.locator('#tableBody tr');
+    assert.equal(await rows.nth(0).locator('.unit-input').inputValue(), '');
+    assert.ok(await rows.nth(0).locator('.unit-input option').count() > 20);
     await use('Petrol').click();
     assert.equal(await rows.count(), 1);
     assert.equal(await rows.nth(0).locator('.name-input').inputValue(), 'Petrol');
     assert.equal(await rows.nth(0).locator('.qty-input').evaluate(node => node === document.activeElement), true);
     await rows.nth(0).locator('.qty-input').fill('2'); await rows.nth(0).locator('.price-input').fill('100');
+    await rows.nth(0).locator('.unit-input').selectOption('Liter');
     await use('Petrol').click();
     assert.equal(await rows.count(), 1); assert.equal(await rows.nth(0).locator('.qty-input').inputValue(), '2');
     assert.equal(await rows.nth(0).locator('.price-input').inputValue(), '100');
+    assert.equal(await rows.nth(0).locator('.unit-input').inputValue(), 'Liter');
     await use('Hotel').focus(); await use('Hotel').press('Enter');
     assert.equal(await rows.count(), 2); await rows.nth(1).locator('.price-input').fill('400');
+    assert.equal(await rows.nth(1).locator('.unit-input').inputValue(), '');
     await page.locator('#selCategory').selectOption('Kitchen/Food');
     assert.equal(await rows.nth(0).locator('.name-input').inputValue(), 'Petrol');
     await use('Chicken').click();
     await rows.nth(2).locator('.name-input').fill('Chicken breast');
     await rows.nth(2).locator('.price-input').fill('200');
+    await rows.nth(2).locator('.unit-input').selectOption('Kilogram');
     await use('Chicken').click();
     assert.equal(await rows.count(), 4); assert.equal(await rows.nth(2).locator('.name-input').inputValue(), 'Chicken breast');
+    assert.equal(await rows.nth(2).locator('.unit-input').inputValue(), 'Kilogram');
     await rows.nth(3).locator('.price-input').fill('250');
     await use('Chicken').click(); assert.equal(await rows.count(), 4);
     await page.locator('#btnAddItem').click(); await use('Naan').click();
@@ -94,6 +101,15 @@ const manager = '33333333-3333-4333-8333-333333333333';
     assert.equal(await rows.nth(5).locator('.qty-input').inputValue(), '5');
     assert.equal(await rows.nth(6).locator('.name-input').inputValue(), 'Eggs');
     assert.equal(await page.locator('#lblGrandTotal').textContent(), '1050.00');
+    await page.locator('#productsTable').screenshot({ path: path.join(qa, 'units-desktop.png') });
+    for (const width of [720, 650, 390, 320]) {
+      await page.setViewportSize({ width, height: 844 });
+      assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth), false);
+      assert.equal(await rows.nth(0).locator('.unit-input').evaluate(el => {
+        const box = el.getBoundingClientRect(); return box.left >= 0 && box.right <= innerWidth;
+      }), true);
+    }
+    await page.locator('#productsTable').screenshot({ path: path.join(qa, 'units-mobile.png') });
     await page.locator('#pcSuggestionCard').screenshot({ path: path.join(qa, 'card-desktop.png') });
     await page.setViewportSize({ width: 390, height: 844 });
     assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth), false);
@@ -108,6 +124,17 @@ const manager = '33333333-3333-4333-8333-333333333333';
     assert.equal(await page.locator('#pcSuggestionItems button').count(), 0);
     assert.equal(await page.locator('#otherCategoryGroup').isVisible(), true);
     assert.match(await page.locator('#pcSuggestionStatus').textContent(), /manually/);
+    await page.locator('#selCategory').selectOption('Travel');
+    await page.locator('#btnAddItem').click();
+    const untouched = await rows.count() - 1;
+    await rows.nth(untouched).locator('.unit-input').selectOption('Pack');
+    await page.evaluate(() => document.querySelector('#tableBody tr:last-child').dataset.pcTouched = 'false');
+    await use('Hotel').click(); // Existing item still focuses, never overwrites a unit-only draft.
+    assert.equal(await rows.nth(untouched).locator('.unit-input').inputValue(), 'Pack');
+    await page.evaluate(() => { DATAVERSE_CONFIG.itemSuggestions.Travel.push('Taxi'); renderItemSuggestions(); });
+    await use('Taxi').click();
+    assert.equal(await rows.nth(untouched).locator('.name-input').inputValue(), '');
+    assert.equal(await rows.last().locator('.name-input').inputValue(), 'Taxi');
     assert.equal(ui.writes.length, 0); assert.deepEqual(ui.errors, []); await page.close();
 
     for (const mode of ['retry', 'uncertain', 'definite']) {
@@ -123,7 +150,12 @@ const manager = '33333333-3333-4333-8333-333333333333';
       // Header-only PDF fixture is intentionally synthetic; no PDF artifact is authored/delivered.
       await page.locator('#fileReceipt').setInputFiles({ name: 'synthetic.pdf', mimeType: 'application/pdf', buffer: Buffer.from('%PDF-1.7\nfixture') });
       await page.locator('#btnSubmit').click();
-      await page.waitForFunction(() => document.querySelector('#pcAlertBox').textContent.includes('Error:'));
+      await page.waitForFunction(() => document.querySelector('#pcAlertBox').textContent.includes('choose a valid unit'));
+      assert.equal(h.writes.length, 0, 'Missing units prevent all request writes');
+      await page.locator('.unit-input').nth(0).selectOption('Kilogram');
+      await page.locator('.unit-input').nth(1).selectOption('Piece');
+      await page.locator('#btnSubmit').click();
+      await page.waitForFunction(() => document.querySelector('#pcAlertBox').textContent.includes('Synthetic'));
       const locked = mode !== 'definite';
       assert.equal(await page.locator('#pcSuggestionItems button:disabled').count(), locked ? 3 : 0);
       if (locked) {
@@ -138,13 +170,15 @@ const manager = '33333333-3333-4333-8333-333333333333';
         await page.waitForFunction(() => document.querySelector('#pcAlertBox').textContent.includes('Success!'));
         assert.equal(h.writes.filter(write => write.method === 'POST').length, 3);
         const products = h.writes.filter(write => write.method === 'POST' && write.set === 'hr_pettycashlineitems');
-        assert.deepEqual(products.map(write => [write.body.hr_itemname, write.body.hr_quantity, write.body.hr_unitprice, write.body.hr_totalprice, write.body.hr_category]),
-          [['Chicken', 2, 100, 200, 123140001], ['Naan', 3, 20, 60, 123140001]]);
+        assert.deepEqual(products.map(write => [write.body.hr_itemname, write.body.hr_quantity, write.body.hr_unit, write.body.hr_unitprice, write.body.hr_totalprice, write.body.hr_category]),
+          [['Chicken', 2, 'Kilogram', 100, 200, 123140001], ['Naan', 3, 'Piece', 20, 60, 123140001]]);
         assert.equal(h.writes.filter(write => write.method === 'PUT').length, 2);
         assert.equal(await page.locator('#selCategory').inputValue(), 'Travel');
         assert.equal(await page.locator('#pcSuggestionCategory').textContent(), 'Travel');
         assert.equal(await page.locator('#pcSuggestionItems button:disabled').count(), 0);
         assert.equal(await page.locator('#tableBody tr').count(), 1);
+        assert.equal(await page.locator('.unit-input').inputValue(), '', 'Success resets the unit');
+        assert.ok(await page.locator('.unit-input option').count() > 20);
       } else if (mode === 'uncertain') {
         await page.locator('#btnSubmit').click();
         assert.equal(h.writes.filter(write => write.method === 'POST').length, 1);

@@ -1,9 +1,14 @@
 # Header, footer and home — 2026-11-01
 
+**Publication update 2 November 2026:** the user confirms Header, Footer and Home
+have been published. Instructions below remain the maintenance/republication
+procedure. Native acceptance results have not been independently reviewed.
+
 Implemented locally using the **Header.html** and **Footer.html** supplied by the
 user. The existing four application pages, Finance configuration, shared modules,
 receipt tools, data schema and native flows are unchanged. Login page UI is not
-part of this revision. No tenant deployment or sign-in/out has been performed.
+part of this revision. No tenant deployment or sign-in/out was performed by the
+assistant; publication was performed and confirmed by the user.
 
 ## Publish these four items
 

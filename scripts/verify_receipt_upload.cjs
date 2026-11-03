@@ -106,6 +106,7 @@ async function renderPdf(bytes) {
         window.jspdf.jsPDF = function (...args) { window.pdfGenerations++; return new Original(...args); };
       });
       await page.locator('.name-input').fill('Office supplies');
+      await page.locator('.unit-input').selectOption('Piece');
       await page.locator('.price-input').fill('250');
       await page.locator('#txtJustification').fill('Synthetic receipt upload test');
       return { page, calls, writes, errors };

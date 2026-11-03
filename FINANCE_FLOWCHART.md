@@ -1,5 +1,10 @@
 # Finance cash movement: current flow
 
+Current handover source baseline is finance-posting-v5; user confirmed the
+Finance config/read-only issue fixed after the UI change. This diagram describes
+the guided native build, not an inspected flow export. Read
+[HANDOVER.md](HANDOVER.md) and its checklist before company sign-off.
+
 Updated 2026-10-31. This documents the simpler Finance flow built in this
 conversation, including the frontend work before and after the flow. It is
 not the superseded recipe that calculated the entire ledger inside Power
@@ -150,12 +155,12 @@ user-reported installed; controlled verification remains before Finance sign-off
 | Native Finance flow invocation, validation, create/read-back and response | Guided build completed by user; posting now reported working. Full exported definition not independently audited. |
 | Website computes signed ledger balance separately | Implemented; correct display user-confirmed after hard refresh. |
 | Required AJAX header and lowercase response names | Fixed locally; user reports the flow now runs. Keep the permanent shared template current. |
-| Ledger query no longer limited to first 100 rows | Fixed and tested locally; user reports the latest pre-v4 script published on 2026-10-31. New v4 publication remains pending. |
+| Ledger query no longer limited to first 100 rows | Present in current finance-posting-v5 source and tested; user previously reported correct live display. Attach native acceptance evidence. |
 | Prevent operator posting to their own account | Frontend v4 blocks both directions while preserving own viewing. User reports native Is_Self_Posting condition and new script installed; native denial/no-write checks remain unverified. |
 | Cash Returned, same-key replay and non-Finance denial | Covered in local mocked tests; explicitly verify in the tenant before normal use. Concurrency/uncertain-result scenarios also need live verification. |
 | Manager approval and automatic Expense Approved ledger row | Separate flow user-created on 2026-10-31; screenshot configuration recorded in MANAGER_APPROVAL_FLOW.md. Full readiness/deduplication/currency/summary behavior not audited. |
 
-Current local baseline: 132 unit tests, 13 mocked Finance browser scenarios and
+Current combined local baseline: 141 unit checks, 13 mocked Finance browser scenarios and
 4 shared-page browser states passed. This diagram does not create tenant actions
 or establish server-side self-posting denial.
 

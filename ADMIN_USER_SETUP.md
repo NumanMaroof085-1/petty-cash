@@ -1,5 +1,11 @@
 # Administrator user management setup
 
+> **Historical build and troubleshooting record.** The maintained profile-only
+> instructions are [ADMIN_PROFILE_SETUP.md](ADMIN_PROFILE_SETUP.md) and
+> [HANDOVER.md](HANDOVER.md). Current Admin version is admin-profiles-v3.
+> Older versions, credential experiments and pending-phase notes below do not
+> override that implementation.
+
 ## Current implementation: admin-profiles-v2 (2026-10-19)
 
 The requested cleanup is implemented locally. Use **ADMIN_PROFILE_SETUP.md** for

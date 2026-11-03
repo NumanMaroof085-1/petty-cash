@@ -119,15 +119,17 @@
 .pc-app #pcSuggestionCard .pc-suggestion-button:hover:not(:disabled){background:#e1eee8;border-color:#8bb9af}
 .pc-app #pcSuggestionStatus{font-size:12px;color:#46675a;margin:12px 0 0}
 .pc-app #pcSuggestionStatus:empty{display:none}
-.pc-app #productsTable{table-layout:fixed;min-width:0}
-.pc-app #productsTable th:first-child{width:40%}
-.pc-app #productsTable th:nth-child(2){width:14%}
-.pc-app #productsTable th:nth-child(3){width:23%}
-.pc-app #productsTable th:nth-child(4){width:23%;text-align:right}
+.pc-app #productsTable{table-layout:fixed;min-width:680px}
+.pc-app #productsTable th:first-child{width:32%}
+.pc-app #productsTable th:nth-child(2){width:12%}
+.pc-app #productsTable th:nth-child(3){width:19%}
+.pc-app #productsTable th:nth-child(4){width:19%}
+.pc-app #productsTable th:nth-child(5){width:18%;text-align:right}
 .pc-app #productsTable td{padding:12px 9px!important;vertical-align:middle!important}
 .pc-app #productsTable td:first-child{padding-left:14px!important}
 .pc-app #productsTable td:last-child{padding-right:14px!important;text-align:right;white-space:nowrap}
-.pc-app #productsTable input{padding:10px!important;border-radius:8px!important;font-size:13px!important;border:1px solid #ccd9de!important;box-shadow:none!important}
+.pc-app #productsTable input,.pc-app #productsTable select{padding:10px!important;border-radius:8px!important;font-size:13px!important;border:1px solid #ccd9de!important;box-shadow:none!important}
+.pc-app #productsTable select{padding-right:20px!important;min-width:0}
 .pc-app #productsTable .row-total{font-size:14px;font-variant-numeric:tabular-nums;font-weight:650}
 .pc-app #productsTable .btn-outline{padding:3px 6px!important;min-height:28px;margin-left:5px!important;border-color:#ecd9d9!important;color:#a23b43!important;background:#fff!important}
 .pc-app .grand-total{display:flex;align-items:center;justify-content:flex-end;gap:18px;padding:18px 0 0;font-size:12px;color:var(--pc-muted)}
@@ -200,22 +202,28 @@
   .pc-app .section-title{font-size:16px}.pc-app .pc-title-group{gap:9px}
   .pc-app #btnAddItem{padding:8px 11px;min-height:36px;font-size:11px}
   .pc-app #pcSuggestionCard{padding:18px}
-  .pc-app .pc-product-scroll{border:0;border-radius:0;overflow:visible}
-  .pc-app #productsTable,.pc-app #productsTable tbody{display:block}
-  .pc-app #productsTable thead{position:absolute;width:1px;height:1px;clip:rect(0,0,0,0);overflow:hidden}
-  .pc-app #productsTable tr{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:16px;border:1px solid var(--pc-line);border-radius:12px;margin-bottom:12px}
-  .pc-app #productsTable td{display:block;padding:0!important;border:0;min-width:0}
-  .pc-app #productsTable td:first-child,.pc-app #productsTable td:last-child{grid-column:1/-1;padding:0!important}
-  .pc-app #productsTable td::before{display:block;font-size:11px;font-weight:600;color:var(--pc-muted);margin:0 0 5px}
-  .pc-app #productsTable td:nth-child(1)::before{content:'Product name'}
-  .pc-app #productsTable td:nth-child(2)::before{content:'Quantity'}
-  .pc-app #productsTable td:nth-child(3)::before{content:'Unit price (PKR)'}
-  .pc-app #productsTable td:nth-child(4){display:flex;align-items:center;justify-content:flex-end;gap:8px}
-  .pc-app #productsTable td:nth-child(4)::before{content:'Total';margin:0 auto 0 0}
-  .pc-app #productsTable input{font-size:16px!important}
   .pc-app #pcReceiptArea{padding:18px 12px}
   .pc-app .pc-request-submit{bottom:8px;padding:14px}.pc-app .pc-request-submit p{max-width:130px;font-size:11px}
   .pc-app .pc-request-submit button{min-width:0;padding:11px 14px;font-size:12px}
+}
+@media(max-width:720px){
+  .pc-app .pc-product-scroll{border:0;border-radius:0;overflow:visible}
+  .pc-app #productsTable,.pc-app #productsTable tbody{display:block;min-width:0}
+  .pc-app #productsTable thead{position:absolute;width:1px;height:1px;clip:rect(0,0,0,0);overflow:hidden}
+  .pc-app #productsTable tr{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px;padding:16px;border:1px solid var(--pc-line);border-radius:12px;margin-bottom:12px}
+  .pc-app #productsTable td{display:block;padding:0!important;border:0;min-width:0}
+  .pc-app #productsTable td:first-child,.pc-app #productsTable td:nth-child(4),.pc-app #productsTable td:last-child{grid-column:1/-1;padding:0!important}
+  .pc-app #productsTable td::before{display:block;font-size:11px;font-weight:600;color:var(--pc-muted);margin:0 0 5px}
+  .pc-app #productsTable td:nth-child(1)::before{content:'Product name'}
+  .pc-app #productsTable td:nth-child(2)::before{content:'Quantity'}
+  .pc-app #productsTable td:nth-child(3)::before{content:'Unit'}
+  .pc-app #productsTable td:nth-child(4)::before{content:'Unit price (PKR)'}
+  .pc-app #productsTable td:nth-child(5){display:flex;align-items:center;justify-content:flex-end;gap:8px}
+  .pc-app #productsTable td:nth-child(5)::before{content:'Total';margin:0 auto 0 0}
+  .pc-app #productsTable input,.pc-app #productsTable select{font-size:16px!important}
+}
+@media(max-width:400px){
+  .pc-app #productsTable tr{grid-template-columns:minmax(0,1fr)}
 }
 @media(prefers-reduced-motion:reduce){.pc-app *{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
 </style>
@@ -255,10 +263,11 @@
     <div class="section-title"><h3 id="pcItemsTitle" class="pc-title-group"><span class="circle-badge" aria-hidden="true">02</span>Items</h3><button type="button" id="btnAddItem" onclick="addNewItemRow()" class="btn-outline">+ Add item</button></div>
     <div class="pc-table-scroll pc-product-scroll">
       <table id="productsTable" class="table-custom" aria-label="Expense items">
-        <thead><tr><th scope="col">Product name</th><th scope="col">Quantity</th><th scope="col">Unit price (PKR)</th><th scope="col">Total (PKR)</th></tr></thead>
+        <thead><tr><th scope="col">Product name</th><th scope="col">Quantity</th><th scope="col">Unit</th><th scope="col">Unit price (PKR)</th><th scope="col">Total (PKR)</th></tr></thead>
         <tbody id="tableBody"><tr>
           <td><input type="text" placeholder="Enter product name" aria-label="Product name" class="form-control name-input" /></td>
-          <td><input type="number" value="1" min="1" oninput="calculateTotals()" aria-label="Quantity" class="form-control qty-input" /></td>
+          <td><input type="number" value="1" min="0" step="any" oninput="calculateTotals()" aria-label="Quantity" class="form-control qty-input" /></td>
+          <td><select class="form-control unit-input" aria-label="Unit" required><option value="">Select unit</option></select></td>
           <td><input type="number" placeholder="0" min="0" step="any" oninput="calculateTotals()" aria-label="Unit price (PKR)" class="form-control price-input" /></td>
           <td><span class="row-total">0.00</span></td>
         </tr></tbody>
@@ -306,6 +315,16 @@
   // =========================================================================
   const DATAVERSE_CONFIG = {
     testContactId: "", // Optional: Paste a Contact GUID here if testing in studio preview
+    // Stable text values saved to Line Item hr_unit; labels include familiar symbols.
+    units: [
+      ["Piece", "Piece (pc)"], ["Liter", "Liter (L)"], ["Milliliter", "Milliliter (mL)"],
+      ["Kilogram", "Kilogram (kg)"], ["Gram", "Gram (g)"], ["Dozen", "Dozen"],
+      ["Pack", "Pack"], ["Box", "Box"], ["Bag", "Bag"], ["Bottle", "Bottle"],
+      ["Can", "Can"], ["Carton", "Carton"], ["Pair", "Pair"], ["Set", "Set"],
+      ["Roll", "Roll"], ["Sheet", "Sheet"], ["Meter", "Meter (m)"],
+      ["Centimeter", "Centimeter (cm)"], ["Square meter", "Square meter (m²)"],
+      ["Hour", "Hour"], ["Day", "Day"], ["Trip", "Trip"], ["Service", "Service"]
+    ],
     // Frontend shortcuts only; extend these lists with approved regular items.
     itemSuggestions: {
       "Travel": ["Petrol", "Hotel", "Food"],
@@ -378,6 +397,7 @@
         id: "hr_pettycashlineitemid",
         name: "hr_itemname",
         quantity: "hr_quantity",
+        unit: "hr_unit", // User-confirmed logical name; Single line of text, length 30.
         unitPrice: "hr_unitprice",
         total: "hr_totalprice", // Confirmed Simple currency column; the client must supply it.
         category: "hr_category",
@@ -477,7 +497,7 @@
 
   function suggestionHint() {
     return configuredItemSuggestions().length
-      ? "Choose an item, then add quantity and price."
+      ? "Choose an item, then add quantity, unit and price."
       : "No suggestions yet. Add items manually below.";
   }
 
@@ -527,26 +547,42 @@
     });
     if (matching) {
       matching.querySelector(".qty-input").focus();
-      if (status) status.textContent = name + " is already listed. Its quantity and price were not changed.";
+      if (status) status.textContent = name + " is already listed. Its quantity, unit and price were not changed.";
       return matching;
     }
     const blank = rows.find(row => {
-      const product = row.querySelector(".name-input"), quantity = row.querySelector(".qty-input"), price = row.querySelector(".price-input");
+      const product = row.querySelector(".name-input"), quantity = row.querySelector(".qty-input"), price = row.querySelector(".price-input"), unit = row.querySelector(".unit-input");
       return (!row.dataset || row.dataset.pcTouched !== "true") && product && quantity && price &&
-        !product.value.trim() && quantity.value === "1" && !price.value.trim();
+        !product.value.trim() && quantity.value === "1" && !price.value.trim() && (!unit || !unit.value);
     });
     const row = blank || addNewItemRow();
     row.querySelector(".name-input").value = name;
     row.dataset.pcTouched = "true";
     calculateTotals();
     row.querySelector(".qty-input").focus();
-    if (status) status.textContent = name + " added. Enter quantity and price.";
+    if (status) status.textContent = name + " added. Enter quantity, unit and price.";
     return row;
   }
 
   function itemTotal(quantity, unitPrice) {
     // PKR totals are displayed and submitted to two decimal places.
     return Number((quantity * unitPrice).toFixed(2));
+  }
+
+  function unitOptionsMarkup() {
+    const escape = value => String(value).replace(/[&<>"']/g, character =>
+      ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[character]);
+    return '<option value="">Select unit</option>' + DATAVERSE_CONFIG.units.map(([value, label]) =>
+      '<option value="' + escape(value) + '">' + escape(label) + '</option>').join("");
+  }
+
+  function initializeUnitInputs() {
+    for (const row of document.querySelectorAll("#tableBody tr")) {
+      const select = row.querySelector(".unit-input");
+      if (!select) continue;
+      const selected = select.value;
+      select.innerHTML = unitOptionsMarkup(); select.value = selected || "";
+    }
   }
 
   function calculateTotals() {
@@ -597,7 +633,8 @@
 
     newRow.innerHTML = `
       <td valign="top" style="padding: 10px; vertical-align: top;"><input type="text" aria-label="Product name" class="form-control name-input" placeholder="Enter product name" style="width: 100%; padding: 10px; border: 1px solid #cbd5e0; border-radius: 6px; box-sizing: border-box;"></td>
-      <td valign="top" style="padding: 10px; vertical-align: top;"><input type="number" aria-label="Quantity" class="form-control qty-input" value="1" min="1" oninput="calculateTotals()" style="width: 100%; padding: 10px; border: 1px solid #cbd5e0; border-radius: 6px; box-sizing: border-box;"></td>
+      <td valign="top" style="padding: 10px; vertical-align: top;"><input type="number" aria-label="Quantity" class="form-control qty-input" value="1" min="0" step="any" oninput="calculateTotals()" style="width: 100%; padding: 10px; border: 1px solid #cbd5e0; border-radius: 6px; box-sizing: border-box;"></td>
+      <td><select class="form-control unit-input" aria-label="Unit" required>${unitOptionsMarkup()}</select></td>
       <td valign="top" style="padding: 10px; vertical-align: top;"><input type="number" aria-label="Unit price (PKR)" class="form-control price-input" placeholder="0" min="0" step="any" oninput="calculateTotals()" style="width: 100%; padding: 10px; border: 1px solid #cbd5e0; border-radius: 6px; box-sizing: border-box;"></td>
       <td valign="top" style="padding: 18px 10px 10px; vertical-align: top; font-weight: bold;">
         <span class="row-total">0.00</span>
@@ -671,7 +708,8 @@
     tbody.innerHTML = `
       <tr>
         <td valign="top" style="padding: 10px; vertical-align: top;"><input type="text" placeholder="Enter product name" aria-label="Product name" class="form-control name-input" style="width: 100%; padding: 10px; border: 1px solid rgb(203, 213, 224); border-radius: 6px; box-sizing: border-box;" /></td>
-        <td valign="top" style="padding: 10px; vertical-align: top;"><input type="number" value="1" min="1" oninput="calculateTotals()" aria-label="Quantity" class="form-control qty-input" style="width: 100%; padding: 10px; border: 1px solid rgb(203, 213, 224); border-radius: 6px; box-sizing: border-box;" /></td>
+        <td valign="top" style="padding: 10px; vertical-align: top;"><input type="number" value="1" min="0" step="any" oninput="calculateTotals()" aria-label="Quantity" class="form-control qty-input" style="width: 100%; padding: 10px; border: 1px solid rgb(203, 213, 224); border-radius: 6px; box-sizing: border-box;" /></td>
+        <td><select class="form-control unit-input" aria-label="Unit" required>${unitOptionsMarkup()}</select></td>
         <td valign="top" style="padding: 10px; vertical-align: top;"><input type="number" placeholder="0" min="0" step="any" oninput="calculateTotals()" aria-label="Unit price (PKR)" class="form-control price-input" style="width: 100%; padding: 10px; border: 1px solid rgb(203, 213, 224); border-radius: 6px; box-sizing: border-box;" /></td>
         <td valign="top" style="padding: 18px 10px 10px; vertical-align: top; font-weight: bold;"><span class="row-total">0.00</span></td>
       </tr>
@@ -908,6 +946,7 @@
       const priceInput = row.querySelector(".price-input");
 
       const itemName = nameInput ? nameInput.value.trim() : "";
+      const unit = row.querySelector(".unit-input")?.value || "";
       const qty = qtyInput ? parseFloat(qtyInput.value) : 0;
       const price = priceInput ? parseFloat(priceInput.value) : 0;
       const total = itemTotal(qty, price);
@@ -917,6 +956,7 @@
           index: index + 1,
           name: itemName,
           quantity: qty,
+          unit,
           unitPrice: price,
           total: total
         });
@@ -954,6 +994,9 @@
       }
       if (!Number.isFinite(item.quantity) || item.quantity <= 0) {
         throw new Error(`Item "${item.name}" must have a valid quantity greater than 0.`);
+      }
+      if (!DATAVERSE_CONFIG.units.some(([value]) => value === item.unit)) {
+        throw new Error(`Please choose a valid unit for item "${item.name}".`);
       }
       if (!Number.isFinite(item.unitPrice) || item.unitPrice < 0) {
         throw new Error(`Item "${item.name}" must have a valid price.`);
@@ -1003,6 +1046,7 @@
     const payload = {
       [c.name]: item.name,
       [c.quantity]: item.quantity,
+      [c.unit]: item.unit,
       [c.unitPrice]: item.unitPrice,
       [c.total]: itemTotal(item.quantity, item.unitPrice),
       [c.category]: category,
@@ -1015,7 +1059,7 @@
 
   function lineItemReadColumns(includeOtherCategory) {
     const c = DATAVERSE_CONFIG.columns.lineItems;
-    return [c.name, c.quantity, c.unitPrice, c.total, c.category, lookupValue(c.parentRequest)]
+    return [c.name, c.quantity, c.unit, c.unitPrice, c.total, c.category, lookupValue(c.parentRequest)]
       .concat(includeOtherCategory ? [c.otherCategory] : []);
   }
 
@@ -1114,7 +1158,7 @@
         "?$select=" + lineItemReadColumns(otherCategory !== undefined).join(",")
     });
     const actual = res.data || {};
-    const expected = { [c.name]: item.name, [c.quantity]: item.quantity,
+    const expected = { [c.name]: item.name, [c.quantity]: item.quantity, [c.unit]: item.unit,
       [c.unitPrice]: item.unitPrice, [c.total]: itemTotal(item.quantity, item.unitPrice),
       [c.category]: category };
     if (otherCategory !== undefined) expected[c.otherCategory] = otherCategory;
@@ -1385,9 +1429,14 @@
     }
 
     const tbody = document.getElementById("tableBody");
+    initializeUnitInputs();
     if (tbody && !tbody.dataset.pcSuggestionTracking) {
       tbody.dataset.pcSuggestionTracking = "true";
       tbody.addEventListener("input", event => {
+        const row = event.target.closest("tr");
+        if (row && tbody.contains(row)) row.dataset.pcTouched = "true";
+      });
+      tbody.addEventListener("change", event => {
         const row = event.target.closest("tr");
         if (row && tbody.contains(row)) row.dataset.pcTouched = "true";
       });

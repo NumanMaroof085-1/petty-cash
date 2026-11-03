@@ -1,5 +1,10 @@
 # Power Pages Web API field settings
 
+**Current handover baseline: 2 November 2026.** These current field unions support
+the request, Admin, Finance and Home sources. Older troubleshooting notes below
+are history; do not replace these unions with a smaller historical list. See
+[HANDOVER.md](HANDOVER.md) for roles/deployment and native verification limits.
+
 Finance flow build guide: the user supplied hr_recordedby as the backend-only
 Recorded By Contact lookup and hr_cashtransactionid as the primary GUID. This does not require a new
 portal API field, table privilege or site setting. Keep the posting key/operator
@@ -24,8 +29,10 @@ size limit separately; the client maximum remains 10 MiB, and no live setting
 was changed by the assistant.
 
 The original settings screenshot used `*`; the submission page was subsequently
-confirmed working with the corrected configuration. Microsoft removed wildcard
-support on September 14, 2026. Use explicit fields on the selected
+confirmed working with the corrected configuration. Microsoft's current
+[Web API guidance](https://learn.microsoft.com/en-us/power-pages/configure/web-api-overview#site-settings-for-the-web-api)
+requires replacing wildcard field settings with explicit required columns.
+Use explicit fields on the selected
 website, preserving any additional validated fields used by other pages.
 
 These lists are generated from the current client configuration. The user has
@@ -59,7 +66,7 @@ Replace the value with this single comma-separated line after verifying the
 names against the live table:
 
 ```text
-_hr_parentrequest_value,hr_ParentRequest,hr_category,hr_itemname,hr_othercategory,hr_pettycashlineitemid,hr_quantity,hr_totalprice,hr_unitprice
+_hr_parentrequest_value,hr_ParentRequest,hr_category,hr_itemname,hr_othercategory,hr_pettycashlineitemid,hr_quantity,hr_totalprice,hr_unit,hr_unitprice
 ```
 
 `hr_totalprice` is confirmed to be a Simple currency column, not Calculated.
@@ -73,13 +80,15 @@ Replace the value with this single comma-separated line after verifying the
 names against the live table:
 
 ```text
-_hr_department_value,_hr_reportstomanager_value,contactid,fullname,hr_currentbalance,statecode
+_hr_department_value,_hr_reportstomanager_value,adx_identity_logonenabled,adx_identity_username,contactid,emailaddress1,firstname,fullname,hr_Department,hr_ReportsToManager,hr_currentbalance,hr_userrole,lastname,statecode
 ```
 
-`fullname`, `hr_currentbalance`, and `statecode` support the new accounts
-employee selector and saved-balance summary. Employee Contact reads must remain
-Self-scoped; only separately authorized Accounts/Admin roles may read other
-Contacts according to their explicitly assigned table permissions.
+This public union covers Admin profile fields, lookup bindings and Finance's
+active employee directory. Employee Contact reads remain Self-scoped; only
+separately authorized Finance/Admin roles receive their documented broader reads.
+Website balances use the cash ledger; hr_currentbalance is retained as a summary
+and initialized on new profiles only. Exclude new-password input, password hash
+and security stamp. Keep cumulative table/column permission grants under review.
 
 ## Webapi/hr_cashtransaction/fields
 
@@ -91,7 +100,7 @@ The new balance widget and pages only read this table:
 _hr_employee_value,_hr_linkedrequest_value,createdon,hr_amount,hr_notespurpose,hr_transactionreference,hr_transactiontype
 ```
 
-Employee reads must be Contact-scoped through Employee. Accounts may read
+Employee reads must be Contact-scoped through Employee. Finance may read
 authorized employee transactions. Do not expose direct ledger or Contact
 balance writes to these pages. See BALANCE_MODULE_SETUP.md for the restricted
 posting flow, confirmed posting-key column, and complete deployment checklist.
@@ -105,19 +114,18 @@ Set `Webapi/hr_departments/enabled` to `true`. The Department table logical
 name is `hr_departments`; do not use the request lookup's `hr_department` in
 this setting name. Its entity set `hr_departmentses` belongs in the API URL.
 
-The client selects the confirmed text/name column. It addresses each existing
-record by the GUID read from the Contact lookup, so no primary-key column name
-is needed in this list:
+Request lookup validation reads the name; Admin's department directory also
+selects the actual GUID key and active state. Use their combined union:
 
 ```text
-hr_departmentname
+hr_departmentname,hr_departmentsid,statecode
 ```
 
 ## Confirmed names and the remaining binding check
 
-### Current Admin profile-only cleanup (2026-10-19; deployment pending)
+### Admin profile-only field cleanup
 
-Use ADMIN_PROFILE_SETUP.md and admin-profiles-v2. Keep username/login-enabled
+Use ADMIN_PROFILE_SETUP.md and current admin-profiles-v3. Keep username/login-enabled
 public fields; remove only adx_identity_newpassword from the tested Contact
 union. No password, hash or security stamp is needed by the current page:
 

@@ -1,12 +1,18 @@
 # Manager approval flow: user-created configuration
 
+**2 November 2026 update:** the user confirms manager approval duplicate
+protection is complete. Record it as user-reported completion. Final expressions,
+the chosen duplicate-handling method, native export and controlled run evidence
+have not been supplied for independent review. The guided checkpoint below is
+historical and must not be treated as the current unfinished tenant state.
+
 Recorded 2026-10-31 from the user's description and two screenshots. The user
 built this flow independently. No flow export, run results or action expressions
 were inspected; do not treat it as a tenant audit or an assistant deployment.
 User subsequently reports Finance self-posting condition and v4 script installed.
-The current discussion is expense posting keys and duplicate prevention.
+The earlier discussion below covers expense posting keys and duplicate prevention.
 
-## Current guided step: lookup and zero-existing-expense condition
+## Historical guided step: lookup and zero-existing-expense condition
 
 2026-10-31: user asks to implement the first recommendation and says they
 inserted a condition BEFORE the approval action. For the write-time duplicate

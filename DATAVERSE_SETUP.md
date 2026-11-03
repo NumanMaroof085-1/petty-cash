@@ -1,5 +1,10 @@
 # Dataverse setup and live verification
 
+> **Historical request-integration investigation.** Use [HANDOVER.md](HANDOVER.md)
+> and [WEBAPI_SITE_SETTINGS.md](WEBAPI_SITE_SETTINGS.md) for the current combined
+> data/permission/field baseline. The early reduced-payload attempts and mapping
+> failures below are not the final save behavior. Source preserves all fields.
+
 The architecture decision is direct submission through the Power Pages Web API.
 Power Automate remains the approval and accounting workflow engine. Moving
 creation to a flow would not remove the need to verify columns, relationships,
