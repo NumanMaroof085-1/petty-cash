@@ -1,0 +1,6 @@
+{
+  "hr_approvalstatus@OData.Community.Display.V1.FormattedValue": "Pending",
+  "hr_approvalstatus": 123140000,
+  "hr_workflowstage@OData.Community.Display.V1.FormattedValue": "Ready for Manager",
+  "hr_workflowstage": 123140003
+}

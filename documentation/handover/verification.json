@@ -1,7 +1,7 @@
 {
-  "audit_date": "2026-11-08",
+  "audit_date": "2026-11-09",
   "scope": "Local source and documentation. No native tenant, export, authentication or permission audit.",
-  "source_commit_before_documentation_changes": "1af8fccc7efbbc29da77ffb7022c670c9fc04d0e",
+  "source_commit_before_documentation_changes": "e4a520ebb5be47f5322318b78eb6457ebc4097d7",
   "node_version": "v24.22.1",
   "local_checks": {
     "documentation_links_checked": 55,
@@ -46,7 +46,55 @@
       "question_card_visible": true,
       "expected_version_and_ready": true
     },
-    "next_native_test": "First attempt blocked: user reports Request saves but manager flow does not run; Flow checker identifies invalid hr_workflowstagev filtering attribute. Correct to hr_workflowstage; successful save/trigger not yet confirmed.",
+    "next_native_test": "9 November: automatic manager resumption user-confirmed, but final test fails at Condition_-_10k greater() Boolean operand. Instruct full routing Boolean expression equals Expression true, preserving Ready for Boss OR amount >10000; request condition-only current Code view after save. Native fix/recovery and final financial acceptance pending; no blind failed-run resubmission.",
+    "user_reported_native_progress": {
+      "reported_on": "2026-11-09",
+      "initial_manager_approval_and_question_visible": true,
+      "answer_submitted_and_flow_succeeded": true,
+      "new_manager_run_after_answer": true,
+      "initial_answer_restart_failed_user_reported": true,
+      "answer_return_status_inspected": true,
+      "answer_response_status": "answered",
+      "answer_response_evidence": "documentation/flow-snapshots/clarification-answer-response.received-2026-11-09.json",
+      "queue_action_status_user_reported": "Succeeded",
+      "queued_row_values_inspected": true,
+      "queued_workflow_stage": 123140003,
+      "queued_approval_status": 123140000,
+      "current_main_trigger_inspected": true,
+      "declared_main_trigger_message": 4,
+      "trigger_refresh_user_reported": true,
+      "fresh_event_recovery_result_verified": false,
+      "fresh_event_recovery_user_reported": "No main flow run after native stage edits.",
+      "main_flow_health_user_reported": {
+        "status": "On",
+        "flow_checker": "No warnings/errors",
+        "all_runs": "Only initial successful run"
+      },
+      "queue_input_parameters_inspected": true,
+      "queue_input_evidence": "documentation/flow-snapshots/clarification-queue-input.received-2026-11-09.json",
+      "queue_request_id": "b73e9530-92db-f111-84ea-70a8a52176fd",
+      "connection_status_user_reported": {
+        "Dataverse": "Green tick",
+        "Approvals": "Green tick"
+      },
+      "callback_registration_read_verified": true,
+      "callback_registration_evidence": "documentation/flow-snapshots/callback-registrations.received-2026-11-09.json",
+      "callback_registration_configuration_matches": true,
+      "callback_delivery_verified": false,
+      "controlled_event_delivery_user_reported": true,
+      "controlled_event_main_review_email_with_question_and_answer_user_reported": true,
+      "automatic_answer_restart_retest_pending": false,
+      "automatic_answer_restart_user_reported": true,
+      "final_approval_test_error_user_reported": {
+        "action": "Condition_-_10k",
+        "error": "greater() received Boolean instead of numeric operand",
+        "native_condition_fix_verified": false
+      },
+      "temporary_diagnostic_cleanup_user_confirmed": false,
+      "trigger_evidence": "documentation/flow-snapshots/approval-trigger.resumption.received-2026-11-09.json",
+      "queue_values_evidence": "documentation/flow-snapshots/clarification-queue-output.received-2026-11-09.json",
+      "clarification_notification_delivery_reported": false
+    },
     "main_trigger_modified_user_reported": true,
     "site_invocation_user_confirmed": "0a9693f4-61d8-f111-84ea-70a8a52176fd",
     "trigger_snapshot": "documentation/flow-snapshots/clarification-answer-trigger.with-inputs.received-2026-11-08.json",
@@ -59,7 +107,7 @@
       "clarificationId",
       "answer"
     ],
-    "native_integration_pending": "Corrected required input schema inspected; Input_* bindings, platform caller and runtime delivery remain unverified.",
+    "native_integration_pending": "Automatic manager answer-to-review email user-confirmed. Final test blocked on 10k condition Boolean operand error; designer correction instructed but native condition/fix unverified. Final posting/single deduction, boss clarification/rejection, cleanup and independent permission acceptance pending; original missed-event cause unknown.",
     "browser_checks": "2026-11-08 intercepted mock reply, denied-read and foreign-link cases passed on desktop/mobile; screenshots inspected, not native acceptance."
   },
   "anonymous_authentication_challenge": {
@@ -127,14 +175,14 @@
     },
     {
       "file": "CLARIFICATION_SETUP.md",
-      "bytes": 77390,
-      "sha256": "f946dee61285d677097907705fdffbcaf888f92324dc6d5a80beb6bdf94fb6cf",
+      "bytes": 85489,
+      "sha256": "daf6d4138dbb2f1ab3daa3c8f94ca595c1ca6ccffea0704fe28937b2b244d2ce",
       "classification": "source_or_documentation"
     },
     {
       "file": "CLARIFICATION_UI_SETUP.md",
-      "bytes": 10468,
-      "sha256": "fc2dfe4d358899157e362a6f7506b21b036ba4a45d804032c756a0008e6d1abb",
+      "bytes": 15621,
+      "sha256": "f13bb1ae8f884794397109918b10d16a5cc605ab48805bb4ca83c7602f2f1082",
       "classification": "source_or_documentation"
     },
     {
@@ -199,8 +247,8 @@
     },
     {
       "file": "HANDOVER_CHECKLIST.md",
-      "bytes": 6863,
-      "sha256": "d4403842b4ed08b50182ce8d0f659755c7e710fa303ea4e64e51ed3c4fe425e9",
+      "bytes": 7501,
+      "sha256": "a5d60a27a0c974428bd4036c9762deccdc0aed89c5f3c1542e98564424ae04f7",
       "classification": "source_or_documentation"
     },
     {
@@ -217,8 +265,8 @@
     },
     {
       "file": "IMPLEMENTATION_LOG.md",
-      "bytes": 204978,
-      "sha256": "826a3ea4c9a3e2b70ce19f8fe70b7cfbef08f7c8ccf33c4d9b86a3e77c2d83ca",
+      "bytes": 220227,
+      "sha256": "0fcbfcb4ef8886db99739f0c6ce103723d9da724e665bc951768e107a5c6a02c",
       "classification": "source_or_documentation"
     },
     {
@@ -229,8 +277,8 @@
     },
     {
       "file": "MANAGER_APPROVAL_FLOW.md",
-      "bytes": 31498,
-      "sha256": "1e5c9aa584af67a0fb82c37f12cb1557e0296f831c9b4a67350bc5e62aaf65c7",
+      "bytes": 36265,
+      "sha256": "dbb6fc56258b6533b22340b145b325c7d92f6c8d8e3520525cad1b378d385058",
       "classification": "source_or_documentation"
     },
     {
@@ -301,8 +349,8 @@
     },
     {
       "file": "REVIEW_HANDOFF_PLAN.md",
-      "bytes": 31090,
-      "sha256": "b77f632922aa69eb6385d3fd8c5e7200693f14d214e8a710a549f19b67a5ddfa",
+      "bytes": 55220,
+      "sha256": "afb7a63464fb851163cbd1e6b7c6896ddb2d0b1f33dda8bddebe25d79e990032",
       "classification": "source_or_documentation"
     },
     {
@@ -348,6 +396,24 @@
       "classification": "source_or_documentation"
     },
     {
+      "file": "documentation/flow-snapshots/approval-trigger.resumption.received-2026-11-09.json",
+      "bytes": 773,
+      "sha256": "b1c76405193fcffe08e6c1c8e6cdb15c46b2360d95dc453b3e5524d41d5a1c23",
+      "classification": "source_or_documentation"
+    },
+    {
+      "file": "documentation/flow-snapshots/callback-registrations.received-2026-11-09.json",
+      "bytes": 2524,
+      "sha256": "7a23e19a06d57637b8b0e4fcc63ed3784806659b1cf78267c00c71e87d7ba99b",
+      "classification": "source_or_documentation"
+    },
+    {
+      "file": "documentation/flow-snapshots/clarification-answer-response.received-2026-11-09.json",
+      "bytes": 149,
+      "sha256": "ed0d48e09f87700a125d76c61ed6fdef8aa4f17f1748dbe7d18c6c2a4e89c8e2",
+      "classification": "source_or_documentation"
+    },
+    {
       "file": "documentation/flow-snapshots/clarification-answer-trigger.received-2026-11-08.json",
       "bytes": 224,
       "sha256": "91ac65e5d262da8aa4e148c6f858bf7e6d590991c726829b2bdb0f766a053460",
@@ -357,6 +423,18 @@
       "file": "documentation/flow-snapshots/clarification-answer-trigger.with-inputs.received-2026-11-08.json",
       "bytes": 659,
       "sha256": "272c07648e500abf0b380090580d4e6a9b103235586e70d334d9e06a75defc76",
+      "classification": "source_or_documentation"
+    },
+    {
+      "file": "documentation/flow-snapshots/clarification-queue-input.received-2026-11-09.json",
+      "bytes": 284,
+      "sha256": "085ba541436507bcfb89e348268f32e4fd36d65cd3e43051895252050cde953b",
+      "classification": "source_or_documentation"
+    },
+    {
+      "file": "documentation/flow-snapshots/clarification-queue-output.received-2026-11-09.json",
+      "bytes": 231,
+      "sha256": "3c23e203dc3015814d29e13d72d341941a7c8038da8072879a17bdd7288a387f",
       "classification": "source_or_documentation"
     },
     {
@@ -499,8 +577,8 @@
     },
     {
       "file": "scripts/verify_handover.cjs",
-      "bytes": 10227,
-      "sha256": "c7383f3f2ec39a97cd0858a1348f7005f426e1d531d55b65745d23984d883a1f",
+      "bytes": 13398,
+      "sha256": "c3bcdb7f3965733f1e2652970067ea4b2764f30421fd8a4c8bfaf02a165f3514",
       "classification": "source_or_documentation"
     },
     {

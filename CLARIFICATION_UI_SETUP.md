@@ -1,6 +1,79 @@
 # My Requests clarification replies
 
-## Status - 8 November 2026
+## Status - 9 November 2026
+
+Current user confirmation: answering a new clarification automatically sends the
+next manager approval email in the instructed retest without manual stage updates.
+The manager reply/resumption path is user-reported working. Final financial,
+boss/rejection and independent permission acceptance remain separate checks.
+Earlier diagnostic paragraphs below are historical, not current blockers.
+
+Latest runtime report: explicit manual same-value stage Update caused both test
+and MAIN flows to run, and a new manager approval email contains the question
+and answer. Automatic reply-to-review triggering without that manual update is
+still pending. Next use Need Clarification on the CURRENT new approval, answer
+the new question on My Requests, and check for automatic main run/email without
+manual diagnostics. Temporary test-flow cleanup instructed, not yet confirmed.
+
+Latest supplied registration output matches both intended triggers. Read of
+the stored configuration is now evidenced, not successful callback delivery.
+Next inspect Callback Registration System Jobs using REVIEW_HANDOFF_PLAN.md;
+automatic resumption is still unverified. Reply UI and native data are unchanged.
+The following paragraphs retain earlier diagnostic checkpoints as history.
+
+Latest evidence: supplied Queue input includes the exact watched stage column
+on Request b73e9530-92db-f111-84ea-70a8a52176fd; user reports green Dataverse and
+Approvals connections. Next inspect persisted Callback Registrations using one
+standard List rows action in the temporary manual diagnostic, not the portal.
+Query/selected fields are in REVIEW_HANDOFF_PLAN.md. No results yet, no source
+change, extra approval flow or HTTP/Entra consent. Automatic restart unresolved.
+
+User now confirms main flow On, clean Flow Checker and only initial successful
+run visible in All runs. Awaiting the queue action's actual input parameters
+and status of the main trigger's Dataverse connection before any further edit.
+The reply UI/accepted answer is not changed by this trigger-delivery diagnostic.
+
+Current result: user reports no main flow run after the fresh native stage test.
+No more row edits or answer submissions are instructed. Await MAIN flow Details
+status/warning text and All runs evidence (including queued/cancelled/skipped)
+to distinguish trigger delivery from a hidden or early-terminated run. No change
+to the answer UI, source, flow count or schema is needed for this read-only check.
+
+Latest checkpoint: user reports completing main-flow save/Off/On. Next create
+one fresh watched-stage event on the existing queued test Request, only if it
+remains Pending/Ready Manager with no newer approval run. In native Dataverse,
+save Awaiting Employee - Manager, then save Ready for Manager, changing no other
+data. Expected new main run/approval is unverified. Full conditions/recovery
+limits in REVIEW_HANDOFF_PLAN.md. This one-time diagnostic does not replace
+the required subsequent automatic reply test; no source change is needed.
+
+Newest evidence: supplied main trigger uses Added or Modified, correct column
+selection and row filter; queued Outputs are Ready for Manager / Pending and
+satisfy it. No new main run is still reported. Next save/toggle the main flow
+Off/On and check trigger health, leaving page, filters and answer unchanged.
+Restart is a troubleshooting attempt, not a proven fix; it will not replay the
+old webhook event. Existing queued record recovery and a new automatic event
+test will follow after re-enabling. See REVIEW_HANDOFF_PLAN.md.
+
+Latest evidence: the supplied answer response is status answered with the
+expected queued message and clarification GUID. Queue_Clarification_Review is
+reported Succeeded. Acceptance at this response level is established; no new
+manager run is still the reported issue. Next inspect CURRENT main trigger
+Code view and queued Request stage/status Outputs, expected Ready for Manager
+123140003 / Pending 123140000. Do not resubmit the answer or change filters yet.
+
+User now reports a new Request was submitted, manager selected Need
+Clarification in the approval email, the question appeared on the employee's
+page, and the employee submitted an answer. The initial manager flow and answer
+flow show Succeeded by user report. They confirm NO new manager flow run after
+answer submission. Notification email delivery is not reported. A successful
+answer-flow run alone does not prove its returned status was answered: the
+common response can report rejected/unconfirmed after validation/processing.
+
+Current diagnostic request: Outputs from Return_Clarification_Result (status,
+clarificationid, message) and whether Queue_Clarification_Review Succeeded or
+was Skipped. No repeated submission, wider trigger filter or new flow is
+instructed until that evidence identifies whether the answer was queued.
 
 Prepared and tested locally with synthetic APIs. The user now reports the main
 approval trigger changed to Added or Modified. The site-specific My Requests
@@ -134,16 +207,21 @@ No native response/caller/permission check or live answer call was performed by
 the assistant. Ordinary flow writes retain the accepted simultaneous-run limitation
 in [REVIEW_HANDOFF_PLAN.md](REVIEW_HANDOFF_PLAN.md).
 
-## Next controlled native test - manager question and notification
+## First controlled native test - progress and unresolved resumption
 
-First attempt is now blocked: user reports the record saves but the manager
+The earlier first attempt was blocked: user reported the record saved but the manager
 flow does not run. Flow checker specifically reports `hr_workflowstagev` is an
 invalid filtering attribute. Correct main trigger Select columns to exactly
 `hr_workflowstage`, save and confirm the flow is On before continuing. No
-successful manager approval/question or notification delivery is confirmed.
+successful manager approval/question was confirmed at that earlier checkpoint.
 No change to the UI, field allow-list or schema is needed for this typo.
 
-Remaining test steps/expected results:
+The later 9 November report confirms initial approval/question visibility and
+answer submission by user report; its automatic restart is missing. The test
+recipe below is retained as history/expected behavior, not a request to repeat
+the submission. Actual clarification notification delivery remains unverified.
+
+Test recipe/expected results:
 
 1. Turn ON the existing Petty Cash - Clarification Notification flow.
 2. As a normal employee with the existing department/manager profile, submit a

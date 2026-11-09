@@ -1,0 +1,11 @@
+{
+  "host": {
+    "connectionReferenceName": "shared_commondataserviceforapps",
+    "operationId": "UpdateOnlyRecord"
+  },
+  "parameters": {
+    "entityName": "hr_pettycashrequests",
+    "recordId": "b73e9530-92db-f111-84ea-70a8a52176fd",
+    "item/hr_workflowstage": 123140003
+  }
+}

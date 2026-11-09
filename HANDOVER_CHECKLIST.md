@@ -29,6 +29,17 @@ These confirmations establish reported completion/publication, not an exported
 definition review or each individual acceptance result below. Keep the remaining
 evidence, ownership and sign-off items open until recorded.
 
+## Clarification runtime confirmation on 9 November 2026
+
+- [x] User confirms manager Need Clarification -> employee answer on My Requests
+  -> new manager approval email automatically, following retest without manual update.
+- [ ] Complete this resumed Request's final approval and confirm exactly one
+  linked Expense Approved transaction and correct single ledger deduction.
+- [ ] Verify boss-stage clarification/resumption and rejection behavior separately.
+- [ ] Confirm temporary Trigger Test and manual diagnostic Update action disabled/removed.
+
+These are user-reported native results, not an independent full flow/export audit.
+
 ## Native assets and access
 
 - [ ] Company-controlled source repository and agreed release commit/tag recorded.

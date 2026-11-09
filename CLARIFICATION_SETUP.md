@@ -1,5 +1,133 @@
 # Request clarification upgrade
 
+## Current runtime status - automatic manager reply cycle working
+
+9 November user confirms a new approval email is now sent automatically after
+the employee answers, following the no-manual-update retest. Manager resumption
+is user-confirmed end to end; earlier missing-event cause remains unknown.
+No fresh full native export/run was inspected. Final approval/one expense/one
+ledger deduction, boss clarification and rejection acceptance remain separate.
+See REVIEW_HANDOFF_PLAN.md; older diagnostic notes below are historical.
+
+## Latest runtime report - manual event resumes review; automatic retest pending
+
+User reports controlled same-value stage Update triggered both Dataverse flows
+and a manager approval email containing clarification question/answer. This is
+successful user-reported resumption for the manual event; original missing event
+cause remains unknown. Next repeat Need Clarification on that current approval,
+answer the NEW question through My Requests and verify a new review automatically
+without manual flow/record edits. Details and temporary diagnostic cleanup are in
+REVIEW_HANDOFF_PLAN.md. Boss and final financial acceptance are not inferred.
+
+## Latest result - persisted trigger configuration matches
+
+9 November supplied Callback Registrations output matches both notification and
+main approval trigger settings, including Added or Modified and Ready for Manager.
+Evidence: documentation/flow-snapshots/callback-registrations.received-2026-11-09.json.
+No trigger-setting repair is established. Next inspect existing Callback
+Registration System Jobs in the same environment for status/error details;
+bounded instructions in REVIEW_HANDOFF_PLAN.md. No further Request updates,
+answer retries or registration mutations. Automatic resumption remains unresolved.
+Earlier diagnostic checkpoints below are history.
+
+## Latest evidence - watched update included; connections green
+
+User supplies Queue_Clarification_Review UpdateOnlyRecord inputs targeting
+hr_pettycashrequests, Request b73e9530-92db-f111-84ea-70a8a52176fd and
+item/hr_workflowstage 123140003. Both Dataverse and Approvals connections are
+green by user report. Exact Update input is now inspected; no source/filter or
+connection repair identified. Supplied input is preserved separately under
+documentation/flow-snapshots/clarification-queue-input.received-2026-11-09.json.
+Next use standard Dataverse List rows in the temporary manual check flow to read
+Callback Registrations for this Request table. Exact bounded field list/query
+in REVIEW_HANDOFF_PLAN.md. No HTTP/Entra consent, main-flow redesign or new
+business table; diagnostic creation/run/results remain unverified. Keep the
+queued request/answer and main flow logic unchanged pending this evidence.
+
+## Current diagnostic - only initial run, connection/inputs requested
+
+User confirms main flow On, no Flow Checker warnings/errors and only the initial
+successful run in All runs; no subsequent running/cancelled entry. Next inspect
+the successful Queue_Clarification_Review raw Inputs parameters (entityName,
+recordId, item/hr_workflowstage) and exact main-trigger Dataverse connection
+status. Matching output values do not prove the watched attribute was included
+in the Update request. No repeat answer/state changes or new flow are instructed;
+no source/schema/permission fix is established. See REVIEW_HANDOFF_PLAN.md.
+
+## Latest native result - no reported run after fresh update
+
+User reports direct Workflow Stage changes still did not start the main flow
+after the save/Off/On attempt. Do not repeat those changes or submit the answer
+again. Next inspect MAIN flow Details status/trigger-connection warnings and
+Run history -> All runs, including Running/Waiting/Cancelled/Skipped entries.
+Requested read-only evidence is pending; no new trigger/filter/source change is
+instructed. Current code and queued status/stage match, so the restart did not
+prove a fix or identify the cause. See REVIEW_HANDOFF_PLAN.md.
+
+## Current next test - fresh event after reported trigger restart
+
+User reports main flow refresh done (9 November); no repaired trigger/run is yet
+confirmed. On ONLY the same queued test Request, first check it is still Pending
+and Ready for Manager with no newer/in-progress manager run. If already reviewing
+or completed, leave it alone. Otherwise native Dataverse Workflow Stage ->
+Awaiting Employee - Manager, save completely; then Ready for Manager, save.
+This generates a fresh eligible changed-column event while retaining the saved
+answer and existing correlation fields. Do not replay the answer, create another
+Request, reset Not Started, change balances or bypass validation.
+Exact guardrails and expected new run/approval in REVIEW_HANDOFF_PLAN.md.
+This is instructed one-time recovery/test, not a normal manual reply step or a
+claim automation is repaired. A later genuine reply must resume automatically.
+
+## Latest evidence - trigger declaration and queued values match
+
+User supplies current main trigger Code view on 9 November: message 4, Request
+table, Organization scope, filteringattributes hr_workflowstage and the exact
+Pending plus initial/Ready stage filter. Microsoft CallbackRegistration metadata
+confirms message 4 means Added or Modified. Queue Outputs show approval status
+123140000 Pending and workflow stage 123140003 Ready for Manager. This output
+satisfies the supplied filter; no filter widening or new state/column is needed.
+Current trigger and queue fragment are preserved separately under
+documentation/flow-snapshots; older root snapshots remain unchanged.
+
+No new manager run is still reported. Actual callback registration health,
+timing/environment and the queue action's input column set are not yet verified.
+Next bounded troubleshooting step: save the main flow, turn it Off then On,
+and check for a trigger warning on Details. This is a documented troubleshooting
+attempt, not proof that registration is the cause or is repaired. Leave filters,
+answer flow and source unchanged. Do not replay the answer or create a new test
+request during this step. A webhook restart does not replay the already-queued
+row; a controlled fresh event/recovery will be needed after re-enabling.
+
+## Latest evidence - answer accepted; main restart still missing
+
+On 9 November the user supplies Return_Clarification_Result Outputs with status
+answered and matching clarification ID 69f97072-92db-f111-84ea-70a8a52176fd,
+message Your answer was saved and queued for review. They also report
+Queue_Clarification_Review Succeeded. Preserve the supplied response in
+documentation/flow-snapshots/clarification-answer-response.received-2026-11-09.json.
+No new manager run remains the reported problem; the accepted-answer question
+is now resolved at the response/report level, without assuming the queued row
+has the correct persisted stage or the main trigger handles modifications.
+
+Next requested: CURRENT main trigger Code view from Power Automate (the local
+approval-trigger-current.json is still the older Added-only snapshot), and
+Queue_Clarification_Review Outputs hr_workflowstage/hr_approvalstatus. Expected
+manager reply values are 123140003 Ready for Manager and 123140000 Pending.
+No resubmission, speculative filter edit, new flow or source change instructed.
+
+## Current diagnostic checkpoint - 9 November 2026
+
+User reports Request -> initial manager approval -> Need Clarification -> own
+question visible -> employee submits answer. Initial manager flow and answer
+flow show Succeeded. User confirms no NEW manager flow run after the answer.
+This demonstrates initial question-path progress by user report, not complete
+answer acceptance/resumption. Notification email delivery is not reported.
+Next inspect answer Return_Clarification_Result Outputs and whether
+Queue_Clarification_Review Succeeded/Skipped. Do not infer successful queueing
+from the overall run status; no new flow/filter or repeat submission instructed.
+Earlier trigger-typo blocker is historical: manager flow now runs on creation,
+but current native trigger Code view/modified subscription remains uninspected.
+
 ## Current blocker - invalid main trigger filtering attribute
 
 During the first native test the user reports the Request saves but the manager

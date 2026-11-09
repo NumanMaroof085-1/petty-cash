@@ -1,0 +1,20 @@
+{
+  "type": "OpenApiConnectionWebhook",
+  "inputs": {
+    "parameters": {
+      "subscriptionRequest/message": 4,
+      "subscriptionRequest/entityname": "hr_pettycashrequest",
+      "subscriptionRequest/scope": 4,
+      "subscriptionRequest/filteringattributes": "hr_workflowstage",
+      "subscriptionRequest/filterexpression": "hr_approvalstatus eq 123140000 and (hr_workflowstage eq 123140000 or hr_workflowstage eq 123140003 or hr_workflowstage eq 123140006)"
+    },
+    "host": {
+      "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
+      "connection": "shared_commondataserviceforapps",
+      "operationId": "SubscribeWebhookTrigger"
+    }
+  },
+  "metadata": {
+    "operationMetadataId": "320b0314-dd49-4d51-ac9f-88f5280f6a2d"
+  }
+}

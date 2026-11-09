@@ -5,6 +5,229 @@ same change. Record exact files, functionality, schema names, permissions, site
 settings, tests, and deployment state. Never describe a proposed tenant change
 as deployed merely because local code or documentation exists.
 
+## 2026-11-09 Diagnose Boolean operand at 10k condition; specify designer correction
+
+- User reports Condition_-_10k greater() type error: Boolean supplied where
+  numeric arguments expected. Current native condition JSON not yet received.
+- Instruct full Boolean OR(Ready for Boss, total >10000) on left, operator is
+  equal to, right Expression true. Keep existing branches and strict threshold.
+  Likely erroneous outer numeric comparison is explicitly an inference.
+- Request condition-only Code view after saving before selecting next test or
+  recovery; avoid blind resubmission of partially advanced review state.
+- Automatic manager clarification remains user-confirmed; final expense/balance
+  acceptance now blocked on this condition. No native fix or app edit performed.
+
+## 2026-11-09 Record successful automatic manager resumption
+
+- User confirms approval email now sends automatically after employee answer,
+  following the instructed retest without manual Update or Request editing.
+- Mark manager clarification/reply/resumption user-confirmed working; original
+  missed-event cause unknown, no independent new export/run review claimed.
+- Next final approval acceptance: Approved/Completed, one linked Expense Approved
+  transaction, correct single ledger deduction; boss >10k path when applicable.
+  Boss clarification/rejection, permissions and diagnostic cleanup remain separate.
+- Updated handover checklist, flow/UI setup, diagnostic current status and audit
+  metadata. Application source and existing native flow logic unchanged by assistant.
+
+## 2026-11-09 Record controlled-event success; require automatic answer retest
+
+- User reports explicit manual stage Update caused both Dataverse flows to run
+  and new manager approval email included clarification question and answer.
+- Main update delivery/resumption now user-reported for that event. Original
+  cause remains unknown and automatic reply-to-review is not yet proven.
+- Instructed test using Need Clarification on the current resumed approval,
+  employee answering the NEW question, then checking new main run/email without
+  any manual update. Pending/no-expense behavior and final/boss checks separate.
+- Instructed temporary Trigger Test shutdown and removal/disablement of manual
+  diagnostic Update action; cleanup not confirmed. Business flows stay On.
+- Updated setup/handoff/audit metadata only. No application or native flow
+  changed by assistant; no new export/run output independently inspected.
+
+## 2026-11-09 Record test setup acknowledgement; instruct one controlled update
+
+- User reports temporary Trigger Test setup Done; no run/output independently seen.
+- Next check same affected Request still Pending/Ready for Manager and no newer
+  main review before one explicit Update a row of only Workflow Stage to the same
+  Ready value in the existing temporary manual diagnostic. No reset/stage toggles.
+- Compare new runs in test and main flows; capture Update error if any. Main may
+  resume normal manager review. Test execution, root cause and fix remain pending.
+- No local app code, schema or production business-flow logic changed.
+
+## 2026-11-09 Confirm empty trigger conditions; specify isolated trigger diagnostic
+
+- User confirms current MAIN trigger conditions Empty; aligns with supplied code.
+- Instructed temporary Automated Trigger Test, same environment/connection,
+  Modified Request, Organization, no selected-column restriction, exact affected
+  Request ID filter, and only Compose(triggerBody()). No approval/email/write
+  action and no portal association. Save/On only; controlled event not yet instructed.
+- Diagnostic creation/run/output unconfirmed, root cause unresolved. No app code,
+  table/column, existing-flow logic or tenant data changed by the assistant.
+
+## 2026-11-09 Record disabled administration mode; confirm current trigger conditions
+
+- User reports Administration mode disabled; no environment change needed for
+  that documented cause. Background service health is not independently verified.
+- Next read-only check: MAIN trigger Settings / Trigger conditions, exact current
+  expressions or Empty, separate from already inspected Filter rows. Supplied
+  trigger code had no conditions block; no defect or fix inferred at this point.
+- No app/flow/data change, approval replay or new business feature implemented.
+
+## 2026-11-09 Record empty expander-job view; inspect environment processing
+
+- User selected CallbackRegistration Expander Operation and reports empty
+  results. No service failure or absence of all delivery jobs inferred.
+- Next read-only check: environment Details / Edit, Administration mode and
+  Background operations labels/values, following Microsoft's documented trigger
+  dependency. No environment setting change, new request or job replay instructed.
+- Updated handoff/audit status only; automatic resumption and cause unresolved.
+
+## 2026-11-09 Clarify System Job type filter after cleanup-only screenshot
+
+- User reports no records at test time; screenshot shows a 'callback' text search
+  returning Bulk Delete cleanup jobs, not a demonstrated trigger-job type filter.
+- Clarified clearing name search, using Edit filters / System Job Type when
+  available, keeping all statuses and inspecting prior test times. Ask for filter
+  options if unavailable; no new request, event replay or native mutation.
+- No root cause or absent-delivery conclusion inferred from this screenshot.
+  Updated handoff diagnostic and audit status; application functionality unchanged.
+
+## 2026-11-09 Inspect stored registrations; request callback System Job evidence
+
+- Preserved supplied two-row List rows response in the separate dated
+  callback-registrations snapshot. Existing supplied trigger/input snapshots remain intact.
+- Main registration 77467b8e-81d3-f111-a05d-70a8a52176fd matches intended message 4,
+  scope 4, watched column and Pending/Not Started-or-Ready filter. Notification
+  registration matches Modified/waiting stages. No setting mismatch established.
+- Next diagnostic is read-only existing System Jobs, Callback Registration type,
+  around previous answer/stage-edit times; ask for Status Reason/error or absence.
+  No Request replay, trigger redesign, callback deletion or job retry instructed.
+- Updated setup/handoff status and audit metadata. No application code, schema,
+  permissions, native flow or tenant records changed by the assistant. Root cause
+  and automatic review restart remain unverified. Local audit is not native acceptance.
+
+## 2026-11-09 Inspect correct queue input; specify read-only registration check
+
+- User supplies Queue inputs: UpdateOnlyRecord, hr_pettycashrequests, Request
+  b73e9530-92db-f111-84ea-70a8a52176fd, item/hr_workflowstage 123140003. Saved a
+  separate received-input JSON snapshot. Exact watched column inclusion now
+  verified from supplied input; root cause still unknown. Dataverse/Approvals
+  connection statuses are green by user report, not independent inspection.
+- Next instructed standard Dataverse List rows of existing Callback Registrations,
+  filter entityname eq hr_pettycashrequest (quoted string in actual guide), bounded
+  count 100 and explicit documented configuration fields, excluding URLs. Reuse
+  earlier manual connection-check flow or a temporary manual diagnostic in the
+  same environment/connection. Replace its unconnected HTTP action if present.
+- No HTTP/Entra consent, portal association, new business table, approval/resume
+  flow, main trigger/filter edit, registration write or Request/answer change.
+  This checks actual stored config and can produce a real privilege error;
+  empty rows must not be interpreted outside the connection user's visibility.
+- Creation/run/output of diagnostic are instructed only. No native read/write
+  performed by assistant. Updated current guides and verification evidence;
+  callback health, event delivery and automatic restart remain unresolved.
+
+## 2026-11-09 Record On/clean checker/one run; request exact update and connection
+
+- User confirms main flow On, no Flow Checker warning/error and only initial
+  successful request run visible in All runs; no newer running/cancelled entry.
+  Matching trigger/queue code still does not establish callback delivery.
+- Requested read-only Queue_Clarification_Review raw Inputs parameters, especially
+  entityName, recordId, item/hr_workflowstage, plus the status of the exact MAIN
+  trigger's Dataverse connection under More -> Connections. Output values alone
+  do not prove the selected watched attribute was present in the Update request.
+- No connection switch, trigger replacement, filter widening, another flow or
+  repeated row/answer mutation instructed. No specific fault/fix claimed. Clean
+  Flow Checker is not substituted for connection/registration/event proof.
+- Updated current diagnostic guides and verification source; no application,
+  schema/permission, financial behavior or native operation changed by assistant.
+
+## 2026-11-09 Record no run after fresh event; inspect trigger health/visibility
+
+- User reports manager flow still does not run after native Workflow Stage edits
+  following the save/Off/On attempt. That troubleshooting did not establish a fix;
+  callback/connection/registration cause remains unproven.
+- Stopped further state toggles, answer retries and filter changes. Requested
+  read-only MAIN flow Details Status/trigger-connection warning text and Run
+  history All runs including Running/Waiting/Cancelled/Skipped after the edit.
+  These distinguish absent trigger delivery from hidden/queued/early-ending runs.
+- Preserved existing matching trigger/queue evidence; no new flow, connection
+  mutation, source behavior, schema/permission or financial edit. Updated current
+  setup/UI/handoff/main-flow status and audit-source record. No native test,
+  email or write performed by assistant; diagnostic evidence still pending.
+
+## 2026-11-09 Record trigger refresh; instruct one existing-record event test
+
+- User reports main-flow save/Off/On refresh done. No actual trigger fix, new
+  event/run, warning state or callback health is inferred without new evidence.
+- Next instructed one-time native recovery/test on SAME queued Request only if
+  still Pending / Ready Manager and no newer/in-progress manager run: save
+  Awaiting Employee - Manager 123140002, then Ready Manager 123140003. The first
+  stage is excluded by the main row filter; the second makes a fresh actual
+  watched-column update. Do not set Not Started or edit answer/round/IDs/lookups.
+- Retain existing fresh resume validation. If already reviewing/completed or a
+  new run exists, do not edit. Expected new run/question-answer approval and
+  unchanged balance remain unverified. Stop after one attempt; inspect real
+  failed/cancelled actions if it runs. Notification guard should exclude an
+  already Answered child during the intermediate stage; no delivery inferred.
+- This manual step is diagnostic recovery, not the intended normal workflow or
+  proof automatic replies work. Subsequent genuine clarification/answer must
+  resume without manual edits. No new flow, source, schema, portal privilege or
+  financial behavior changes. Native edits are instructed, not performed by
+  assistant or yet confirmed executed. Updated current guides and audit record.
+
+## 2026-11-09 Inspect matching main trigger and queue values
+
+- User supplies current main trigger message 4 / scope 4 / hr_pettycashrequest /
+  hr_workflowstage filteringattributes and exact Pending initial/Ready filter.
+  Microsoft CallbackRegistration metadata confirms 4 = Added or Modified and
+  scope 4 = Organization. Supplied queued output is Pending 123140000 and Ready
+  for Manager 123140003; it satisfies that filter. No filter/source fix inferred.
+- Preserved new native trigger and queue output fragment as separate received
+  9 November JSON snapshots, without replacing older user files/evidence.
+- No new manager run still reported. Next instructed save main flow, Off/On,
+  check Details trigger warning. This is a documented troubleshooting attempt,
+  not confirmed registration fault/fix. Webhook restart processes new events;
+  already-queued record needs a subsequent controlled recovery/event. No answer
+  replay, new Request, trigger recreation or wider filter instructed now.
+- Updated guides and evidence manifest. Callback health, actual Update input
+  attributes, event timing/environment and automatic resumption remain unresolved.
+  No native call, email, schema/permission/source behavior or financial change
+  performed by assistant.
+
+## 2026-11-09 Inspect answered response; narrow missing-restart diagnostic
+
+- User supplies Return_Clarification_Result status answered, clarification ID
+  69f97072-92db-f111-84ea-70a8a52176fd, and queued-for-review message; reports
+  Queue_Clarification_Review Succeeded. Preserved actual response in the received
+  9 November JSON snapshot. Earlier rejected/unconfirmed possibility is resolved
+  for this supplied response; correct row/stage persistence is not yet inspected.
+- User's no-new-manager-run report still stands. Requested CURRENT main trigger
+  Code view (existing local trigger file is older Added-only evidence), and queue
+  Outputs hr_workflowstage/hr_approvalstatus, expected manager Ready 123140003 and
+  Pending 123140000. No resubmission, assumed current-trigger fault, wider filter,
+  new flow or source/financial behavior change instructed without this evidence.
+- Updated setup/UI/handoff/main flow status and verification evidence record.
+  No native call, email or write performed by assistant; independent caller,
+  permissions, restart and final expense acceptance remain pending.
+
+## 2026-11-09 Record initial clarification progress; diagnose missing restart
+
+- User reports new request, manager Need Clarification in approval email, question
+  visible on employee page, employee answer submitted, and Succeeded initial
+  manager/answer flows. Asked whether a later manager run exists; user confirms
+  no new run. Employee clarification email delivery not reported or inferred.
+- Explained intended answer -> Ready Manager -> new run of SAME main flow ->
+  next review round / prior question Processed -> new manager approval with Q/A.
+  Approval Status remains Pending and balance unchanged until final approval.
+  These post-answer transitions are expectations, not observed acceptance.
+- Requested final Return_Clarification_Result Outputs and Queue_Clarification_Review
+  Succeeded/Skipped to distinguish accepted queue from rejected/unconfirmed
+  response in an overall successful run. No speculative filter/source/schema
+  edits, new flows or repeat submissions. Actual response/queue/stage/trigger
+  evidence remains pending; no native operation performed by assistant.
+- Updated UI/setup/handoff/main-flow guides and audit-source progress record.
+  Earlier hr_workflowstagev error remains historical; initial manager run now
+  happens by user report, without assuming its current native definition.
+
 ## 2026-11-08 Diagnose manager trigger filtering-attribute typo
 
 - User reports Request saves but manager approval flow does not run. Asked for

@@ -1,0 +1,46 @@
+{
+  "body": {
+    "@odata.context": "https://orgc513a088.crm15.dynamics.com/api/data/v9.1/$metadata#callbackregistrations(callbackregistrationid,name,entityname,message,sdkmessagename,scope,filteringattributes,filterexpression,postponeuntil,softdeletestatus,createdon,modifiedon)",
+    "@Microsoft.Dynamics.CRM.totalrecordcount": -1,
+    "@Microsoft.Dynamics.CRM.totalrecordcountlimitexceeded": false,
+    "@Microsoft.Dynamics.CRM.globalmetadataversion": "3871758",
+    "value": [
+      {
+        "@odata.etag": "W/\"3874515\"",
+        "scope@OData.Community.Display.V1.FormattedValue": "Organization",
+        "scope": 4,
+        "message@OData.Community.Display.V1.FormattedValue": "Modified",
+        "message": 3,
+        "filteringattributes": "hr_workflowstage",
+        "name": "59bf82d5-55d8-f111-84ea-70a8a52176fd:MTA",
+        "softdeletestatus@OData.Community.Display.V1.FormattedValue": "0",
+        "softdeletestatus": 0,
+        "entityname": "hr_pettycashrequest",
+        "callbackregistrationid": "115e35dc-55d8-f111-84ea-70a8a52176fd",
+        "modifiedon@OData.Community.Display.V1.FormattedValue": "11/8/2026 6:13 PM",
+        "modifiedon": "2026-11-08T13:13:47Z",
+        "filterexpression": "hr_approvalstatus eq 123140000 and (hr_workflowstage eq 123140002 or hr_workflowstage eq 123140005) and _hr_activeclarification_value ne null",
+        "createdon@OData.Community.Display.V1.FormattedValue": "11/4/2026 6:44 PM",
+        "createdon": "2026-11-04T13:44:31Z"
+      },
+      {
+        "@odata.etag": "W/\"3876448\"",
+        "scope@OData.Community.Display.V1.FormattedValue": "Organization",
+        "scope": 4,
+        "message@OData.Community.Display.V1.FormattedValue": "Added or Modified",
+        "message": 4,
+        "filteringattributes": "hr_workflowstage",
+        "name": "d7503f88-81d3-f111-a05d-70a8a52176fd:MTA",
+        "softdeletestatus@OData.Community.Display.V1.FormattedValue": "0",
+        "softdeletestatus": 0,
+        "entityname": "hr_pettycashrequest",
+        "callbackregistrationid": "77467b8e-81d3-f111-a05d-70a8a52176fd",
+        "modifiedon@OData.Community.Display.V1.FormattedValue": "11/9/2026 11:50 AM",
+        "modifiedon": "2026-11-09T06:50:29Z",
+        "filterexpression": "hr_approvalstatus eq 123140000 and (hr_workflowstage eq 123140000 or hr_workflowstage eq 123140003 or hr_workflowstage eq 123140006)",
+        "createdon@OData.Community.Display.V1.FormattedValue": "10/29/2026 3:14 PM",
+        "createdon": "2026-10-29T10:14:51Z"
+      }
+    ]
+  }
+}
