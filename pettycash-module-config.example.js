@@ -5,5 +5,8 @@
 window.PC_MODULE_CONFIG = {
   financeFlowId: "",
   financeSecurityReviewed: false,
+  clarificationsEnabled: false,
+  clarificationFlowId: "",
+  clarificationInputNames: { clarificationId: "clarificationId", answer: "answer" },
   requestStatus: { Pending: 123140000, Approved: 123140001, Rejected: 123140002 }
 };

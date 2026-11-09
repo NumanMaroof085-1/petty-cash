@@ -128,6 +128,130 @@ test('a missing Contact balance column is not silently displayed as zero', async
   const h = harness({ fetcher() { return { status: 200, body: { contactid: employee } }; } });
   await assert.rejects(h.api.readSavedBalance(employee), /not returned/);
 });
+
+const clarificationConfig = { clarificationsEnabled: true, clarificationFlowId: flow };
+test('page payload names match corrected Power Pages titles, distinct from internal flow properties', () => {
+  const trigger = JSON.parse(fs.readFileSync('documentation/flow-snapshots/clarification-answer-trigger.with-inputs.received-2026-11-08.json', 'utf8'));
+  const schema = trigger.inputs.schema;
+  assert.equal(trigger.kind, 'PowerPages');
+  assert.deepEqual(schema.required, ['text', 'text_1']);
+  assert.equal(schema.properties.text.type, 'string');
+  assert.equal(schema.properties.text_1.type, 'string');
+  const pageScope = { window: {}, Object };
+  vm.runInNewContext(fs.readFileSync('My Petty Cash Requests.html', 'utf8').match(/<script>\s*([\s\S]*?)\s*<\/script>/)[1], pageScope);
+  const config = pageScope.window.PC_MODULE_CONFIG;
+  assert.equal(config.clarificationInputNames.clarificationId, schema.properties.text.title);
+  assert.equal(config.clarificationInputNames.answer, schema.properties.text_1.title);
+  assert.equal(config.clarificationsEnabled, true, 'Site page is prepared for controlled publication; shared defaults remain disabled');
+});
+function clarificationRow(extra = {}) {
+  return { hr_requestclarificationid: transaction, _hr_request_value: employee, _hr_employee_value: other,
+    hr_clarificationreference: 'CL-000001', hr_question: 'Explain the taxi fare.', hr_answer: null,
+    hr_approvalstage: 123140000, hr_clarificationstatus: 123140000, hr_reviewround: 1, ...extra };
+}
+test('clarifications stay disabled by default without affecting Finance configuration', async () => {
+  const h = harness();
+  assert.equal(h.api.clarificationReady(), false);
+  await assert.rejects(h.api.myClarifications(other), /not enabled/);
+  await assert.rejects(h.api.submitClarificationAnswer({ clarificationId: transaction, answer: 'Taxi' }), /temporarily unavailable/);
+  assert.equal(h.calls.length, 0);
+  const finance = harness({ config: { financeFlowId: flow, financeSecurityReviewed: true } });
+  assert.equal(finance.api.flowReady(), true);
+  assert.equal(finance.api.clarificationReady(), false);
+});
+test('clarification reads are caller-filtered, paged, read-only and do not request source approval IDs', async () => {
+  const h = harness({ config: clarificationConfig, fetcher(url, options, count) {
+    assert.equal(options.method, 'GET');
+    const query = new URL(url, 'https://portal.example.test').searchParams;
+    if (count === 1) {
+      assert.equal(query.get('$filter'), '_hr_employee_value eq ' + other);
+      assert.doesNotMatch(query.get('$select'), /hr_sourceapprovalid/);
+      assert.equal(query.has('$top'), false);
+    }
+    return { status: 200, body: count === 1 ? { value: [clarificationRow()],
+      '@odata.nextLink': '/_api/hr_requestclarifications?$skiptoken=next' } : { value: [] } };
+  } });
+  assert.equal((await h.api.myClarifications(other)).length, 1);
+  assert.equal(h.calls.length, 2);
+  await assert.rejects(h.api.myClarifications(employee), /Only your own/);
+  assert.equal(h.calls.length, 2);
+});
+test('a foreign employee row or malicious paging link prevents partial clarification results', async () => {
+  const h = harness({ config: clarificationConfig, fetcher() {
+    return { status: 200, body: { value: [clarificationRow({ _hr_employee_value: employee })] } };
+  } });
+  await assert.rejects(h.api.myClarifications(other), /Another employee/);
+  const foreign = harness({ config: clarificationConfig, fetcher() {
+    return { status: 200, body: { value: [clarificationRow()], '@odata.nextLink': 'https://evil.test/_api/hr_requestclarifications' } };
+  } });
+  await assert.rejects(foreign.api.myClarifications(other), /Unexpected paging/);
+  assert.equal(foreign.calls.length, 1);
+});
+test('answer transport sends exactly the two configured inputs with CSRF and AJAX headers', async () => {
+  const h = harness({ config: { ...clarificationConfig, clarificationInputNames: { clarificationId: 'text', answer: 'text_1' } },
+    fetcher(url, options) {
+      assert.equal(url, '/_api/cloudflow/v1.0/trigger/' + flow);
+      assert.equal(options.method, 'POST');
+      assert.equal(options.credentials, 'same-origin');
+      assert.equal(options.headers.__RequestVerificationToken, 'token');
+      assert.equal(options.headers['X-Requested-With'], 'XMLHttpRequest');
+      assert.deepEqual(JSON.parse(new URLSearchParams(options.body).get('eventData')), { text: transaction, text_1: 'Taxi for site visit.' });
+      return { status: 200, body: { status: 'answered', clarificationid: transaction, message: 'Answer received.' } };
+    } });
+  const result = await h.api.submitClarificationAnswer({ clarificationId: transaction, answer: '  Taxi for site visit.  ', employeeId: employee });
+  assert.equal(result.status, 'answered'); assert.equal(h.api.pendingClarificationId, null);
+});
+test('invalid, anonymous, insecure or overlong answers never send a request', async () => {
+  for (const answer of ['', '   ', 'a'.repeat(4001), null]) {
+    const h = harness({ config: clarificationConfig });
+    await assert.rejects(h.api.submitClarificationAnswer({ clarificationId: transaction, answer }));
+    assert.equal(h.calls.length, 0);
+  }
+  for (const settings of [{ signedIn: false }, { origin: 'http://portal.example.test' }, { missingToken: true }]) {
+    const h = harness({ config: clarificationConfig, ...settings });
+    await assert.rejects(h.api.submitClarificationAnswer({ clarificationId: transaction, answer: 'A valid answer' }));
+    assert.equal(h.calls.length, 0);
+  }
+});
+test('an uncertain result retains the exact answer and blocks edits or a different question until confirmed', async () => {
+  const h = harness({ config: clarificationConfig, fetcher(url, options, count) {
+    if (count === 1) return { status: 500, rawBody: '<html>Failure</html>' };
+    return { status: 200, body: { status: 'answered', clarificationId: transaction } };
+  } });
+  const input = { clarificationId: transaction, answer: 'A site visit.' };
+  await assert.rejects(h.api.submitClarificationAnswer(input), /retry the same answer/);
+  assert.equal(h.api.pendingClarificationId, transaction);
+  await assert.rejects(h.api.submitClarificationAnswer({ ...input, answer: 'An edited answer' }), /previous answer is unconfirmed/);
+  await assert.rejects(h.api.submitClarificationAnswer({ ...input, clarificationId: employee }), /previous answer is unconfirmed/);
+  assert.equal(h.calls.length, 1);
+  await h.api.submitClarificationAnswer(input);
+  assert.equal(h.calls[0].body, h.calls[1].body);
+  assert.equal(h.api.pendingClarificationId, null);
+});
+test('response correlation and confirmed statuses are required; unconfirmed answers are retained', async () => {
+  for (const body of [{ status: 'answered', clarificationid: employee },
+    { status: 'unconfirmed', clarificationid: transaction }, { status: 'posted', clarificationid: transaction }]) {
+    const h = harness({ config: clarificationConfig, fetcher() { return { status: 200, body }; } });
+    await assert.rejects(h.api.submitClarificationAnswer({ clarificationId: transaction, answer: 'Reason' }), /retry the same answer/);
+    assert.equal(h.api.pendingClarificationId, transaction);
+  }
+  const rejected = harness({ config: clarificationConfig, fetcher() {
+    return { status: 200, body: { status: 'rejected', clarificationid: transaction, message: 'Question is closed.' } };
+  } });
+  await assert.rejects(rejected.api.submitClarificationAnswer({ clarificationId: transaction, answer: 'Reason' }), /Question is closed/);
+  assert.equal(rejected.api.pendingClarificationId, null);
+});
+test('a second click while an answer is in flight cannot submit another request', async () => {
+  let complete;
+  const h = harness({ config: clarificationConfig, fetcher() { return new Promise(resolve => { complete = resolve; }); } });
+  const input = { clarificationId: transaction, answer: 'Reason' };
+  const operation = h.api.submitClarificationAnswer(input);
+  while (!complete) await Promise.resolve();
+  await assert.rejects(h.api.submitClarificationAnswer(input), /already being submitted/);
+  assert.equal(h.calls.length, 1);
+  complete({ status: 200, body: { status: 'answered', clarificationid: transaction } });
+  await operation;
+});
 test('cash posting is disabled by default and accepts only given or returned cash', async () => {
   const h = harness();
   assert.equal(h.api.flowReady(), false);
@@ -312,7 +436,7 @@ test('Power Pages lowercase output names confirm the same event and mismatched l
 });
 
 test('console transport repair preserves an already pending operation, CSRF and body without sending a request on install', async () => {
-  const oldSource = script.replace(/\r\n/g, '\n').replace(',\n          "X-Requested-With": "XMLHttpRequest"', '')
+  const oldSource = script.replace(/\r\n/g, '\n').replaceAll(',\n          "X-Requested-With": "XMLHttpRequest"', '')
     .replace('body[name] ?? body[name.toLowerCase()]', 'body[name]');
   assert.doesNotMatch(oldSource, /"X-Requested-With": "XMLHttpRequest"/);
   const h = harness({ source: oldSource, config: { financeFlowId: flow, financeSecurityReviewed: true } });

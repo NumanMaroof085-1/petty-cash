@@ -1,19 +1,32 @@
 {
-  "audit_date": "2026-11-03",
+  "audit_date": "2026-11-08",
   "scope": "Local source and documentation. No native tenant, export, authentication or permission audit.",
-  "source_commit_before_documentation_changes": "194ca2568791d772976f6244977ad5d426d970ee",
+  "source_commit_before_documentation_changes": "1af8fccc7efbbc29da77ffb7022c670c9fc04d0e",
   "node_version": "v24.22.1",
   "local_checks": {
-    "documentation_links_checked": 36,
+    "documentation_links_checked": 55,
     "generated_templates_consistent": true,
     "configured_finance_page_matches_recorded_invocation": true,
-    "unit_tests": 148,
-    "passed": 148,
+    "unit_tests": 157,
+    "passed": 157,
     "failed": 0
   },
   "browser_evidence": "Prior mocked suites documented in setup guides. Not rerun or represented as native acceptance by this documentation audit.",
   "word_documents": "Original DOCX files are older references; not reissued or freshly rendered for company handover.",
   "native_exports_reviewed": false,
+  "approval_fragment_review": {
+    "reviewed_on": "2026-11-07",
+    "evidence": "documentation/flow-snapshots/approval-current-review.2026-11-07.json",
+    "scope": "Supplied outer outcome Switch and main trigger only; not a full flow export or runtime audit.",
+    "native_corrections_confirmed": false,
+    "user_reported_corrections": {
+      "confirmed_on": "2026-11-07",
+      "boss_waiting_stage_corrected": true,
+      "intended_boss_recipient_corrected": true,
+      "evidence": "User confirms both guided corrections; received JSON remains an older snapshot, updated native code/run not inspected."
+    },
+    "runtime_acceptance_verified": false
+  },
   "user_reported_completion": {
     "confirmed_on": "2026-11-02",
     "manager_approval_duplicate_protection": true,
@@ -21,6 +34,43 @@
     "evidence": "User reply to the two handover status questions; not a native export/run review."
   },
   "native_tenant_operations_performed": false,
+  "clarification_reply_ui": {
+    "implemented_locally_on": "2026-11-08",
+    "source_feature_version": "clarification-replies-v1",
+    "enabled_in_page": true,
+    "native_deployment_verified": false,
+    "native_answer_invocation_verified": false,
+    "publication_state": "User reports question card visible and expected clarification feature version/ready true; not independently inspected.",
+    "publication_user_reported": {
+      "confirmed_on": "2026-11-08",
+      "question_card_visible": true,
+      "expected_version_and_ready": true
+    },
+    "next_native_test": "First attempt blocked: user reports Request saves but manager flow does not run; Flow checker identifies invalid hr_workflowstagev filtering attribute. Correct to hr_workflowstage; successful save/trigger not yet confirmed.",
+    "main_trigger_modified_user_reported": true,
+    "site_invocation_user_confirmed": "0a9693f4-61d8-f111-84ea-70a8a52176fd",
+    "trigger_snapshot": "documentation/flow-snapshots/clarification-answer-trigger.with-inputs.received-2026-11-08.json",
+    "native_trigger_inputs_declared": true,
+    "trigger_internal_properties": {
+      "clarificationId": "text",
+      "answer": "text_1"
+    },
+    "page_payload_names": [
+      "clarificationId",
+      "answer"
+    ],
+    "native_integration_pending": "Corrected required input schema inspected; Input_* bindings, platform caller and runtime delivery remain unverified.",
+    "browser_checks": "2026-11-08 intercepted mock reply, denied-read and foreign-link cases passed on desktop/mobile; screenshots inspected, not native acceptance."
+  },
+  "anonymous_authentication_challenge": {
+    "checked_on": "2026-11-07",
+    "endpoint": "https://orgc513a088.api.crm15.dynamics.com/api/data/v9.2/WhoAmI",
+    "status": 401,
+    "advertised_resource_uri": "https://orgc513a088.api.crm15.dynamics.com/",
+    "credentials_sent": false,
+    "identity_or_business_records_returned": false,
+    "authenticated_connector_or_tenant_access_verified": false
+  },
   "product_units_user_confirmation": {
     "confirmed_on": "2026-11-03",
     "saved_to_unit_column": true,
@@ -52,6 +102,12 @@
       "classification": "source_or_documentation"
     },
     {
+      "file": "APPROVAL_FLOW_REVIEW.md",
+      "bytes": 81430,
+      "sha256": "9b0f92d887f55a72b4af252e988f1a34ce894bbe77dafc57878ec91f1db58b07",
+      "classification": "source_or_documentation"
+    },
+    {
       "file": "Accounts Cash Management.html",
       "bytes": 2184,
       "sha256": "2ad492d40dac0422d7fad5ee511389e0a441716403c6b5b825193cb7a0ff5d7a",
@@ -67,6 +123,18 @@
       "file": "BALANCE_MODULE_SETUP.md",
       "bytes": 27695,
       "sha256": "b14972e8b43cabacdef19f7f605d29f781d4571e1074e2027ac4a5fa23561d2c",
+      "classification": "source_or_documentation"
+    },
+    {
+      "file": "CLARIFICATION_SETUP.md",
+      "bytes": 77390,
+      "sha256": "f946dee61285d677097907705fdffbcaf888f92324dc6d5a80beb6bdf94fb6cf",
+      "classification": "source_or_documentation"
+    },
+    {
+      "file": "CLARIFICATION_UI_SETUP.md",
+      "bytes": 10468,
+      "sha256": "fc2dfe4d358899157e362a6f7506b21b036ba4a45d804032c756a0008e6d1abb",
       "classification": "source_or_documentation"
     },
     {
@@ -125,8 +193,8 @@
     },
     {
       "file": "HANDOVER.md",
-      "bytes": 17575,
-      "sha256": "28a552a360361facb2bdd869536a9bd064bbbd8e87618faa3768fed95abee552",
+      "bytes": 18224,
+      "sha256": "c15131640a7c666edca01d30fb4761c3552aef569ede37e4f0cd6037df7fab33",
       "classification": "source_or_documentation"
     },
     {
@@ -149,8 +217,8 @@
     },
     {
       "file": "IMPLEMENTATION_LOG.md",
-      "bytes": 130440,
-      "sha256": "6c01b8d1858dd8f779e7d30437a331f8d1e1a478a3d61da13ab8d95bce6138d2",
+      "bytes": 204978,
+      "sha256": "826a3ea4c9a3e2b70ce19f8fe70b7cfbef08f7c8ccf33c4d9b86a3e77c2d83ca",
       "classification": "source_or_documentation"
     },
     {
@@ -161,14 +229,14 @@
     },
     {
       "file": "MANAGER_APPROVAL_FLOW.md",
-      "bytes": 11236,
-      "sha256": "8e78797165ac934a76afe3bd4cf2a0f274426353cb3486cc219ae8afdec1aff0",
+      "bytes": 31498,
+      "sha256": "1e5c9aa584af67a0fb82c37f12cb1557e0296f831c9b4a67350bc5e62aaf65c7",
       "classification": "source_or_documentation"
     },
     {
       "file": "My Petty Cash Requests.html",
-      "bytes": 23733,
-      "sha256": "098bfbaf091289d6b88bc285a7566066348b5bab56b94bf81811fb33e0d386b3",
+      "bytes": 25636,
+      "sha256": "344a85fadd53ad53ac0f720c0f90db690ba91d83d5cad73a09077da65588b852",
       "classification": "source_or_documentation"
     },
     {
@@ -221,14 +289,20 @@
     },
     {
       "file": "README.md",
-      "bytes": 19948,
-      "sha256": "12885bf15b0fce2a9fcdde72fcc6e5b058b3220274df2d3dfb3d28d68b3c2a87",
+      "bytes": 20584,
+      "sha256": "9ba5c0be4aab55d1dbeff43ab654e6ca19ed65aed4950fbb26ca505ff74d4ca3",
       "classification": "source_or_documentation"
     },
     {
       "file": "RECEIPT_PDF_SETUP.md",
       "bytes": 8265,
       "sha256": "35c413defffdd74d9fce824f0e6c3bc25d7a2b81408c6c1faeffbe3bb2ce2d0c",
+      "classification": "source_or_documentation"
+    },
+    {
+      "file": "REVIEW_HANDOFF_PLAN.md",
+      "bytes": 31090,
+      "sha256": "b77f632922aa69eb6385d3fd8c5e7200693f14d214e8a710a549f19b67a5ddfa",
       "classification": "source_or_documentation"
     },
     {
@@ -245,14 +319,50 @@
     },
     {
       "file": "WEBAPI_SITE_SETTINGS.md",
-      "bytes": 16160,
-      "sha256": "558d04269ea226453ee8b5dcd3742b65cb0f251af5c9c82b6603a19ca5e5db31",
+      "bytes": 17446,
+      "sha256": "043f122b06f20232ee6d30d8d2a9647698003aad232fb510299e145a39461f4d",
+      "classification": "source_or_documentation"
+    },
+    {
+      "file": "approval-flow-current.json",
+      "bytes": 52605,
+      "sha256": "fe65e66606ce6e6ea334afb45362f4bd28bc2d04fe523bb1872d87f7b01aec6d",
+      "classification": "source_or_documentation"
+    },
+    {
+      "file": "approval-trigger-current.json",
+      "bytes": 538,
+      "sha256": "015798d74eae98813af4915f95c3009de1e6e14b528ec75fe1b2cbaec78b0d5f",
       "classification": "source_or_documentation"
     },
     {
       "file": "documentation/README.md",
       "bytes": 3937,
       "sha256": "dd3f2086f0505dcd7dbe6922d2e3103128a091160ff42ea8955c9e20cf037823",
+      "classification": "source_or_documentation"
+    },
+    {
+      "file": "documentation/flow-snapshots/approval-current-review.2026-11-07.json",
+      "bytes": 4777,
+      "sha256": "84091245d5884a12fa97286cb8da7748ef75e7f921d23266955d746e4c1fca6b",
+      "classification": "source_or_documentation"
+    },
+    {
+      "file": "documentation/flow-snapshots/clarification-answer-trigger.received-2026-11-08.json",
+      "bytes": 224,
+      "sha256": "91ac65e5d262da8aa4e148c6f858bf7e6d590991c726829b2bdb0f766a053460",
+      "classification": "source_or_documentation"
+    },
+    {
+      "file": "documentation/flow-snapshots/clarification-answer-trigger.with-inputs.received-2026-11-08.json",
+      "bytes": 659,
+      "sha256": "272c07648e500abf0b380090580d4e6a9b103235586e70d334d9e06a75defc76",
+      "classification": "source_or_documentation"
+    },
+    {
+      "file": "documentation/flow-snapshots/manager-approval-switch.received-2026-11-05.json",
+      "bytes": 16094,
+      "sha256": "2bae6e3426523e8b16ff01162c0b790c2f0a74b5f8f597879a7ea33b001661da",
       "classification": "source_or_documentation"
     },
     {
@@ -293,14 +403,14 @@
     },
     {
       "file": "pettycash-module-config.example.js",
-      "bytes": 411,
-      "sha256": "24a95861e4953adf4d2a9009d6ff81c6500c0c58db5891938022231d836bae77",
+      "bytes": 558,
+      "sha256": "c52a3041d6b70dee6731e5f7b82a0db810a2ab65d8aab2b33b5e5d75d110e9a6",
       "classification": "source_or_documentation"
     },
     {
       "file": "pettycash-modules.js",
-      "bytes": 27606,
-      "sha256": "1cad68c6abbc5fc3cbc018f28b0e6c29c5eb156849ef6e3578303c8cc0caa944",
+      "bytes": 39675,
+      "sha256": "3e648898dcd687d2cbf19aa28d7a7c11bb5269fcf0d854ba6b6297045c263cbf",
       "classification": "source_or_documentation"
     },
     {
@@ -376,6 +486,12 @@
       "classification": "source_or_documentation"
     },
     {
+      "file": "scripts/verify_clarification_page.cjs",
+      "bytes": 7808,
+      "sha256": "39d8834d75e46a09414fcf67c360ee886c6bd63315fe075b99eb03f8e3dc0277",
+      "classification": "source_or_documentation"
+    },
+    {
       "file": "scripts/verify_finance_page.cjs",
       "bytes": 19412,
       "sha256": "bbaaee0d882e786482c1a4f9b8dd9053fb1d4c4881876d1a7217aa4f81543d7c",
@@ -383,8 +499,8 @@
     },
     {
       "file": "scripts/verify_handover.cjs",
-      "bytes": 6757,
-      "sha256": "8ed750668748acf0b0da4b4d88ec4bd313a70e4c1c47238bebef7212d5333ff5",
+      "bytes": 10227,
+      "sha256": "c7383f3f2ec39a97cd0858a1348f7005f426e1d531d55b65745d23984d883a1f",
       "classification": "source_or_documentation"
     },
     {
@@ -395,8 +511,8 @@
     },
     {
       "file": "scripts/verify_module_pages.cjs",
-      "bytes": 8222,
-      "sha256": "ac2f3d8bae249011d46ef442137777a237f3bc94573d77ce936fa6fadffd67a3",
+      "bytes": 8505,
+      "sha256": "b54ea2316995da570c64335d91fd46c8603238b3e3f3c4c5a0701a2afe52deeb",
       "classification": "source_or_documentation"
     },
     {
@@ -413,8 +529,8 @@
     },
     {
       "file": "scripts/verify_ui_pages.cjs",
-      "bytes": 14386,
-      "sha256": "5fe8a1985a25c56f13a2dce8be37a0c70f50c7a749ee4efe311b277f488146fa",
+      "bytes": 14496,
+      "sha256": "e4ee3008082b9b360d2f81f227396b342220e0bcd310f53e8ac6675c33c3c868",
       "classification": "source_or_documentation"
     },
     {
@@ -431,8 +547,8 @@
     },
     {
       "file": "tests/pettycash-modules.test.cjs",
-      "bytes": 22644,
-      "sha256": "33b26190e86a7287c056bbea1e1b22a9056d1acbab0c1fd02a76923d5a6c4aae",
+      "bytes": 31029,
+      "sha256": "a53723c2b71a1f5eddc38487af7638efd6b9c0182dfd10320cfef3c3ff54143d",
       "classification": "source_or_documentation"
     },
     {

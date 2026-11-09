@@ -7,6 +7,8 @@
   // Repeated template includes must not reset an in-flight movement or bind twice.
   if (root.PettyCashModules && root.PettyCashModules.version === "finance-posting-v5") return;
   const config = Object.assign({ financeFlowId: "", financeSecurityReviewed: false,
+    clarificationsEnabled: false, clarificationFlowId: "",
+    clarificationInputNames: { clarificationId: "clarificationId", answer: "answer" },
     requestStatus: { Pending: 123140000, Approved: 123140001, Rejected: 123140002 }
   }, root.PC_MODULE_CONFIG || {});
   const guidPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
@@ -134,6 +136,84 @@
     }
     return rows;
   }
+  const clarificationStatuses = Object.freeze({
+    123140000: "Awaiting your answer", 123140001: "Answer received",
+    123140002: "Returned for review", 123140003: "Closed"
+  });
+  let pendingAnswer = null, answering = false;
+  function clarificationReady() {
+    const names = config.clarificationInputNames || {};
+    return config.clarificationsEnabled === true && guidPattern.test(config.clarificationFlowId) &&
+      [names.clarificationId, names.answer].every(name => typeof name === "string" && /^[a-zA-Z_][a-zA-Z0-9_]{0,99}$/.test(name)) &&
+      names.clarificationId !== names.answer;
+  }
+  async function myClarifications(employeeId) {
+    if (config.clarificationsEnabled !== true) throw new Error("Clarifications are not enabled.");
+    const id = guid(employeeId);
+    if (id !== signedInId()) throw new Error("Only your own clarification questions can be loaded.");
+    const rows = await collection("/_api/hr_requestclarifications?$select=" +
+      "hr_requestclarificationid,hr_clarificationreference,hr_question,hr_answer,hr_answeredon,hr_approvalstage,hr_clarificationstatus,hr_reviewround,createdon,_hr_employee_value,_hr_request_value" +
+      "&$filter=" + encodeURIComponent("_hr_employee_value eq " + id) +
+      "&$orderby=createdon desc,hr_requestclarificationid desc", "hr_requestclarifications");
+    const seen = new Set();
+    for (const row of rows) {
+      if (guid(row._hr_employee_value) !== id) throw new Error("Another employee's clarification was returned. Check table permissions.");
+      const rowId = guid(row.hr_requestclarificationid);
+      guid(row._hr_request_value);
+      if (seen.has(rowId)) throw new Error("A clarification was returned more than once. Refresh the questions.");
+      seen.add(rowId);
+      if (!Object.prototype.hasOwnProperty.call(clarificationStatuses, row.hr_clarificationstatus) ||
+          ![123140000, 123140001].includes(row.hr_approvalstage) ||
+          typeof row.hr_question !== "string" || !row.hr_question.trim() || row.hr_question.length > 4000 ||
+          (row.hr_answer != null && (typeof row.hr_answer !== "string" || row.hr_answer.length > 4000))) {
+        throw new Error("A clarification has incomplete or unsupported fields. Contact your administrator.");
+      }
+    }
+    return rows;
+  }
+  async function submitClarificationAnswer(value) {
+    if (!clarificationReady()) throw new Error("Replying is temporarily unavailable. Contact your administrator.");
+    const caller = signedInId(), clarificationId = guid(value.clarificationId);
+    if (new URL(root.location.origin).protocol !== "https:") throw new Error("Submitting an answer requires HTTPS.");
+    if (typeof value.answer !== "string" || !value.answer.trim() || value.answer.trim().length > 4000) {
+      throw new Error("Enter an answer of 1 to 4,000 characters.");
+    }
+    if (answering) throw new Error("An answer is already being submitted.");
+    const answer = value.answer.trim(), fingerprint = JSON.stringify({ caller, clarificationId, answer });
+    if (pendingAnswer && pendingAnswer.fingerprint !== fingerprint) {
+      throw new Error("The previous answer is unconfirmed. Keep this page open and retry that same answer first.");
+    }
+    if (!pendingAnswer) pendingAnswer = { clarificationId, answer, fingerprint };
+    answering = true;
+    try {
+      const names = config.clarificationInputNames;
+      // Caller identity comes from the Power Pages trigger, never this payload.
+      const result = await api("/_api/cloudflow/v1.0/trigger/" + guid(config.clarificationFlowId), {
+        method: "POST", headers: { "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+          "X-Requested-With": "XMLHttpRequest" },
+        body: new URLSearchParams({ eventData: JSON.stringify({
+          [names.clarificationId]: clarificationId, [names.answer]: answer
+        }) }).toString()
+      });
+      const body = result.body;
+      if (result.status !== 200 || !body || Array.isArray(body) ||
+          guid(body.clarificationid ?? body.clarificationId) !== clarificationId ||
+          !["answered", "rejected", "unconfirmed"].includes(body.status)) {
+        throw new Error("The flow did not confirm this answer.");
+      }
+      if (body.status === "rejected") {
+        pendingAnswer = null;
+        throw new Error(typeof body.message === "string" && body.message || "This question is no longer accepting an answer. Refresh the questions.");
+      }
+      if (body.status !== "answered") throw new Error("The answer could not be confirmed.");
+      pendingAnswer = null;
+      return { status: "answered", clarificationId,
+        message: typeof body.message === "string" && body.message || "Answer submitted. Your request will return for review." };
+    } catch (error) {
+      if (pendingAnswer) error.message += " Keep this page open and retry the same answer. Reference: " + clarificationId + ".";
+      throw error;
+    } finally { answering = false; }
+  }
   async function employees() {
     requireFinance();
     const rows = await collection("/_api/contacts?$select=contactid,fullname,adx_identity_username,statecode&$filter=statecode eq 0&$orderby=fullname asc,contactid asc&$top=100", "contacts");
@@ -220,6 +300,109 @@
   function signedInId() { return guid(root.document.getElementById("pcModuleUserId").value); }
   function statusLabel(value) {
     return Object.keys(config.requestStatus).find(label => config.requestStatus[label] === value) || "Unknown status (" + value + ")";
+  }
+  function mountClarifications() {
+    const document = root.document, get = id => document.getElementById(id);
+    const section = get("pcClarifications");
+    if (config.clarificationsEnabled !== true || !section || section.dataset.pcMounted) return;
+    section.dataset.pcMounted = "true"; section.hidden = false; section.style.display = "block";
+    const message = get("pcClarificationMessage"), list = get("pcClarificationList"), history = get("pcClarificationHistory");
+    const historyList = get("pcClarificationHistoryList"), refresh = get("pcClarificationRefresh");
+    const drafts = new Map(), confirmed = new Map();
+    let rows = [], loaded = false, loading = false, saving = false, linkId = "", linkFocused = false;
+    let linkMessage = "";
+    const link = new URL(root.location.href || root.location.origin).searchParams.get("clarificationId");
+    if (link) {
+      try { linkId = guid(link); } catch (_) { linkMessage = "This clarification link is invalid. Your questions are listed below."; }
+    }
+    function controls() {
+      refresh.disabled = loading || saving || Boolean(pendingAnswer);
+      for (const form of list.querySelectorAll("form")) {
+        const area = form.querySelector("textarea"), button = form.querySelector("button");
+        const isPending = pendingAnswer && pendingAnswer.clarificationId === form.dataset.clarificationId;
+        area.disabled = loading || saving || Boolean(pendingAnswer);
+        button.disabled = !loaded || loading || saving || !clarificationReady() ||
+          (pendingAnswer ? !isPending : !area.value.trim() || area.value.trim().length > 4000);
+        button.textContent = saving && isPending ? "Sending…" : isPending ? "Retry same answer" : "Send answer";
+      }
+      section.setAttribute("aria-busy", String(loading || saving));
+    }
+    function render() {
+      list.replaceChildren(); historyList.replaceChildren();
+      let open = 0;
+      for (const record of rows) {
+        const id = guid(record.hr_requestclarificationid);
+        const reply = pendingAnswer && pendingAnswer.clarificationId === id;
+        const status = record.hr_clarificationstatus === 123140000 && confirmed.has(id) ? 123140001 : record.hr_clarificationstatus;
+        const editable = status === 123140000 || reply;
+        const card = node("article", undefined, "pc-clarification"); card.id = "pcClarification-" + id;
+        const head = node("div", undefined, "pc-card-head");
+        head.appendChild(node("h3", record.hr_clarificationreference || "Clarification"));
+        head.appendChild(node("span", clarificationStatuses[status], "pc-status" + (status === 123140000 ? " pc-status-pending" : "")));
+        card.appendChild(head);
+        const request = dashboardRows.find(row => String(row.hr_pettycashrequestid).toLowerCase() === guid(record._hr_request_value));
+        card.appendChild(node("p", (record.hr_approvalstage === 123140000 ? "Manager" : "Boss") + " · " +
+          (request && request.hr_requesttitle || "Request " + guid(record._hr_request_value).slice(0, 8)), "pc-muted"));
+        card.appendChild(node("p", record.hr_question, "pc-clarification-text"));
+        if (editable) {
+          open++;
+          const form = node("form"); form.dataset.clarificationId = id; form.style.display = "block";
+          const label = node("label", "Your answer"), area = node("textarea");
+          area.id = "pcClarificationAnswer-" + id; label.htmlFor = area.id;
+          area.required = true; area.maxLength = 4000; area.rows = 3;
+          area.value = reply ? pendingAnswer.answer : drafts.get(id) || "";
+          const hint = node("p", "", "pc-hint"), button = node("button", "Send answer"); button.type = "submit";
+          hint.id = area.id + "-hint"; area.setAttribute("aria-describedby", hint.id);
+          const count = () => { hint.textContent = area.value.length + " / 4,000 characters"; };
+          area.oninput = () => { drafts.set(id, area.value); count(); controls(); }; count();
+          form.append(label, area, hint, button);
+          form.onsubmit = async event => {
+            event.preventDefault(); if (button.disabled) return;
+            const input = { clarificationId: id, answer: area.value };
+            drafts.set(id, area.value); saving = true; controls(); message.textContent = "Sending your answer…";
+            try {
+              const operation = submitClarificationAnswer(input); controls();
+              const result = await operation;
+              confirmed.set(id, input.answer.trim()); drafts.delete(id);
+              message.textContent = result.message; render();
+            } catch (error) { message.textContent = error.message; }
+            finally { saving = false; controls(); }
+          };
+          card.appendChild(form); list.appendChild(card);
+        } else {
+          const answer = confirmed.get(id) || record.hr_answer;
+          if (answer) {
+            card.appendChild(node("p", "Your answer", "pc-clarification-answer-label"));
+            card.appendChild(node("p", answer, "pc-clarification-text"));
+          }
+          historyList.appendChild(card);
+        }
+      }
+      if (!open) list.appendChild(node("p", "No questions need your answer.", "pc-muted"));
+      history.hidden = !historyList.children.length;
+      if (linkId && !linkFocused) {
+        const linked = rows.find(row => guid(row.hr_requestclarificationid) === linkId);
+        if (linked) {
+          if (linked.hr_clarificationstatus !== 123140000) history.open = true;
+          const card = get("pcClarification-" + linkId);
+          card.classList.add("pc-clarification-linked"); card.tabIndex = -1;
+          card.scrollIntoView({ block: "nearest" }); card.focus({ preventScroll: true }); linkFocused = true;
+        } else linkMessage = "This question is not available for this account. Check your sign-in or refresh the questions.";
+      }
+      controls();
+    }
+    async function load() {
+      if (loading || saving || pendingAnswer) return;
+      loading = true; controls(); message.textContent = "Loading questions…";
+      try {
+        const next = await myClarifications(signedInId());
+        rows = next; loaded = true; render();
+        message.textContent = linkMessage || (clarificationReady() ? "" : "Replying is temporarily unavailable. Contact your administrator.");
+      } catch (error) { loaded = false; message.textContent = error.message; }
+      finally { loading = false; controls(); }
+    }
+    refresh.onclick = load;
+    load();
   }
   let dashboardRows = [];
   function renderDashboardRequests() {
@@ -429,7 +612,10 @@
     }
   }
   root.PettyCashModules = Object.freeze({ readBalance, readSavedBalance, cashTransactions, sumTransactions, myRequests, employees, balanceMeaning, money,
-    version: "finance-posting-v5", validateMovement, projectedBalance, postMovement, flowReady,
+    version: "finance-posting-v5", clarificationVersion: "clarification-replies-v1",
+    myClarifications, clarificationReady, submitClarificationAnswer, mountClarifications,
+    get pendingClarificationId() { return pendingAnswer && pendingAnswer.clarificationId; },
+    validateMovement, projectedBalance, postMovement, flowReady,
     get pendingPostingKey() { return pendingMovement && pendingMovement.postingKey; } });
   function initialize() {
     const page = root.document.querySelector("[data-pc-page]");
@@ -440,6 +626,7 @@
       if (search) search.oninput = renderDashboardRequests;
       if (status) status.onchange = renderDashboardRequests;
       showDashboard();
+      mountClarifications();
     } else if (page.dataset.pcPage === "finance") showFinance();
     else if (page.dataset.pcPage === "accounts") {
       const button = root.document.getElementById("pcPostCash"); if (button) button.disabled = true;

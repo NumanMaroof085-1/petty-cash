@@ -1,0 +1,13 @@
+{
+  "kind": "PowerPages",
+  "inputs": {
+    "schema": {
+      "type": "object",
+      "properties": {},
+      "required": []
+    }
+  },
+  "metadata": {
+    "operationMetadataId": "823dac54-6843-4206-96b6-80c5c9c72708"
+  }
+}

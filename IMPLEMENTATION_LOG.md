@@ -5,6 +5,1101 @@ same change. Record exact files, functionality, schema names, permissions, site
 settings, tests, and deployment state. Never describe a proposed tenant change
 as deployed merely because local code or documentation exists.
 
+## 2026-11-08 Diagnose manager trigger filtering-attribute typo
+
+- User reports Request saves but manager approval flow does not run. Asked for
+  flow On/history state and saved Approval Status/Workflow Stage without another
+  submission. User instead supplies Flow checker error identifying invalid
+  filtering attribute hr_workflowstagev on hr_pettycashrequest.
+- Instructed correcting main trigger Select columns to hr_workflowstage (remove
+  trailing v), preserving existing Filter rows and Added or Modified, then save
+  and confirm On. Corrected save/trigger registration/run are not yet confirmed.
+- Earlier possible blank/default stage explanation remains an unverified
+  hypothesis, not the established cause; no filter widening, workflow-stage
+  portal exposure, column/flow recreation or source behavior change introduced.
+- Updated main clarification/handoff/UI status and audit source with the actual
+  blocker. Original snapshots remain unchanged. No native write, email or flow
+  call by assistant; native question/notification/answer acceptance still pending.
+
+## 2026-11-08 Record publication report; instruct manager-question test
+
+- User confirms new reviewer-question card visible and expected console feature
+  version/ready true. Publication now user-reported; no independent site/code or
+  native answer/caller inspection. No source functionality changes this turn.
+- Next instructed turning on existing Petty Cash - Clarification Notification,
+  then NEW small employee request below PKR 10000 -> manager Need Clarification
+  with question in Comments -> employee clarification email and linked question.
+  Stop before answering. Expected Pending/Awaiting Manager-Employee and unchanged
+  balance/absence of expense deduction are test expectations, not measured facts.
+- Updated current guides/README/handover and manifest source to distinguish
+  loaded UI from native acceptance. Notification activation/test are instructed,
+  not confirmed executed. No actual email, native flow call or record write by
+  assistant; no new role, table, column, template, flow or financial action.
+
+## 2026-11-08 Prepare existing page/template for controlled publication
+
+- User reports main trigger Change type changed to Added or Modified. Updated
+  native definition/runtime remains uninspected; no complete-flow acceptance.
+- Set clarificationsEnabled true ONLY in this site's My Petty Cash Requests.html,
+  retaining the confirmed flow ID and title mapping. Shared-script/reusable
+  defaults stay false and Finance's configuration remains untouched. No new
+  template, page, column, flow, Web File or include is required.
+- Next instructed publishing the existing My Requests HTML and replacing the
+  existing Petty Cash Modules Source with complete shared JS in one script
+  wrapper. Hard-refresh/version/ready checks documented. Keep notification Off
+  until publication is confirmed, then controlled native tests verify actual
+  inputs/caller, permissions, manager/boss resume and financial behavior.
+- Updated regression fixtures to handle the now-enabled page's read-only
+  clarification request. Mock clarification reply/denied/foreign-link cases,
+  existing requests/Finance/balance checks, and four-page UI at 1440/768/390/320
+  widths pass. All network intercepted; no native write/email/flow call performed.
+- Updated current setup/handoff/README and manifest source to distinguish local
+  activation, user-reported flow setup, publication instructions and native
+  acceptance. Supplied native snapshots preserved unchanged. No actual site
+  deployment, notification activation or answer submission by assistant.
+
+## 2026-11-08 Record receipt wait; specify staged automatic resumption
+
+- User reports Wait_For_Receipt configured. Native loop definition, limits,
+  placement, dependencies and slow/missing-upload runtime remain uninspected.
+- Next instructed changing ONLY the existing main approval trigger's Change type
+  to Added or Modified, retaining Request/Organization, hr_workflowstage selection
+  and Pending plus initial/Ready stage filter. No new resume flow. Existing
+  validation and final expense guards retained; atomic hardening stays deferred.
+- Notification remains Off and My Requests false until prepared page/template
+  publication, followed by controlled tests. No answer submission/test in the
+  staging gap; no live activation or deployment performed by assistant.
+- Updated handoff/setup/main flow guides to distinguish user reports, instructed
+  trigger activation and native acceptance. Ordinary concurrency and financial
+  partial-write limitations unchanged; no new schema, permission or cash logic.
+
+## 2026-11-08 Record trigger filters; specify bounded receipt wait
+
+- User reports main trigger advanced filters completed; native code/save/runtime
+  uninspected. Added-only, notification Off and UI false remain instructed.
+- Source confirms Request header -> sequential verified lines -> mandatory PDF
+  upload. Next instructed root Wait_For_Receipt after whole Review_Is_Resume,
+  before manager lookup: Delay 5 seconds then Get_Submission_Receipt selecting
+  existing hr_receiptimage; loop until nonempty, Count 60, Timeout PT5M.
+- Preserve later receipt Download and default success-only preparation before
+  Start_Review_Round/approval. Documented file ID vs binary, count-limit behavior,
+  missing/unreadable receipt failing closed and interrupted/slow-upload recovery.
+  This is application-path readiness, not validation of arbitrary external writes
+  or atomic posting. No new column, flow, public privilege or financial behavior.
+- Exact instructions in REVIEW_HANDOFF_PLAN.md, status references in main/setup
+  guides. Loop is instructed only; no native update/run or source deployment
+  performed. Slow/missing upload and controlled end-to-end tests remain pending.
+
+## 2026-11-08 Record answer bindings; prepare main trigger filters
+
+- User reports Input_Clarification/Input_Answer mappings to text/text_1 complete.
+  Native action definitions, platform caller and runtime delivery uninspected.
+- Next instructed only two advanced fields in the existing main Dataverse Request
+  trigger: Select columns hr_workflowstage; Filter rows Pending AND Not Started,
+  Ready for Manager or Ready for Boss. Exact plain OData expression in the handoff
+  guide. Preserve Added-only Change type and Organization scope at this step.
+- Documented why later Modified activation excludes internal Review/Awaiting/
+  Completed writes and why eligible same-value updates can still trigger. No
+  atomic duplicate prevention or submission-readiness claim. Initial receipt
+  timing and lifecycle/acceptance work remain pending.
+- Notification Off, page feature false, no new flow, native action by assistant,
+  permission, portal/source behavior or cash change. Updated setup/handoff/main
+  flow documentation; filters are instructed, not reported configured yet.
+
+## 2026-11-08 Inspect corrected answer trigger input declarations
+
+- User supplies corrected Power Pages trigger schema: required text/title
+  clarificationId and text_1/title answer, both strings. Saved separately as
+  clarification-answer-trigger.with-inputs.received-2026-11-08.json; earlier empty
+  schema preserved unchanged. Declaration issue resolved, not a native run/export.
+- Checked Microsoft's Power Pages worked example: page eventData uses input
+  titles; flow actions use internal body properties. Kept My Requests payload
+  names clarificationId/answer. Instructed existing Input_Clarification and
+  Input_Answer to read triggerBody()['text'] and ['text_1'] respectively, or the
+  equivalent trigger dynamic tokens. Input_Caller stays built-in User ID.
+- Added a contract regression check linking corrected schema titles and required
+  string properties to disabled page configuration. Updated UI/main setup,
+  handover, README and verification source with corrected snapshot/mapping.
+- Feature remains false/unpublished; main trigger Added only, notification Off.
+  Actual Input_* bindings, caller/permissions, runtime parameter delivery and
+  review resumption still require native verification. No tenant action or
+  direct record write performed; Finance/receipt/request behavior untouched.
+
+## 2026-11-08 Implement disabled My Requests reply UI; inspect answer trigger
+
+- User reports final workflow tracking edits complete. Native updated code/save/
+  runtime uninspected. User copies confirmed answer-flow invocation URL ending
+  0a9693f4-61d8-f111-84ea-70a8a52176fd and trigger code with empty schema properties.
+  Preserved that code in the received 8 November trigger JSON snapshot.
+- Implemented the existing My Requests question/reply section and page-local
+  responsive styles in My Petty Cash Requests.html. Configuration merges existing
+  values, records the confirmed site URL, and keeps clarificationsEnabled false
+  until trigger inputs and review resumption are finished. No new page/template.
+- Extended pettycash-modules.js with own-employee paginated clarification reads,
+  plain-text rendering, manager/boss labels, read-only answer history and safe
+  email-link highlighting. Drafts survive refresh in the open page. Loading is
+  independent of existing requests/balance; no source approval field is requested.
+- Added two-input CSRF/AJAX eventData transport through the existing role-secured
+  flow. Requires matching response GUID and answered status. Uncertain results
+  lock edits/other questions for an exact manual same-answer retry; duplicate
+  clicks blocked. Confirmed answers cannot reopen from a stale same-page read.
+  No storage, direct table writes, cash changes or caller ID payload added.
+- Existing Finance version/logic retained; clarificationVersion is independently
+  clarification-replies-v1. Disabled reusable config fields added. Existing
+  legacy Finance-repair test fixture now removes both AJAX-header occurrences
+  when simulating an old script; its actual behavior assertions are preserved.
+- Eight new unit tests and three intercepted browser scenarios pass, covering
+  reply/retry, denied reads without loss of requests/balance, foreign links,
+  draft preservation, plain-text questions, closed history and stale reads.
+  Desktop/mobile screenshots inspected; no mobile overflow/browser errors. Only
+  synthetic requests; no live tenant access, data write or deployment performed.
+- Added CLARIFICATION_UI_SETUP.md; updated main setup, handover, README, handoff
+  guide and verification source to document source/configuration, snapshot and
+  unpublished/disabled state. Current native blocker: add the two Text trigger
+  inputs clarificationId/answer, reselect Input_Clarification/Input_Answer tokens
+  and inspect saved schema. Input_Caller remains built-in User ID. Main trigger
+  stays Added only and notification Off; no consent/HTTP connector is required.
+
+## 2026-11-08 Record boss transition; specify final workflow tracking
+
+- User reports Start_Boss_Review completed; native parameters/dependencies,
+  saved definition and runtime uninspected.
+- Located four final Request Approval Status updates in the supplied snapshot:
+  Update_a_row_-_request_status_1 (manager-only approve), Update_a_row_1 (manager
+  reject), Update_a_row_-_request_status (boss approve), Update_a_row_1_1 (boss
+  reject). Instructed adding Workflow Stage Completed (123140007) and explicit
+  null Current Approval ID/Active Clarification to these existing actions only.
+- Preserve final status, row ID, comments, round and existing mappings. No
+  completion marking on clarification or manager-to-boss pending paths. Guide
+  distinguishes completed decision tracking from successful financial posting.
+- No native action edited by assistant; no schema, permission, portal, cash or
+  Contact balance change. Original snapshots remain unchanged. Save only,
+  trigger Added only, notification Off; remaining lifecycle/readiness/trigger,
+  reply UI and native acceptance still pending.
+
+## 2026-11-08 Record approval context; specify manager-to-boss stage transition
+
+- User reports Review_Clarification_Context and both approval Details edits
+  completed; native code/save/runtime/rendering remain uninspected.
+- Next instructed Start_Boss_Review, a Dataverse Update a row immediately before
+  the existing boss approval in Condition - 10k True. Set Boss Review, advance
+  round for manager-to-boss transitions and retain the already incremented boss
+  resume round. Use captured Get_Review_Request fields; exact expression and
+  initial/manager-resume/boss-resume cases documented in REVIEW_HANDOFF_PLAN.md.
+- Clear old Current Approval ID and Active Clarification with explicit null.
+  Preserve final Approval Status, money, recipient, original approvals/Switch
+  and strict threshold. Existing boss approval follows update success only.
+- No native action was edited by the assistant; supplied snapshots unchanged.
+  New step instructed, not yet confirmed configured/saved/runtime-tested.
+  Trigger remains Added only and notification Off while remaining lifecycle
+  checks, completion bookkeeping, reply UI and controlled tests are pending.
+
+## 2026-11-08 Record handoff configuration; specify approval answer context
+
+- User reports Complete_Clarification_Handoff and Mark_Clarification_Processed
+  completed. Native definition, dependency chain, save and runtime uninspected.
+- Next instructed one root Compose, Review_Clarification_Context, after the
+  whole handoff condition and before Run_Manager_Review. Captured Ready stages
+  select the previously validated question/answer; initial requests output an
+  empty string. Exact expression and blank-line formatting in the handoff guide.
+- Append its Outputs token to existing Details in both manager and boss approval
+  actions. Preserve request content, comment instructions, response choices,
+  recipients and receipt attachments. Latest prior clarification only, not a
+  full history; no schema, permission, portal or financial behavior changed.
+- Save only. New Compose/text edits are instructed, not native-verified.
+  Manager-to-boss stage transition, remaining lifecycle work, reply UI and
+  controlled tests remain pending; main trigger Added only, notification Off.
+
+## 2026-11-08 Record review-round update; specify prior-clarification completion
+
+- User reports Start_Review_Round completed; native definition, null clearing,
+  save and runtime remain uninspected.
+- Next instructed main-level Complete_Clarification_Handoff immediately after
+  that update and before Run_Manager_Review. Captured Ready Manager/Boss entries
+  take True: Mark_Clarification_Processed updates only the previously validated
+  active child's status to Processed (123140002), using the original parent
+  snapshot lookup. False stays empty for initial requests.
+- Existing resume validation stays before the parent update; subsequent review
+  follows the whole new condition on success only. Preserve answer/question,
+  date/source/round and all lookups; Processed means return to review, not final
+  approval or proof of email delivery. Separate writes retain the documented
+  partial-failure limitation; no new permission, schema, portal or financial edit.
+- Exact setup in REVIEW_HANDOFF_PLAN.md. Save only; main trigger Added only and
+  notification Off. No native configuration or runtime verification of this new
+  instructed step; remaining stage/context/UI and controlled tests are pending.
+
+## 2026-11-08 Specify first ordinary review-round update
+
+- Following acceptance of the simplified approach, instructed one native
+  Dataverse Update a row, Start_Review_Round, after preparation Compose and
+  before Run_Manager_Review at main level. Row comes from Get_Review_Request;
+  target is Manager Review except captured Ready for Boss targets Boss Review.
+  Initial round is 1; resume increments the captured validated round.
+- Explicit null clears old Current Approval ID and Active Clarification; other
+  values, Approval Status, Contact and ledger are untouched. Existing routing
+  continues using the original snapshot. Exact fields/expressions and intended
+  placement recorded in REVIEW_HANDOFF_PLAN.md; no native action/save/run verified.
+- Save only; trigger remains Added only and notification Off. Prior-child
+  Processed update, manager-to-boss transition, answer context and UI remain
+  pending. This partial ordinary handoff must not yet be exercised end to end;
+  failures between writes stop dispatch and may need administrator repair.
+
+## 2026-11-08 Simplify clarification implementation at user request
+
+- User asks to skip the connector consent detour and avoid overcomplication.
+  Deferred HTTP with Microsoft Entra ID, Global Administrator consent, temporary
+  WhoAmI diagnostic and ETag/transactional claim work for this first version.
+- Updated REVIEW_HANDOFF_PLAN.md and top-level notices in CLARIFICATION_SETUP.md,
+  MANAGER_APPROVAL_FLOW.md and APPROVAL_FLOW_REVIEW.md to supersede the earlier
+  mandatory connection path. Prior investigation retained as history.
+- Continue planned clarification work with existing Dataverse actions, ownership
+  and current-state checks, source IDs and unique keys. Explicitly record that
+  ordinary reads/updates do not prevent simultaneous-run duplicate dispatch or
+  concurrent answer overwrite. No race-safe/exactly-once claim is made.
+- Existing flow logic, permission checks, financial posting and supplied JSON
+  snapshots untouched. No tenant action, script, consent or portal code change.
+  Ordinary resume transitions/recovery, answer context, UI and native tests are
+  still required before the feature is complete; no new flow/table proposed.
+
+## 2026-11-08 Record HTTP connector consent prerequisite
+
+- User subsequently reports their Entra Assigned roles section is empty. No
+  administrator role confirmed; group/eligible assignments uninspected. Next
+  action is an IT handoff for authorized connector consent; no new role or
+  tenant permission was assigned. Existing connection check remains pending.
+- User screenshot shows HTTP with Microsoft Entra ID connection creation fails
+  with Consent Required. Authenticated connection and manual WhoAmI run remain
+  unverified; no conditional update or tenant data write has been performed.
+- Verified Microsoft's current connector documentation: its consent procedure
+  requires a Global Administrator and Microsoft ManagePermissionGrant.ps1 using
+  PowerShell 7+. Recorded the prerequisite and official references in
+  REVIEW_HANDOFF_PLAN.md. Asked whether the user has tenant administrator access;
+  portal Admin web role is unrelated. No consent script/grant was executed.
+- Main approval trigger remains instructed Added only; notification remains
+  instructed Off. No website, schema, portal role or financial behavior changed.
+
+## 2026-11-07 Record routing; verify auth resource and prepare connection check
+
+- User reports manager move, outer Switch On/runAfter and existing 10k edits
+  configured. Updated native structure/save/runtime uninspected.
+- User supplies https://orgc513a088.api.crm15.dynamics.com/api/data/v9.2.
+  Anonymous GET WhoAmI returned 401 with resource_id matching the api-host root.
+  No credentials sent or identity/business data returned; no authenticated
+  Dataverse operation or write performed. Do not infer connector access from it.
+- Added REVIEW_HANDOFF_PLAN.md with verified resource/base URL, next temporary
+  manual Petty Cash - Dataverse Connection Check (HTTP with Microsoft Entra ID,
+  GET WhoAmI), expected 200 and data-free reporting request. No portal association
+  or web role. Connection/flow creation/consent/run are instructed, not confirmed.
+- Documented draft ETag/conditional change-set handoff contract: claim next
+  review round, Process prior child and clear parent markers together; inspect
+  inner batch results. Metadata/auth/response verification and exact writes remain
+  pending. No extra table/column or new protected-write action implemented.
+- Trigger Added only; notification Off. No website/schema/permission, approval,
+  email, Contact, Request or financial data change by assistant. Guides/manifest
+  record the limited anonymous check separately from native acceptance.
+
+## 2026-11-07 Record resume validation; specify coordinated approval routing
+
+- User reports Review_Is_Resume, Get_Resume_Clarification and Resume_Is_Current
+  configured. No updated native prefix/placement, outputs or run inspected.
+- Next grouped native edits: root Run_Manager_Review contains the existing
+  manager approval only in True; False is empty for boss Ready. Outer outcome
+  Switch stays at root, uses stage-aware On and successful runAfter on the
+  condition rather than its nested child. Preserve original action names/cases.
+- Existing 10k condition forces boss Ready back to boss, retaining strict >10000
+  for other entries using captured Get_Review_Request total. No manager-only
+  finalization via a skipped manager response; no additional outer nesting.
+- Local decision model checked 27 stage/threshold/manager-response combinations;
+  all passed. This is draft routing logic only, not native expression/save/run
+  validation, approval delivery or concurrency testing.
+- Edits instructed only, not confirmed configured/runtime-tested. Trigger stays
+  Added only; notification Off. Claims, durable Processed handoff, review-stage/
+  marker transitions, saved-answer details and financial risks remain pending.
+- Guides/manifest only; no tenant action, source snapshot mutation, schema/site/
+  API/permission, email, approval or financial operation by the assistant.
+
+## 2026-11-07 Record root entry guard; specify answered-question correlation
+
+- User reports Get_Review_Request and Review_Entry_Allowed configured. No updated
+  native prefix, placement/dependency, output or run inspected.
+- Next root Review_Is_Resume condition contains Get_Resume_Clarification and
+  Resume_Is_Current validation in True; initial path False stays empty. Validate
+  Answered + answer/date, matching Request/employee/source/positive round and
+  correct Manager/Boss Ready pair. Invalid resume terminates Cancelled; True
+  stays empty pending protected dispatch. Existing actions follow at main level.
+- No old approval tree is nested in this new condition, retaining boss depth 8.
+  No Processed/status/marker write or new approval is instructed yet. Native
+  source ID read is backend-only, with no portal API/permission exposure.
+- Actions instructed, not configured or runtime-verified. Snapshot correlation
+  is not an atomic claim; completeness, conditional writes, manager skipping,
+  saved-answer approval context and finalization risks remain unresolved.
+- Trigger stays Added only; notification Off. Guides/manifest only, no tenant,
+  schema, website, data, approval, email or financial operation by assistant.
+
+## 2026-11-07 Record boss corrections; prepare main-level review entry
+
+- User reports new boss parent stage and intended boss recipient corrected.
+  Native updated code/run not inspected. Received JSON still has the old values;
+  preserve it and its review hashes, distinguish reported tenant updates.
+- Next prepare Get_Review_Request and Review_Entry_Allowed before existing
+  manager lookup at root. Snapshot gate permits only Pending Not Started/Ready
+  for Manager/Ready for Boss; False cancels, True empty. Existing actions stay
+  after the whole condition at root, preserving boss depth 8. No redundant
+  stage-only Compose; the Get output already captures the entry snapshot.
+- Actions instructed only, not configured/runtime-verified. Keep Added-only
+  trigger until manager skipping, protected claims and Processed handoff exist.
+  This eligibility gate is not readiness, ownership/round proof or atomic claim.
+- Notification Off. No native/schema/site/permission/data/financial change by
+  assistant; updated guides/manifest only. Financial consistency risks remain.
+
+## 2026-11-07 Inspect current approval fragments; identify two functional fixes
+
+- User supplies current Switch/trigger JSON. Parsed without edits and reviewed
+  nested actions, writes, conditions, dependencies, threshold and recipient.
+  61 actions, depth 8, no duplicate names/unresolved local sibling runAfter refs.
+- New boss parent Update_a_row writes Manager waiting 123140002, not Boss
+  123140005. Boss approval still uses manager email, not intended fixed boss
+  address. Corrections instructed, not applied/confirmed. Restored boss stage
+  is correct. Minor differences: empty manager restore False, successful Defaults.
+- Source hashes/static findings saved in
+  documentation/flow-snapshots/approval-current-review.2026-11-07.json. Recorded
+  actual names Switch_1/Condition_3/Update_a_row and configured lookup bindings.
+- Prepared resumption constraint: do not wrap depth-8 Switch. Skip only manager
+  approval at root on validated boss Ready entry; capture entry stage and protect
+  review claims/handoff. No restructure or native operation performed. Retained
+  financial ordering/freshness and snapshot/atomicity risks remain unresolved.
+- Guides and manifest coverage updated for supplied inputs/report. Notification
+  stays Off. No tenant, website, approval, email or financial writes performed.
+
+## 2026-11-07 Record boss reuse setup; request current definition for resumption
+
+- User reports existing boss Compose, reuse condition and parent restore update
+  configured. Manager/boss question branches configured by report only; no full
+  updated native definition, row/run or atomic/concurrency acceptance inspected.
+- Next is controlled initial/Ready-stage dispatch: manager replies return to a
+  new manager approval; boss replies return directly to a new boss approval.
+  The last inspected Added-only trigger cannot respond to Ready-stage updates.
+- Local search found only the historical supplied Switch snapshot, no current
+  export. Request full outer manager Switch Code view in approval-flow-current.json
+  and main trigger Code view in approval-trigger-current.json, preserving nested
+  cases/dependencies. No screenshots, secrets or signed URLs needed.
+- Current structure is required to prepare concrete branch/trigger moves without
+  overwriting newer work or replaying manager approval on boss resumption.
+  No native restructure/new flow/frontend enablement instructed at this point.
+- Preserve original completeness/expense guard requirements; atomic writes,
+  claims, insert conflicts and financial consistency findings remain unresolved.
+  Notification stays Off. Documentation/manifest only; no native/data operation.
+
+## 2026-11-07 Record boss question/link setup; specify combined reuse branch
+
+- User reports Create_Boss_Clarification and Set_Boss_Awaiting_Employee configured.
+  No native updated actions, child row/returned ID, parent activation or runtime
+  inspected; new-question path is reported configured, not accepted end-to-end.
+- Next False-branch setup: Existing_Boss_Clarification Compose, combined
+  Boss_Can_Reuse_Clarification and True Restore_Boss_Question_Link. Match source,
+  Request, employee, actual requester, Boss stage/question/positive round, and
+  require Awaiting Answer with no saved answer/timestamp. False cancels no-write.
+- Shared parent/actor guards already precede the branch. Combined checks limit
+  boss nesting. Restore binds the original child/round and only four parent
+  workflow fields, preserving question/history and completed manager approval.
+- New actions instructed, not yet configured/executed. Snapshots/ordinary Update
+  do not provide atomicity; unique-insert conflicts, captured claims, resume,
+  reply UI and controlled concurrency/partial-write tests remain pending.
+- Notification stays Off. Guides/manifest only; no native flow, schema/site,
+  permission, email, Contact or financial operation performed by the assistant.
+
+## 2026-11-07 Record boss routing guards; specify question creation/parent link
+
+- User reports Boss_Can_Link_Clarification and Boss_Question_Is_New configured;
+  no native guard definition/evaluation or runtime inspected.
+- Next two sequential actions inside new-question True: Create_Boss_Clarification
+  saves Request, employee, actual unique responder, question, Boss stage,
+  Awaiting Answer, round and stable boss source ID. Autonumber reference; blank
+  answer/timestamp. Set_Boss_Awaiting_Employee success-only then sets the existing
+  parent's Awaiting Employee - Boss/current source/matching round/active child.
+- Writes instructed, not confirmed configured/executed. Approval stays Pending;
+  completed manager approval is preserved. No new approval or financial write.
+- Separate operations are not atomic. Source-key conflict recovery, existing-row
+  reuse, conditional writes, per-run round claims, resume and UI remain pending.
+  Notification stays Off; no new schema/permissions/API/site configuration.
+- Documentation/manifest only; no native flow mutation or data/email operation
+  performed by the assistant.
+
+## 2026-11-07 Record boss actor validation; specify shared state gate/routing
+
+- User reports boss responder Compose, active Contact lookup and
+  Boss_Clarification_Valid configured. No native action definitions, Contact
+  match, output or execution inspected.
+- Next two conditions: Boss_Can_Link_Clarification inside valid True checks
+  unchanged employee/manager, positive round, Not Started/Boss Review, no active
+  question and no conflicting source approval. False cancels without writes;
+  True adds Boss_Question_Is_New comparing existing source-row count to numeric
+  0, with both branches empty until create/reuse wiring.
+- Shared gate keeps the deeper boss branch flatter. Not Started supports the
+  current Added-only first pass; future manager-to-boss dispatch must explicitly
+  enter Boss Review and hand off prior markers. No automatic clearing or rewind.
+- Conditions instructed only; not configured/runtime-verified. Snapshot checks,
+  fallback round 1 and source lookup do not supply atomic/per-run protection.
+  Boss writes, conflict recovery, dispatch and reply UI remain incomplete.
+- Documentation/manifest only; no native schema/flow, email or financial change.
+  Notification remains Off pending reply UI and controlled testing.
+
+## 2026-11-06 Record boss reads; specify responder lookup and input guard
+
+- User reports Get_Boss_Clarification_Request and Find_Boss_Clarification done;
+  native action definitions, outputs and runtime are uninspected.
+- Next grouped setup: Boss_Clarification_Responder_Email from the actual first
+  boss response, Find_Boss_Clarification_Requester active Contact lookup selecting
+  only contactid/emailaddress1 (top 2), then Boss_Clarification_Valid combining
+  nonempty source/question, <=4000 question length, nonempty responder email,
+  unique active Contact and current Pending Request. These actions are instructed,
+  not yet confirmed configured. True stays empty; False diagnostic Failed.
+- Honor reassignment; do not silently bind the originally intended boss Contact.
+  No credential reads, Contact creation, web-role assignment or financial writes.
+- Current review/round/owner/markers, create/reuse and atomic conflict protection
+  remain outstanding before boss writes. Notification stays Off pending UI/tests.
+  Guides/manifest only; no native flow/data/email operation performed.
+
+## 2026-11-06 Record supplied boss token; specify current-parent/source-row reads
+
+- User supplies Boss_Approval_ID Compose JSON. Inputs references the boss approval
+  body/name; runAfter follows Boss_Clarification_Question with SUCCEEDED. Record
+  verbatim in the review guide; no casing edit, runtime ID or question Inputs
+  inferred from this token snippet.
+- Next two sequential actions in Boss_Outcome > Need Clarification:
+  Get_Boss_Clarification_Request selects current Request workflow, owner/manager
+  and total; Find_Boss_Clarification filters by stable boss source ID, top 1,
+  pagination Off. Read-only setup; no Contact credentials or financial data write.
+- Reads are instructed, not confirmed configured. Boss validation/creation,
+  per-run state/atomic protection, insert conflicts, resumption and reply UI
+  remain pending. Preserve completed manager approval and keep notification Off.
+- Updated guides/manifest only; no native flow mutation, email or data operation.
+
+## 2026-11-06 Record manager recovery configuration; capture boss question inputs
+
+- User reports Manager_Can_Restore_Question and Restore_Manager_Question_Link
+  configured. This completes the guided manager existing-row designer structure
+  by report only; no native updated definition, execution or concurrency test.
+- Next Boss_Outcome > Need Clarification gets Boss_Clarification_Question
+  Compose (first boss response comments) and Boss_Approval_ID Compose using
+  the boss action's actual Approval ID dynamic token. Request only that Compose
+  Code view before source-key wiring; do not assume the manager's token proves
+  the boss's output reference or invent a new source ID.
+- Boss branch must remain within eight nesting levels, so do not copy the full
+  nested manager tree. Preserve the completed manager approval and existing
+  recipient/financial paths. Empty-comment validation will precede boss writes.
+- No boss creation/activation/resumption is instructed yet. Notification stays
+  Off; atomic answer/handoff, per-run claims and insert-time conflict recovery
+  remain incomplete. Documentation/manifest only; no tenant operation performed.
+
+## 2026-11-06 Record open-question guard; specify grouped parent-link restoration
+
+- User reports Manager_Question_Still_Open configured; native action definition,
+  outputs and runtime are uninspected.
+- Next grouped setup finishes the existing-row branch's designer structure:
+  Manager_Can_Restore_Question guards parent Pending, unchanged employee/manager,
+  initial/manager review, empty active child and absent/matching approval ID.
+  False cancels the obsolete/duplicate run without writes, including an already
+  waiting Request; no separate no-write-success condition is needed.
+- True Restore_Manager_Question_Link updates only four Request workflow fields
+  with the original question GUID, its validated round and stable approval ID.
+  No second child, answer overwrite, approval-status or cash/balance operation.
+- New actions instructed, not yet confirmed. This is ordinary snapshot/update
+  logic, not atomic recovery. Conditional writes, per-run claims, insert-time
+  unique-conflict recovery, boss questions, dispatch and reply UI remain pending.
+- Notification remains Off. Guides/manifest only; no native changes performed.
+
+## 2026-11-06 Record reuse identity check; specify open-question guard
+
+- User reports Manager_Existing_Question_Matches configured. No native action
+  definition, output or run inspected.
+- Next inside its True branch: Manager_Question_Still_Open requires Awaiting
+  Answer with empty answer and Answered On. False terminates Cancelled without
+  changing the Request, answer or ledger; True stays empty pending parent state
+  handling. Exact expression/instructions added to the review guide.
+- Closed/answered/inconsistent rows are not reopened. The snapshot does not
+  resolve simultaneous answer writes or parent-state races. Recovery activation,
+  main resume dispatch, boss clarification and reply UI remain incomplete.
+- Notification remains Off. Documentation/manifest only; no native flow, record,
+  role, website setting, email or financial operation changed by the assistant.
+
+## 2026-11-06 Record existing-question reads; specify reuse identity condition
+
+- User reports Existing_Manager_Clarification and Get_Manager_Reuse_Request
+  configured. No native action code, query output or runtime is inspected.
+- Next bounded action is Manager_Existing_Question_Matches in that same False
+  branch, after the fresh parent read. Exact expression checks source approval,
+  Request, nonempty matching employee, nonempty recorded requester, Manager
+  stage, unchanged question and positive matching round (initial parent null
+  uses the same fallback 1 as creation). False terminates Failed with diagnostic
+  ManagerClarificationMismatch; True remains empty pending state handling.
+- Identity snapshots alone do not authorize activation or validate concurrent
+  writes. Child status/answer and parent owner/manager/stage/current approval/
+  active child checks still precede recovery. No child, Request or finance write
+  is instructed in this step. Notification stays Off pending UI/testing.
+- Documentation and manifest only; no tenant mutation or delivery performed.
+
+## 2026-11-06 Record notification Part B; prepare existing-question recovery
+
+- User reports the notification guard, child-based reply-link ID and Question
+  email-token edits done. Alongside Part A, the guided revision is configured
+  by user report only; native save/definition, delivery and runtime unverified.
+- Keep notification Off until reply UI and controlled tests. Next bounded step
+  adds Existing_Manager_Clarification Compose and Get_Manager_Reuse_Request in
+  the existing manager new-question condition's False branch. Reads only, with
+  current Request workflow/owner markers selected; no credential data read.
+- Recovery eligibility/writes, unique-conflict handling, boss clarification,
+  dispatch and atomic reply/handoff remain incomplete. Updated guide's summary
+  distinguishes original empty-branch snapshot from later reported creation.
+- Documentation/manifest only; no tenant mutation, email or financial operation.
+
+## 2026-11-05 Record notification revision Part A; finish guard/link/email next
+
+- User reports Part A done: notification flow Off, Request Modified scalar-stage
+  trigger/filter, Get_Notification_Clarification and existing lookup source edits.
+  Native Code view, saved state and event payload remain uninspected.
+- Next Part B edits the existing Can_Notify_Employee comparison rows (preserving
+  branches), checks current owner/Request/active awaiting question and delivery
+  fields, then uses the child Get for reply-link GUID and Question email token.
+- Keep notification off until reply UI and controlled tests are ready. No claim
+  of exactly-once delivery, source/round write authorization or atomic behavior.
+- Guides/manifest only; no native flow mutation, email, data or financial write.
+
+## 2026-11-05 Record parent waiting link configured; revise notification timing
+
+- User reports Set_Manager_Awaiting_Employee configured; no native row/run or
+  parent/child activation evidence inspected.
+- Grouped next revision of EXISTING notification flow: turn off; change trigger
+  to Request Modified, select scalar hr_workflowstage, filter Pending/awaiting/
+  nonnull active child; read event-linked clarification, then existing employee
+  and current Request; update sources, current-question guard, reply link and
+  Question body token. Historical child-Added instructions marked superseded.
+- Uses workflow Choice in Select columns because lookup Select filtering is not
+  supported. Repeated same-value stage updates may still produce repeated emails;
+  no exactly-once notification guarantee or write authorization is claimed.
+- Instructed only; keep notification off until frontend and controlled tests are
+  ready. Existing-row recovery, main resumption, per-run and atomic state remain
+  pending. Guides/manifest only; no native flow change, email or data mutation.
+
+## 2026-11-05 Record manager create action configured; link parent waiting state next
+
+- User reports Manager_Can_Create_Clarification and Create_Manager_Clarification
+  configured. Native definition, created row and runtime are not inspected.
+- Next instruction is sequential Set_Manager_Awaiting_Employee on the existing
+  Request: Awaiting Employee - Manager, selected approval ID, matching child
+  round and new Active Clarification lookup. Success-only after child creation;
+  no Pending status change, financial write, role grant or Contact mutation.
+- Documented that current child-Added notification can precede parent activation;
+  coordination/rewrite is pending, not silently treated as ready. Existing-row
+  recovery, conditional writes and captured per-run state remain outstanding.
+- Updated guides and manifest only. No native update, email, approval or frontend
+  operation performed; do not run the partial clarification workflow yet.
+
+## 2026-11-05 Record responder lookup configured; map guarded question creation
+
+- User reports responder-email Compose/Contact lookup configured; native response
+  shape and query runtime remain unverified.
+- Next grouped instruction adds Manager_Can_Create_Clarification (unique active
+  responder, unchanged Request employee/manager, eligible stage, no active child,
+  positive round and no conflicting approval ID) and Create_Manager_Clarification
+  with exact lookup binds/question/stage/status/round/stable source ID mapping.
+  Reference uses existing autonumber; Answer/Answered On stay blank.
+- Instructed configuration only. Parent activation and notification timing are
+  not wired, so do not run the partial branch. Snapshot guard is not atomic or a
+  per-run round claim; dispatch tracking, stale decisions, reuse/conflict recovery
+  and supported conditional writes remain pending before live use.
+- Updated guides/manifest only; no native creation, email, Contact update,
+  website change or financial operation performed by the assistant.
+
+## 2026-11-05 Record question guards configured; resolve actual approver Contact
+
+- User reports Manager_Clarification_Valid and Manager_Question_Is_New configured.
+  Native Code view/runtime remain uninspected; no child or parent write added.
+- Next new-question branch actions capture manager response responder email and
+  Find_Manager_Clarification_Requester, selecting only contactid/emailaddress1,
+  active rows, cap 2, with escaped OData email text. No credential fields queried.
+- Preserve enabled approval reassignment. Requested By needs the actual responder
+  Contact, not an Entra ID or silently substituted assigned-manager identity.
+  Nonempty email, unique active match and current-review checks must precede
+  writes; no automatic Contact creation or role grants on missing/ambiguous match.
+- Updated guides and manifest only. No native email, data, website or financial
+  operation performed; source-key recovery/activation/notification still pending.
+
+## 2026-11-05 Record clarification reads configured; validate and route next
+
+- User reports Get_Manager_Clarification_Request and Find_Manager_Clarification
+  configured; native definition/runtime remain uninspected.
+- Next grouped conditions: Manager_Clarification_Valid checks source/question,
+  length <=4000 and Pending. False terminates Failed with explicit diagnostic,
+  leaving Request status unchanged. True contains Manager_Question_Is_New
+  (matching row count ==0), with create/reuse branches empty at this checkpoint.
+- Current-review/actor validation, unique-key conflict recovery, notification
+  ordering and missing-comment exception policy remain pending before writes.
+- Documentation only; no native row, email, approval, website or financial action.
+
+## 2026-11-05 Confirm manager approval-ID token; prepare current/duplicate reads
+
+- User supplies Compose Code view: Manager_Approval_ID uses outputs of the
+  manager approval body/name, after Manager_Clarification_Question. Confirmed
+  configured token reference, not native runtime ID, question inputs or email edits.
+- Next grouped reads are Get_Manager_Clarification_Request by triggering Request
+  GUID, and Find_Manager_Clarification by text hr_sourceapprovalid equal to this
+  ID (top 1, pagination off, Active unique key already user-confirmed).
+- Reads are instructed only. Input/current-review checks, safe unique-key conflict
+  recovery, parent activation/notification ordering and atomic writes remain
+  pending before question creation. No source ID property guessed or invented.
+- Updated guides and manifest only; no native records, emails, approvals,
+  website edits or financial operations performed.
+
+## 2026-11-05 Record boss routing configured; capture clarification inputs next
+
+- User reports boss Custom Responses/Boss_Outcome restructuring done. Updated
+  native code, final recipient and approval/runtime tests remain unverified.
+- Next guided Compose Manager_Clarification_Question extracts trimmed comments
+  from the supplied manager response array. Added planned approver Details text
+  instructing a question in Comments when selecting Need Clarification; comments
+  remain optional until explicit validation/exception handling is implemented.
+- Inspect native Approval ID dynamic token through Manager_Approval_ID Compose
+  Code view; if unavailable, report that rather than inventing body/name or using
+  a response/run/random ID. Connector outputs are dynamic. No new test approval
+  or child/parent writes are needed to inspect the picker.
+- Source-ID binding and safe question creation await that exact native expression.
+  Updated guides/manifest only; no tenant, website or financial mutation.
+
+## 2026-11-05 Record three corrections done; add coordinated boss response routing
+
+- User reports all three threshold/filter/direct-cash-Request-bind corrections
+  completed. Native definitions, boundary tests and runtime are not inspected;
+  original received JSON snapshot remains unchanged audit evidence.
+- Next grouped instruction builds Boss_Outcome Switch after the boss action,
+  moves full existing expense guard/finalization container to Approve and full
+  For_each_2 rejection loop to Reject, then deletes only empty Condition 1.
+  Need Clarification stays empty; Default cancels unexpected responses.
+- Configure existing boss action to Custom Responses - Wait for one response
+  with exact Approve/Reject/Need Clarification in the same edit/save. Preserve
+  action names, nested references and financial expressions. Confirm intended
+  recipient rather than inferring a production boss address from test code.
+- New routing is instructed only. Main resumption, clarification creation, atomic
+  reply writes and financial consistency fixes remain pending. Guides/manifest
+  changes only; no native flow mutation, email, data or financial operation.
+
+## 2026-11-05 Review supplied action code and preserve Switch snapshot
+
+- User supplies manager approval and line-item List rows code plus the complete
+  Switch attachment. Preserved the exact Switch as a JSON snapshot under
+  documentation/flow-snapshots and parsed it successfully. This is a partial
+  native definition review, not a complete export or tenant run inspection.
+- Confirmed manager custom response matching, empty clarification, Default
+  Succeeded; boss Basic, manager-addressed and two-way; threshold >=10000;
+  List rows actually top-one line item; two cash binds derive Request via a line.
+- Documented exact next designer fixes: strict >10000, standard unquoted lookup
+  GUID filter, and direct triggering Request binds on both cash inserts. All are
+  instructed only. Boss response/routing conversion must be coordinated.
+- Static review also found expense read before boss wait, stale pre-wait Contact
+  balance subtraction and balance update before unique cash insert. Recorded
+  financial consistency gaps, reassignment/operator identity and missing readiness
+  gate rather than treating prior duplicate-protection confirmation as atomic.
+- Added APPROVAL_FLOW_REVIEW.md; linked current guides; included snapshot in local
+  handover hashes. No website, native flow, permission or financial write changed.
+
+## 2026-11-05 Inspect supplied approval overview and trigger; request action code
+
+- User provides two current flow screenshots and complete trigger Code view.
+  Recorded webhook operation, entity hr_pettycashrequest, message 1, scope 4 and
+  absence of visible trigger filters. Retained prior Added-only interpretation;
+  no trigger mutation or live execution inferred.
+- Current screenshot shows empty manager clarification case, Default Terminate 2,
+  boss Condition 1 True/False, threshold/expense checks and final cash actions.
+  This supersedes historical clarification-branch temporary Terminate description.
+- Requested only manager approval, full Switch (including nested actions) and
+  List rows - PC request Code view to resolve exact response options, outcome,
+  threshold, duplicate checks, request selection and action references. No more
+  overview screenshots/trigger resend needed if code is supplied.
+- Updated clarification/approval guides and local manifest only. No native flow
+  edits, website changes, data writes or financial operations performed.
+
+## 2026-11-05 Record retry recovery configured; inspect current approval definition
+
+- User reports grouped Reply_Review_State / Retry_Needs_Queue recovery and
+  confirmation actions configured. This is setup confirmation, not native run,
+  expression/export inspection or end-to-end completion.
+- Checked local JSON/ZIP/approval files: no current native flow export found.
+  Next request the latest approval-flow definition, or expanded manager/boss
+  overview plus trigger Code view, before changing working approval routing.
+- Need exact native routing/action names to preserve completeness, boss threshold,
+  prior manager decision and final cash dedupe while adding question creation and
+  Ready-stage resumption. No speculative trigger edits instructed.
+- Atomic answer/handoff writes and frontend reply wiring remain pending. Trigger
+  concurrency stays disabled. Updated clarification/approval guides and manifest
+  only; no tenant, website or financial operation performed.
+
+## 2026-11-05 Record processed-retry branch configured; finish Answered recovery
+
+- User reports Clarification_Already_Processed and its confirmation branch done.
+  Native execution remains unverified; trigger concurrency stays disabled.
+- Grouped remaining retry instructions: Reply_Review_State Compose classifies
+  same-answer/current-review read snapshots as queue, ready or unconfirmed;
+  Retry_Needs_Queue writes Ready only for the matching awaiting review. Already
+  Ready returns confirmation without another update; mismatched/obsolete state
+  returns unconfirmed with no writes. Answer and Answered On are never changed.
+- Kept one conditional level after the classifier to respect the documented
+  eight-level nesting bound; actual native definition/save is still to verify.
+- Read-snapshot checks do not fix concurrent writes. Atomic save/handoff and
+  main approval resume routing remain pending before live use.
+- Updated guide and local manifest only. No tenant, website or financial action.
+
+## 2026-11-05 Confirm flow saves with concurrency disabled; handle processed retry
+
+- User confirms disabling concurrency resolved the flow-save error. Keep the
+  synchronous common Power Pages response; no trigger replacement reported.
+  Successful save is not a verified native reply run or atomic write guarantee.
+- Next guided condition Clarification_Already_Processed inside unchanged-answer
+  True compares child status to Processed 123140002. True confirms the previously
+  saved/handed-off answer via message then answered status, with no record update
+  or new approval. False awaits Answered-state handoff recovery.
+- Processed is a durable handoff marker, not final expense approval; main routing
+  must apply it accordingly. Concurrent-save protection remains unresolved.
+- Updated guide checkpoint and manifest only. No native repair, invocation,
+  tenant write, website edit or financial operation performed by the assistant.
+
+## 2026-11-05 Correct incompatible answer-trigger concurrency instruction
+
+- User reports flow-save InvalidConcurrencyConfiguration: manual Request trigger
+  concurrency is unsupported with synchronous Response unless response is async.
+  The prior degree-1 instruction was incorrect for this flow. Recent designer
+  edits are not assumed persisted after the failed save.
+- Superseded concurrency instructions in the guide. Next repair is try trigger
+  Concurrency Control Off and save while keeping the common synchronous Power
+  Pages return intact. If Off is locked, inspect/preserve dependencies before
+  any trigger replacement; no blind deletion, discard or endpoint change.
+- Do not enable asynchronous response merely to silence validation. Save repair
+  is not concurrent-write protection; atomic save/claim handling remains pending
+  before live activation. Read checks alone do not prevent simultaneous updates.
+- Retry guard configuration/save success are not confirmed. Updated guide and
+  local manifest only; no tenant repair, action deletion or native test performed.
+
+## 2026-11-05 Record first-answer actions configured; add saved-answer retry gate
+
+- User reports completing grouped answer-flow concurrency, save, Ready-stage
+  update and confirmation actions. Native execution/selected settings have not
+  been inspected; end-to-end clarification is still incomplete.
+- Next guided condition Same_Answer_Already_Saved goes in the outer
+  Clarification_Awaiting_Answer False branch. Accept only Answered/Processed
+  with unchanged trimmed text; reject other status/different answer. True awaits
+  handoff recovery/confirmation rather than prematurely setting success.
+- Retry must not rewrite Answer/Answered On or rewind a newer review. Main-flow
+  resume and My Requests UI remain pending. Updated guide's current summary to
+  distinguish confirmed metadata/setup from still-unverified native runtime.
+- Guide/manifest changes only; no tenant, website or financial operation.
+
+## 2026-11-05 Record active-review condition configured; group first-answer writes
+
+- User reports Clarification_Is_Current configured and asks to avoid complexity.
+  Recorded confirmation without implying native execution or caller proof.
+- Grouped next instructions: short answer-flow concurrency 1, sequential
+  Save_Clarification_Answer (trimmed Answer, UTC timestamp, Answered), then
+  Queue_Clarification_Review (Ready for Manager/Boss), then success message/status.
+  No new conditions on the first-answer path. Existing single response remains.
+- Documented success only after both updates, unchanged Pending/financial state,
+  retained review tracking, and pending same-answer recovery on partial failure.
+- Concurrency is limited to this short reply flow, with queue and recreation
+  limitations noted. No global serialization of the approval wait flow. These
+  instructions are not reported executed; live frontend activation/testing waits
+  for retry handling and actual approval resume routing.
+- Updated guide and manifest only. No tenant records, flow actions, permissions,
+  website code or financial rows changed by the assistant.
+
+## 2026-11-05 Record new-answer routing configured; validate active review next
+
+- User reports adding Clarification_Awaiting_Answer. Native execution remains
+  unverified; the answer flow still has no record writes.
+- Next guided condition Clarification_Is_Current inside its True branch requires
+  Pending request, same active clarification, matching positive review round,
+  nonempty matching source/current approval IDs, no existing answer, and matched
+  Manager/Boss Awaiting Employee stage. False rejects a new answer; True stays
+  empty. Saved-answer retry handling remains in the outer False branch.
+- Documented that read checks do not atomically claim a review; concurrency,
+  protected save/handoff, main-flow field population and resume are still pending.
+- Updated guide and local audit manifest only; no tenant, website, approval or
+  financial write performed by the assistant.
+
+## 2026-11-05 Record reply-text validation configured; route new answers next
+
+- User reports configuring Valid_Clarification_Answer and its rejection branch.
+  Native execution remains unverified; no answer/Request writes are enabled.
+- Next guided action is Clarification_Awaiting_Answer inside valid-answer True,
+  comparing child hr_clarificationstatus with numeric Awaiting Answer 123140000.
+  True is reserved for active-review checks; False for status-aware retry/closed
+  handling. Both branches remain empty at this checkpoint.
+- Documented that saved same-answer retries need recovery/confirmation rather
+  than unconditional rejection, and must not overwrite text or restart old review.
+- Updated guide and local audit manifest only; no tenant, frontend or financial
+  operation performed by the assistant.
+
+## 2026-11-05 Record ownership condition configured; validate reply text next
+
+- User reports adding Caller_Owns_Clarification and its rejected ownership
+  branch. Native caller mapping and own/other-user runs are not verified.
+- Next guided action is Valid_Clarification_Answer inside ownership True:
+  require nonempty trimmed Input_Answer with length <= 4000. False sets rejected
+  and a length message; True remains empty for state and retry handling.
+- Documented consistent trimming for future save/replay comparison, retaining
+  internal whitespace/case. No truncation, additional response or Terminate.
+- Updated guide and local audit manifest only. No native reply/Request writes,
+  approval routing, website code or financial behavior changed.
+
+## 2026-11-04 Record common reply response configured; add ownership step
+
+- User reports initializing vReplyStatus/vReplyMessage and the single three-Text
+  Return_Clarification_Result with all four Scope Run after outcomes. Native
+  response schema/runtime and ownership/writes are not yet verified.
+- Next guided step proposes Caller_Owns_Clarification inside processing, after
+  the two lookups. Requires nonempty platform caller matching both child Employee
+  and parent Submitted By, case-insensitive. False sets rejected + own-request
+  message; True awaits state/input/retry checks. No premature Terminate/Response.
+- Updated guide and local manifest only. No portal identity input, native record
+  update, role grant or financial behavior changed by the assistant.
+
+## 2026-11-04 Record reply lookups configured and define common response
+
+- User reports the processing Scope and both reply lookups configured. This is
+  user setup confirmation, not a verified caller mapping or native read/write run.
+- Next guided step proposes two top-level String variables vReplyStatus
+  (unconfirmed), vReplyMessage (generic keep-open/retry text), and one shared
+  Return_Clarification_Result outside/after the Scope. Three Text outputs:
+  status, clarificationid, message. Run after covers all four Scope outcomes.
+- Branches will set variables instead of adding divergent response schemas or
+  terminating before returning. Request ID output is unnecessary because the
+  page has that authorized lookup already; failure replies return no record data.
+  Caller/state validation, save/retry logic and frontend wiring remain pending.
+- Updated guide and manifest only; no native response, write or website change
+  performed by the assistant. Existing cash-flow behavior is untouched.
+
+## 2026-11-04 Confirm boss Contact GUID and prepare answer lookups
+
+- User supplies boss Contact GUID bb427249-63d8-f111-84ea-70a8a52176fd after
+  the profile-only setup instructions. Recorded creation/GUID as user-confirmed;
+  no native email/role/login metadata inspection or admin-role assignment inferred.
+- Next guided step groups reply processing in Process_Clarification_Answer Scope,
+  then reads Get_Reply_Clarification using Input_Clarification and Get_Reply_Request
+  using its hr_request lookup. Recorded explicit backend-only select lists for
+  later ownership/current-review/retry checks. No writes are proposed yet.
+- Input_* Compose action names/tokens still require confirmation/inspection;
+  lookup construction and native invocation are not reported complete. Updated
+  clarification/approval guides and manifest only; no tenant/financial operation.
+
+## 2026-11-04 Record answer-flow creation and boss role guidance
+
+- User shows Submit Clarification Answer in the Add cloud flow screen, asks its
+  role and is instructed Authenticated Users. User then reports flow created.
+  Recorded creation without inferring verified internal input/Compose setup,
+  caller identity, role enforcement, site URL copy or operational reply writes.
+- Boss Contact creation is next independent task. Record name/same fixed email
+  in Management Contacts; Manager business-role choice if needed. Petty Cash Admin
+  web role is not required for email approval/Requested By recordkeeping; website
+  login can stay disabled. No Contact/role creation is reported complete yet.
+- Updated clarification guide and local manifest only; no tenant flow, Contact,
+  role, website or financial write performed by the assistant.
+
+## 2026-11-04 Confirm boss uses native approval action
+
+- User identifies the boss action as Start and wait for an approval. Recorded
+  the exact type and retained the fixed recipient email. Boss custom responses,
+  actual action name/branches and Contact creation/GUID remain unconfirmed.
+- Updated clarification/approval guides, resolving the earlier email-action
+  ambiguity. The response does not confirm the separate answer-flow skeleton.
+  Documentation/source manifest only; no native flow, Contact or email changed.
+
+## 2026-11-04 Record missing boss Contact and clarify decision action
+
+- User confirms no boss Contact exists; boss uses a fixed email and the user is
+  willing to create a Contact. Proposed profile-only Management Contact using
+  name/same email, with website login disabled unless separately needed. Creation
+  and GUID remain pending; fixed approval email does not need changing for this.
+- User calls the boss action send an email; asked for exact action type before
+  assuming approval responses or implementing boss clarification. No received
+  answer is treated as completion of the separate answer-flow skeleton.
+- Updated clarification/approval guides and source/document manifest only.
+
+## 2026-11-04 Confirm approval trigger and boss recipient method
+
+- User answers the pending configuration question: existing approval flow Change
+  type Added only; boss recipient fixed email. Recorded these exact facts without
+  marking the independent answer-flow trigger/Compose step completed.
+- Planned resume wiring must handle workflow-stage updates with existing readiness,
+  decision, round and replay safeguards; no live trigger/recipient is changed.
+  Asked whether the boss email has a matching Contact for Requested By; pending.
+- Updated clarification/approval guides and local source/document manifest only.
+
+## 2026-11-04 Record clarification email configuration completion
+
+- User reports Compose reply link and Send an email (V2) configured/saved inside
+  notification True branch. Recorded as setup completion, not a delivery/link test
+  or end-to-end clarification run.
+- Next guided step proposes Petty Cash - Submit Clarification Answer using When
+  Power Pages calls a flow, Text inputs clarificationId and answer, and three
+  Compose actions capturing both inputs plus the built-in User ID caller token.
+  No browser-supplied identity is accepted as authorization. Native caller/input
+  mapping, row validation, writes, responses, role/URL attachment and UI pending.
+- Checked existing Finance guide and official User ID example. Requested current
+  approval trigger Change type and boss recipient source for later resume wiring;
+  continued independent reply-flow setup while those details are pending.
+- Updated clarification guide and document manifest only; no tenant flow, email,
+  answer/financial row or website behavior changed by the assistant.
+
+## 2026-11-04 Record notification request lookup and condition completion
+
+- User reports Get_Clarification_Request and Can_Notify_Employee configured,
+  including the Pending/submitter checks and false-path Cancelled termination.
+  No native run, condition result or email delivery has been supplied.
+- Next guided step proposes Compose Clarification_Reply_Link and Outlook Send an
+  email (V2) inside True, using employee email/name, request title, trigger
+  question and full site /My-Requests/?clarificationId=<row GUID> link.
+- Recorded the proposed clarificationId query contract and dynamic-token body
+  in CLARIFICATION_SETUP.md. The origin is from the user's previously shared
+  website address; question reply UI/flow and end-to-end behavior remain pending.
+  Documentation/manifest only; no native flow or email was executed by assistant.
+
+## 2026-11-04 Record clarification notification skeleton completion
+
+- User reports notification trigger and Get_Clarification_Employee configured.
+  This is setup confirmation, not a verified notification run or sent email.
+- Next guided step adds Get_Clarification_Request using trigger _hr_request_value,
+  selecting title, approval status and submitter lookup. Can_Notify_Employee AND
+  checks Pending (123140000) and request submitter equals trigger Employee.
+  True awaits email setup; False terminates Cancelled without changing request.
+- Recorded exact proposed action names, expressions and scope in clarification
+  guide. Request/condition creation and live runtime remain pending. No webpage,
+  tenant flow/record or financial behavior is changed by the assistant.
+
+## 2026-11-04 Confirm clarification empty read succeeds
+
+- User confirms the expected read-probe result: HTTP 200, recordsReturned 0.
+  Recorded basic API/field access for that session, not cross-employee isolation
+  or answer authorization. Updated setup guide and Web API status.
+- Next guided step proposes notification flow skeleton inside project solution:
+  Petty Cash - Clarification Notification, Dataverse Added, Request Clarifications,
+  Organization scope, filter hr_clarificationstatus eq 123140000. First action
+  Get_Clarification_Employee reads Contacts using trigger _hr_employee_value and
+  selects only fullname,emailaddress1. Flow creation/run/delivery not confirmed.
+- Request context, email construction, replay/state guards, answer submission,
+  website reply UI and approval resumption remain pending. Documentation/source
+  manifest only; no tenant actions or financial writes performed by the assistant.
+
+## 2026-11-04 Record clarification Web API setup completion
+
+- User reports the clarification enabled/explicit fields settings and site sync
+  done. Updated clarification guide and WEBAPI_SITE_SETTINGS.md as user-reported
+  completion; actual API/ownership evidence is not inferred from setup alone.
+- Next guided step is a GET selecting all twelve exposed clarification fields,
+  top 1, through the live New Request page's existing token helper. The check
+  reports only status/count or error and performs no record creation/posting.
+- Empty results are expected before clarification creation is connected; later
+  own/other-employee reads and reply authorization still need controlled tests.
+  Documentation/manifest only; no tenant operation or website code changed.
+
+## 2026-11-04 Confirm clarification Employee relationship
+
+- User supplies exact Contact relationship hr_requestclarification_Employee_contact
+  for Request Clarifications - Employee Read. Recorded selection; effective
+  privilege/role scope and cross-employee denial are not independently verified.
+- Next guided step proposes Webapi/hr_requestclarification/enabled=true and
+  explicit fields for own question/history reads. Source approval ID and Request
+  workflow controls remain backend-only. Added the read field list to clarification
+  guide and WEBAPI_SITE_SETTINGS.md; native settings are not yet confirmed applied.
+- Documentation/source manifest only; no tenant setting/permission/API write,
+  website UI or flow implementation is performed by the assistant.
+
+## 2026-11-04 Confirm Request workflow tracking metadata
+
+- User supplies hr_workflowstage, hr_currentapprovalid, hr_reviewround and
+  hr_activeclarification on hr_pettycashrequest. Screenshot confirms Workflow
+  Stage values Not Started through Completed, 123140000 through 123140007, in
+  the proposed eight-label order. Recorded exact mapping in clarification guide.
+- Request and Clarification both use hr_reviewround on their respective tables.
+  Native type/default/publication/relationship properties are not independently
+  inspected; new workflow fields are not added to employee API write exposure.
+- Next step proposes Request Clarifications - Employee Read, Contact access via
+  hr_employee, Read only, Authenticated Users. Relationship name, permission
+  creation and cross-employee denial remain unconfirmed. Backend validates replies.
+- Documentation and source/document manifest updated; no frontend, native flow,
+  schema/permission action or financial write performed by the assistant.
+
+## 2026-11-04 Confirm active clarification key
+
+- User screenshot shows Source Approval Unique key name hr_sourceapprovalunique,
+  status Active, on Request Clarification. Column text is truncated; retain the
+  instructed source-only definition hr_sourceapprovalid for later export review.
+- Next step proposes four optional fields on existing hr_pettycashrequest:
+  Workflow Stage (eight local labels, default Not Started), Current Approval ID
+  (text 100), Review Round (Whole Number minimum 1), Active Clarification (lookup
+  hr_requestclarification). Generated names/values/publication not yet confirmed.
+- Recorded stage meanings and preservation of initial products/receipt readiness,
+  existing decision status and backend-only workflow writes in clarification guide.
+  Documentation only; no website, native schema/flow or financial row changed.
+
+## 2026-11-04 Confirm clarification tracking fields and reference
+
+- User supplies hr_answeredon, hr_reviewround and hr_sourceapprovalid and confirms
+  the instructed autonumber is configured on hr_clarificationreference. Recorded
+  the user report; no independent native type/default/format inspection claimed.
+- Next guided step creates Source Approval Unique alternate key on
+  hr_sourceapprovalid only, requiring Active status. Key name/activation remain
+  unconfirmed. Later flow logic must supply nonempty approval IDs, compare
+  duplicate records and gate request review rounds separately.
+- Updated CLARIFICATION_SETUP.md and source/document manifest. Documentation only;
+  no tenant writes, website functionality or approval integration added locally.
+
+## 2026-11-04 Confirm clarification question and status metadata
+
+- User supplies hr_question, hr_answer, hr_approvalstage, hr_clarificationstatus.
+  Stage values Manager/Boss are 123140000/123140001; clarification status values
+  Awaiting Answer/Answered/Processed/Cancelled are 123140000 through 123140003.
+  Recorded as user-confirmed metadata; native type/length/default inspection and
+  end-to-end clarification operation remain pending.
+- Next step proposes Answered On (optional user-local Date and Time), Review
+  Round (required Whole Number, minimum 1), Source Approval ID (required text,
+  maximum 100), plus conversion of existing hr_clarificationreference to
+  autonumber CL-{SEQNUM:6}, seed 1. New logical names/format are not yet confirmed.
+- Updated setup guide and source/document verification manifest. Documentation
+  only; no native schema, website behavior, flow or financial write performed.
+
+## 2026-11-04 Confirm clarification lookup names
+
+- User supplies Request hr_request, Employee hr_employee and Requested By
+  hr_requestedby on hr_requestclarification. Recorded exact names; relationship
+  navigation/schema, native configuration and permission behavior remain unverified.
+- Next guided step defines Question/Answer plain multiline text (4000), local
+  Approval Stage choices Manager/Boss and local Clarification Status choices
+  Awaiting Answer/Answered/Processed/Cancelled. Answer optional; status defaults
+  Awaiting Answer. Their creation/names/numeric values are not yet confirmed.
+- Updated CLARIFICATION_SETUP.md and verification manifest. Documentation only;
+  no tenant flow/schema/permission operation or website/financial behavior change.
+
+## 2026-11-03 Confirm clarification table metadata
+
+- User supplies table hr_requestclarification, entity set hr_requestclarifications,
+  primary GUID hr_requestclarificationid and primary name hr_clarificationreference.
+  Recorded as user-confirmed table shell metadata in CLARIFICATION_SETUP.md.
+- Next guided step adds Request, Employee and Requested By lookups. Their actual
+  logical/relationship names, creation/publication and API/permission settings
+  remain unconfirmed. No UI or native flow is connected to guessed names.
+- Documentation-only local changes; no tenant operation or financial write.
+
+## 2026-11-03 Begin guided clarification upgrade
+
+- User selects email notification plus a reply on My Requests. User reports
+  custom approval responses and the Outcome Switch completed. Clarification and
+  Default use temporary Cancelled termination outside loops; no clarification
+  completion or native flow-export review is inferred.
+- Added CLARIFICATION_SETUP.md with scope, proposed workflow separation, table
+  shell step, pending exact metadata, permissions/UI/flow work and acceptance.
+  Linked it from approval documentation and README. Next step is user creation
+  of a Standard Request Clarification table; generated names remain unknown.
+- Documentation only; no new table, webpage code, native flow, permission or
+  financial row is created by the assistant. Existing request/Finance behavior
+  is unchanged by these local edits.
+
 ## 2026-11-03 Confirm live product-unit save
 
 - User confirms the request works and saves to the Unit column. Supplied

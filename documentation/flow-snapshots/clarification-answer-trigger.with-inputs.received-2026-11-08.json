@@ -1,0 +1,28 @@
+{
+  "kind": "PowerPages",
+  "inputs": {
+    "schema": {
+      "type": "object",
+      "properties": {
+        "text": {
+          "title": "clarificationId",
+          "type": "string",
+          "x-ms-dynamically-added": true,
+          "description": "input1",
+          "x-ms-content-hint": "TEXT"
+        },
+        "text_1": {
+          "title": "answer",
+          "type": "string",
+          "x-ms-dynamically-added": true,
+          "description": "input2",
+          "x-ms-content-hint": "TEXT"
+        }
+      },
+      "required": ["text", "text_1"]
+    }
+  },
+  "metadata": {
+    "operationMetadataId": "823dac54-6843-4206-96b6-80c5c9c72708"
+  }
+}

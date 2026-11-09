@@ -231,6 +231,23 @@
   <header class="pc-page-head"><div><p class="pc-eyebrow">Expenses</p><h2>My Requests</h2><p>Track your expenses and manager feedback.</p></div><button id="pcRefresh" type="button" class="pc-button-secondary"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M20 7v5h-5M4 17v-5h5"/><path d="M6 7a7 7 0 0 1 12-1l2 6M4 12l2 6a7 7 0 0 0 12-1"/></svg> Refresh</button></header>
   <div class="pc-balance-card" aria-live="polite"><div><div class="pc-balance-label">My cash balance</div><div id="pcBalance" class="pc-balance">Loading…</div><p id="pcBalanceMeaning">Positive: company cash held. Negative: company owes you.</p></div></div>
   <p id="pcModuleMessage" class="pc-feedback" role="status" aria-live="polite">Loading requests…</p>
+  <section id="pcClarifications" class="pc-card" hidden aria-labelledby="pcClarificationsTitle">
+    <style>
+      .pc-app .pc-clarification{padding:20px;border:1px solid var(--pc-line);border-radius:12px;margin:16px 0;scroll-margin-top:24px}
+      .pc-app .pc-clarification .pc-card-head{margin-bottom:8px;flex-wrap:wrap}
+      .pc-app .pc-clarification .pc-card-head h3{font-size:15px}
+      .pc-app .pc-clarification-text{white-space:pre-wrap;overflow-wrap:anywhere}
+      .pc-app .pc-clarification form button{margin-top:14px}
+      .pc-app .pc-clarification-answer-label{font-weight:600;font-size:13px;margin-bottom:5px}
+      .pc-app .pc-clarification-linked{border-color:var(--pc-brand);box-shadow:0 0 0 2px #087f7212}
+      .pc-app #pcClarificationHistory .pc-clarification{background:white}
+      @media(max-width:540px){.pc-app .pc-clarification{padding:15px}.pc-app .pc-clarification form button{width:100%}}
+    </style>
+    <div class="pc-card-head"><h3 id="pcClarificationsTitle">Questions from your reviewer</h3><button id="pcClarificationRefresh" type="button" class="pc-button-secondary">Refresh questions</button></div>
+    <p id="pcClarificationMessage" class="pc-feedback" role="status" aria-live="polite"></p>
+    <div id="pcClarificationList"></div>
+    <details id="pcClarificationHistory" class="pc-details" hidden><summary>Earlier questions &amp; answers</summary><div id="pcClarificationHistoryList"></div></details>
+  </section>
   <section class="pc-card" aria-labelledby="pcRequestsTitle">
     <div class="pc-card-head"><h3 id="pcRequestsTitle">Request history</h3><a class="pc-button pc-button-secondary" href="/New-Petty-Cash-Request/">+ New request</a></div>
     <div class="pc-stat-strip" aria-label="Request counts"><span><strong id="pcRequestCount">—</strong>Total</span><span><strong id="pcPendingCount">—</strong>Pending</span><span><strong id="pcApprovedCount">—</strong>Approved</span></div>
@@ -243,4 +260,13 @@
   </section>
 </section>
 {% include 'Petty Cash User Context' %}
+<script>
+// Site-specific configuration for controlled publication; native acceptance pending.
+window.PC_MODULE_CONFIG = Object.assign({}, window.PC_MODULE_CONFIG || {}, {
+  clarificationsEnabled: true,
+  clarificationFlowId: "0a9693f4-61d8-f111-84ea-70a8a52176fd",
+  // Power Pages payload uses these titles; flow Compose actions read text/text_1.
+  clarificationInputNames: { clarificationId: "clarificationId", answer: "answer" }
+});
+</script>
 {% include 'Petty Cash Modules' %}

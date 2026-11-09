@@ -1,5 +1,11 @@
 # Petty Cash Request System
 
+**8 November clarification upgrade:** the user reports My Requests question UI
+published and its version/ready checks correct. Main-flow resumption is reported
+configured and both trigger inputs are inspected; native email/answer delivery
+and end-to-end behavior are not yet tested. See [CLARIFICATION_UI_SETUP.md](CLARIFICATION_UI_SETUP.md)
+and [CLARIFICATION_SETUP.md](CLARIFICATION_SETUP.md). Company acceptance is pending.
+
 ## Company handover start here
 
 **Current documentation baseline: 2 November 2026.** Use
@@ -56,6 +62,8 @@ implemented and tested locally. On 3 November the user confirmed successful live
 unit saving and supplied a screenshot with all setup checks passing.
 
 ## Files
+
+- `CLARIFICATION_SETUP.md`: in-progress clarification upgrade; user-reported custom responses/Switch, table creation checkpoint and remaining notification/reply/resume work. Not a completed feature.
 
 - `Header.html` / `Footer.html`: complete restyled versions of the user-supplied existing Web Templates, preserving managed navigation, editable branding, account controls and locale accessibility links.
 - `HANDOVER.md`, `OPERATIONS_RUNBOOK.md`, `HANDOVER_CHECKLIST.md`, `DOCUMENTATION_AUDIT.md`: current company handover set; `documentation/handover/verification.json` records the local audit/source snapshot.

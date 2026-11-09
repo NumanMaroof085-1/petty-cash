@@ -68,6 +68,7 @@ const requests = [makeRequest(1, 123140000, 'PCR-000128', '', 2400),
           return route.fulfill({ json: { value: emptyRequests ? [] : requests.map((r, i) =>
             literalComments && i === 1 ? { ...r, hr_managercomments: '<img src=x onerror=alert(1)> literal comment' } : r) } });
         }
+        if (url.pathname === '/_api/hr_requestclarifications') return route.fulfill({ json: { value: [] } });
         if (url.pathname === '/_api/contacts') return route.fulfill({ json: { value: [
           { contactid: employee, fullname: 'Hamza Ali', emailaddress1: 'hamza@example.test', adx_identity_username: 'hamza.ali', hr_userrole: 123140000, statecode: 0 },
           { contactid: manager, fullname: 'Sara Ahmed', emailaddress1: 'sara@example.test', adx_identity_username: 'sara.ahmed', hr_userrole: 123140001, statecode: 0 },

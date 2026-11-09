@@ -1,0 +1,18 @@
+{
+  "type": "OpenApiConnectionWebhook",
+  "inputs": {
+    "parameters": {
+      "subscriptionRequest/message": 1,
+      "subscriptionRequest/entityname": "hr_pettycashrequest",
+      "subscriptionRequest/scope": 4
+    },
+    "host": {
+      "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
+      "connection": "shared_commondataserviceforapps",
+      "operationId": "SubscribeWebhookTrigger"
+    }
+  },
+  "metadata": {
+    "operationMetadataId": "320b0314-dd49-4d51-ac9f-88f5280f6a2d"
+  }
+}

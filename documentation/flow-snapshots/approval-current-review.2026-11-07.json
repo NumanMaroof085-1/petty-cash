@@ -1,0 +1,121 @@
+{
+  "review_date": "2026-11-07",
+  "scope": "Static review of user-supplied outer outcome Switch and trigger. Not a full flow export or tenant/runtime audit.",
+  "sources": [
+    {
+      "file": "approval-flow-current.json",
+      "bytes": 52605,
+      "sha256": "fe65e66606ce6e6ea334afb45362f4bd28bc2d04fe523bb1872d87f7b01aec6d"
+    },
+    {
+      "file": "approval-trigger-current.json",
+      "bytes": 538,
+      "sha256": "015798d74eae98813af4915f95c3009de1e6e14b528ec75fe1b2cbaec78b0d5f"
+    }
+  ],
+  "static_checks": {
+    "json_parsed": true,
+    "actions_in_switch_fragment": 61,
+    "action_types": {
+      "Switch": 2,
+      "OpenApiConnection": 22,
+      "If": 13,
+      "OpenApiConnectionWebhook": 1,
+      "Foreach": 4,
+      "Terminate": 11,
+      "Compose": 8
+    },
+    "duplicate_action_names": [],
+    "run_after_dependencies_missing_from_local_sibling_scope": [],
+    "max_action_depth_with_outer_switch_at_root": 8,
+    "depth_limit": 8,
+    "deepest_actions": [
+      "Restore_Boss_Question_Link",
+      "Terminate_9"
+    ]
+  },
+  "actual_action_names": {
+    "boss_outcome_switch": "Switch_1",
+    "new_boss_parent_update": "Update_a_row",
+    "boss_reuse_condition": "Condition_3"
+  },
+  "confirmed_navigation_bindings": [
+    "hr_Request@odata.bind",
+    "hr_Employee@odata.bind",
+    "hr_RequestedBy@odata.bind",
+    "hr_ActiveClarification@odata.bind"
+  ],
+  "findings": [
+    {
+      "id": "BOSS_WAITING_STAGE",
+      "priority": "high",
+      "action": "Update_a_row",
+      "json_pointer": "/cases/Case_-_approve/actions/Condition_-_10k/actions/Switch_1/cases/Need_Clarification/actions/Boss_Clarification_Valid/actions/Boss_Can_Link_Clarification/actions/Boss_Question_Is_New/actions/Update_a_row/inputs/parameters/item~1hr_workflowstage",
+      "actual": 123140002,
+      "expected": 123140005,
+      "impact": "The new boss question is marked Awaiting Employee - Manager; the boss notification-stage and answer-current-stage checks cannot accept this pairing.",
+      "native_correction": "Select Awaiting Employee - Boss on the Update a row immediately after Create_Boss_Clarification."
+    },
+    {
+      "id": "BOSS_RECIPIENT",
+      "priority": "high",
+      "action": "Start_and_wait_for_an_approval_-_boss",
+      "actual": "@outputs('Get_a_row_by_ID_-_manager')?['body/emailaddress1']",
+      "expected": "The intended boss work email; value not supplied or guessed.",
+      "impact": "The manager lookup email is used for the boss approval.",
+      "native_correction": "Replace Assigned to with the agreed fixed boss work email."
+    },
+    {
+      "id": "MANAGER_RESTORE_FALSE",
+      "priority": "low",
+      "action": "Manager_Can_Restore_Question",
+      "actual_else_actions": [],
+      "expected": "No-write Terminate Cancelled as guided.",
+      "impact": "The ineligible path currently does nothing and the run may appear successful; it does not overwrite records."
+    },
+    {
+      "id": "UNEXPECTED_OUTCOME_DEFAULTS",
+      "priority": "low",
+      "actions": [
+        "Terminate_2",
+        "Terminate_2_1"
+      ],
+      "actual": "Succeeded",
+      "expected": "An explicit cancelled/failed unexpected-outcome policy.",
+      "impact": "Unrecognized manager or boss outcomes end successfully without a decision."
+    },
+    {
+      "id": "NO_NESTING_HEADROOM",
+      "priority": "design_constraint",
+      "actual": 8,
+      "expected": "Do not exceed 8 levels.",
+      "impact": "A new enclosing dispatch Condition/Scope/Switch would push existing boss reuse actions over the limit."
+    },
+    {
+      "id": "RESUME_NOT_WIRED",
+      "priority": "remaining_work",
+      "trigger_message": 1,
+      "impact": "Added-only main trigger cannot respond to Ready-stage updates. Resumption must preserve completed manager review."
+    },
+    {
+      "id": "FINANCIAL_ORDER_AND_CACHED_INPUTS",
+      "priority": "high",
+      "actions": [
+        "Update_a_row_-_update_balance",
+        "Add_a_new_row_-_cash_transaction",
+        "Update_a_row_-_update_balance_1",
+        "Add_a_new_row_-_cash_transaction_1"
+      ],
+      "impact": "Both final paths update Contact before unique-key cash insertion and use the external employee lookup balance. Expense check precedes the boss wait. The current prefix is not included, and atomicity/freshness are not established."
+    },
+    {
+      "id": "ATOMIC_CLARIFICATION_HANDOFF",
+      "priority": "remaining_work",
+      "impact": "Create/restore and snapshot guards remain separate operations; conditional-write protection, insert-conflict recovery and captured dispatch claims are not implemented in this fragment."
+    }
+  ],
+  "native_operations_performed": false,
+  "source_files_modified": false,
+  "native_corrections_confirmed": false,
+  "end_to_end_acceptance": false
+}

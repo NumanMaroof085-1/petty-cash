@@ -1,5 +1,16 @@
 # Petty Cash Project Handover
 
+**In-progress addition, 8 November 2026:** My Requests clarification replies are
+implemented and publication is now user-reported: question card visible and
+feature version/ready checks correct. It is not independently inspected. The
+answer flow URL is confirmed;
+its corrected trigger now declares both required inputs. Compose/caller mappings,
+native delivery and acceptance remain pending. Main-flow resumption is now
+user-reported configured, not runtime-verified. See
+[CLARIFICATION_UI_SETUP.md](CLARIFICATION_UI_SETUP.md)
+and [CLARIFICATION_SETUP.md](CLARIFICATION_SETUP.md); this is outside the accepted
+deployment baseline described below.
+
 **Documentation baseline: 2 November 2026.** Start here when taking over this
 project. This guide describes the checked-in implementation and user-reported
 tenant setup. It is not a certificate that the production site, permissions or

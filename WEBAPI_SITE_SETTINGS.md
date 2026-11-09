@@ -74,6 +74,28 @@ The client now writes Quantity multiplied by Unit Price and verifies the saved
 value. Include this field before deploying the updated page. No extra table
 operation permissions are needed just for adding it to the create payload.
 
+## Webapi/hr_requestclarification/fields — upgrade in progress
+
+The user confirms table logical name `hr_requestclarification`, API entity set
+`hr_requestclarifications`, and employee relationship
+`hr_requestclarification_Employee_contact`. Use Contact-scoped Read only for
+Authenticated Users; employees submit answers through the planned validated
+backend flow. The user reports completing the settings below and syncing the
+site on 4 November 2026, then confirmed the full-field read probe returned the
+expected status 200 with zero records. Own/cross-employee row isolation and
+answer authorization still require controlled tests once records exist.
+
+Set `Webapi/hr_requestclarification/enabled` to `true`, then use:
+
+```text
+_hr_employee_value,_hr_request_value,_hr_requestedby_value,createdon,hr_answer,hr_answeredon,hr_approvalstage,hr_clarificationreference,hr_clarificationstatus,hr_question,hr_requestclarificationid,hr_reviewround
+```
+
+This list exposes own-record question/history data for Read; table/column
+permissions still govern access. Do not add source approval IDs or Request
+workflow control fields to browser writes. No new page/flow has been connected
+yet; see [CLARIFICATION_SETUP.md](CLARIFICATION_SETUP.md) for the current checkpoint.
+
 ## Webapi/contact/fields
 
 Replace the value with this single comma-separated line after verifying the

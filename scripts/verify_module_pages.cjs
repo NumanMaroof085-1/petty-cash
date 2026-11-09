@@ -60,6 +60,10 @@ const request = '22222222-2222-4222-8222-222222222222';
           await route.fulfill({ json: { value: [{ hr_pettycashrequestid: request, hr_requesttitle: 'PCR-20261012-1000',
             hr_transactiondate: '2026-10-12T00:00:00Z', hr_totalamount: 1200, hr_paymentsource: 123140001,
             hr_approvalstatus: 123140001, hr_managercomments: '<img src=x onerror=alert(1)> Approved supplies', _hr_submittedby_value: employee }] } });
+        } else if (url.pathname === '/_api/hr_requestclarifications') {
+          assert.equal(route.request().method(), 'GET');
+          assert.equal(url.searchParams.get('$filter'), '_hr_employee_value eq ' + employee);
+          await route.fulfill({ json: { value: [] } });
         } else if (expense && url.pathname === '/_api/contacts(' + employee + ')') {
           assert.equal(route.request().method(), 'GET');
           profileReads++;

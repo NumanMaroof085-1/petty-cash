@@ -1,0 +1,354 @@
+{
+  "type": "Switch",
+  "expression": "@outputs('Start_and_wait_for_an_approval_-_manager')?['body/outcome']",
+  "default": {
+    "actions": {
+      "Terminate_2": {
+        "type": "Terminate",
+        "inputs": {
+          "runStatus": "Succeeded"
+        }
+      }
+    }
+  },
+  "cases": {
+    "Case_-_approve": {
+      "actions": {
+        "List_rows_-_Find_Existing_Expense": {
+          "type": "OpenApiConnection",
+          "inputs": {
+            "parameters": {
+              "entityName": "hr_cashtransactions",
+              "$filter": "@concat(\r\n  '_hr_linkedrequest_value eq ',\r\n  triggerBody()?['hr_pettycashrequestid'],\r\n  ' and hr_transactiontype eq 123140001'\r\n)",
+              "$top": 2
+            },
+            "host": {
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
+              "connection": "shared_commondataserviceforapps",
+              "operationId": "ListRecords"
+            }
+          }
+        },
+        "Condition_-_10k": {
+          "type": "If",
+          "expression": {
+            "or": [
+              {
+                "greaterOrEquals": [
+                  "@triggerOutputs()?['body/hr_totalamount']",
+                  10000
+                ]
+              }
+            ]
+          },
+          "actions": {
+            "Start_and_wait_for_an_approval_-_boss": {
+              "type": "OpenApiConnectionWebhook",
+              "inputs": {
+                "parameters": {
+                  "approvalType": "Basic",
+                  "WebhookApprovalCreationInput/title": "Petty Cash Approval for Request above 10k--- Testing Flow",
+                  "WebhookApprovalCreationInput/assignedTo": "@outputs('Get_a_row_by_ID_-_manager')?['body/emailaddress1']",
+                  "WebhookApprovalCreationInput/details": "Details:\nRequest ID: @{triggerOutputs()?['body/hr_requesttitle']}\nTransaction Date: @{triggerOutputs()?['body/hr_transactiondate']}\nSubmitted by:  @{outputs('Get_a_row_by_ID_-_employee')?['body/fullname']}\nTotal Amount: @{triggerOutputs()?['body/hr_totalamount']}\nThe pdf of receipt(s) is attached.",
+                  "WebhookApprovalCreationInput/requestor": "@outputs('Get_a_row_by_ID_-_employee')?['body/emailaddress1']",
+                  "WebhookApprovalCreationInput/enableNotifications": true,
+                  "WebhookApprovalCreationInput/enableReassignment": true,
+                  "WebhookApprovalCreationInput/attachments": [
+                    {
+                      "name": "Receipt.pdf",
+                      "content": "@body('Download_a_file_or_an_image')"
+                    }
+                  ]
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_approvals",
+                  "connection": "shared_approvals",
+                  "operationId": "StartAndWaitForAnApproval"
+                }
+              }
+            },
+            "Condition_1": {
+              "type": "If",
+              "expression": {
+                "or": [
+                  {
+                    "equals": [
+                      "@outputs('Start_and_wait_for_an_approval_-_boss')?['body/outcome']",
+                      "Approve"
+                    ]
+                  }
+                ]
+              },
+              "actions": {
+                "Condition__No_Existing_Expense": {
+                  "type": "If",
+                  "expression": {
+                    "or": [
+                      {
+                        "equals": [
+                          "@length(body('List_rows_-_Find_Existing_Expense')?['value'])",
+                          0
+                        ]
+                      }
+                    ]
+                  },
+                  "actions": {
+                    "For_each_4": {
+                      "type": "Foreach",
+                      "foreach": "@outputs('Start_and_wait_for_an_approval_-_boss')?['body/responses']",
+                      "actions": {
+                        "Update_a_row_-_request_status": {
+                          "type": "OpenApiConnection",
+                          "inputs": {
+                            "parameters": {
+                              "entityName": "hr_pettycashrequests",
+                              "recordId": "@triggerOutputs()?['body/hr_pettycashrequestid']",
+                              "item/hr_requesttitle": "@triggerOutputs()?['body/hr_requesttitle']",
+                              "item/hr_approvalstatus": 123140001,
+                              "item/hr_managercomments": "@items('For_each_4')?['comments']"
+                            },
+                            "host": {
+                              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
+                              "connection": "shared_commondataserviceforapps",
+                              "operationId": "UpdateOnlyRecord"
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "Update_a_row_-_update_balance": {
+                      "type": "OpenApiConnection",
+                      "inputs": {
+                        "parameters": {
+                          "entityName": "contacts",
+                          "recordId": "@triggerOutputs()?['body/_hr_submittedby_value']",
+                          "item/hr_currentbalance": "@sub(outputs('Get_a_row_by_ID_-_employee')?['body/hr_currentbalance'],triggerOutputs()?['body/hr_totalamount'])"
+                        },
+                        "host": {
+                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
+                          "connection": "shared_commondataserviceforapps",
+                          "operationId": "UpdateOnlyRecord"
+                        }
+                      },
+                      "runAfter": {
+                        "For_each_4": [
+                          "Succeeded"
+                        ]
+                      }
+                    },
+                    "Add_a_new_row_-_cash_transaction": {
+                      "type": "OpenApiConnection",
+                      "inputs": {
+                        "parameters": {
+                          "entityName": "hr_cashtransactions",
+                          "item/hr_amount": "@triggerOutputs()?['body/hr_totalamount']",
+                          "item/hr_Employee@odata.bind": "@concat('contacts(',triggerOutputs()?['body/_hr_submittedby_value'],')')",
+                          "item/hr_LinkedRequest@odata.bind": "@concat('hr_pettycashrequests(',first(body('List_rows_-_PC_request')?['value'])?['_hr_parentrequest_value'],')')",
+                          "item/hr_notespurpose": "Petty Cash Request",
+                          "item/crec6_postingkey": "@concat('expense-', toLower(triggerOutputs()?['body/hr_pettycashrequestid']))",
+                          "item/hr_RecordedBy@odata.bind": "@concat('contacts(',triggerOutputs()?['body/_hr_assignedmanager_value'],')')",
+                          "item/hr_transactiontype": 123140001
+                        },
+                        "host": {
+                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
+                          "connection": "shared_commondataserviceforapps",
+                          "operationId": "CreateRecord"
+                        }
+                      },
+                      "runAfter": {
+                        "Update_a_row_-_update_balance": [
+                          "Succeeded"
+                        ]
+                      }
+                    }
+                  },
+                  "else": {
+                    "actions": {
+                      "Terminate": {
+                        "type": "Terminate",
+                        "inputs": {
+                          "runStatus": "Cancelled"
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "else": {
+                "actions": {
+                  "For_each_2": {
+                    "type": "Foreach",
+                    "foreach": "@outputs('Start_and_wait_for_an_approval_-_boss')?['body/responses']",
+                    "actions": {
+                      "Update_a_row_1_1": {
+                        "type": "OpenApiConnection",
+                        "inputs": {
+                          "parameters": {
+                            "entityName": "hr_pettycashrequests",
+                            "recordId": "@triggerOutputs()?['body/hr_pettycashrequestid']",
+                            "item/hr_requesttitle": "@triggerOutputs()?['body/hr_requesttitle']",
+                            "item/hr_approvalstatus": 123140002,
+                            "item/hr_managercomments": "@item()?['comments']"
+                          },
+                          "host": {
+                            "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
+                            "connection": "shared_commondataserviceforapps",
+                            "operationId": "UpdateOnlyRecord"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "runAfter": {
+                "Start_and_wait_for_an_approval_-_boss": [
+                  "Succeeded"
+                ]
+              }
+            }
+          },
+          "else": {
+            "actions": {
+              "Condition__No_Existing_Expense_1": {
+                "type": "If",
+                "expression": {
+                  "or": [
+                    {
+                      "equals": [
+                        "@length(body('List_rows_-_Find_Existing_Expense')?['value'])",
+                        0
+                      ]
+                    }
+                  ]
+                },
+                "actions": {
+                  "For_each_3": {
+                    "type": "Foreach",
+                    "foreach": "@outputs('Start_and_wait_for_an_approval_-_manager')?['body/responses']",
+                    "actions": {
+                      "Update_a_row_-_request_status_1": {
+                        "type": "OpenApiConnection",
+                        "inputs": {
+                          "parameters": {
+                            "entityName": "hr_pettycashrequests",
+                            "recordId": "@triggerOutputs()?['body/hr_pettycashrequestid']",
+                            "item/hr_requesttitle": "@triggerOutputs()?['body/hr_requesttitle']",
+                            "item/hr_approvalstatus": 123140001
+                          },
+                          "host": {
+                            "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
+                            "connection": "shared_commondataserviceforapps",
+                            "operationId": "UpdateOnlyRecord"
+                          }
+                        }
+                      },
+                      "Update_a_row_-_update_balance_1": {
+                        "type": "OpenApiConnection",
+                        "inputs": {
+                          "parameters": {
+                            "entityName": "contacts",
+                            "recordId": "@triggerOutputs()?['body/_hr_submittedby_value']",
+                            "item/hr_currentbalance": "@sub(outputs('Get_a_row_by_ID_-_employee')?['body/hr_currentbalance'],triggerOutputs()?['body/hr_totalamount'])"
+                          },
+                          "host": {
+                            "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
+                            "connection": "shared_commondataserviceforapps",
+                            "operationId": "UpdateOnlyRecord"
+                          }
+                        },
+                        "runAfter": {
+                          "Update_a_row_-_request_status_1": [
+                            "Succeeded"
+                          ]
+                        }
+                      },
+                      "Add_a_new_row_-_cash_transaction_1": {
+                        "type": "OpenApiConnection",
+                        "inputs": {
+                          "parameters": {
+                            "entityName": "hr_cashtransactions",
+                            "item/hr_amount": "@triggerOutputs()?['body/hr_totalamount']",
+                            "item/hr_Employee@odata.bind": "@concat('contacts(',triggerOutputs()?['body/_hr_submittedby_value'],')')",
+                            "item/hr_LinkedRequest@odata.bind": "@concat('hr_pettycashrequests(',first(body('List_rows_-_PC_request')?['value'])?['_hr_parentrequest_value'],')')",
+                            "item/hr_notespurpose": "Petty Cash Request",
+                            "item/crec6_postingkey": "@concat('expense-', toLower(triggerOutputs()?['body/hr_pettycashrequestid']))",
+                            "item/hr_RecordedBy@odata.bind": "@concat('contacts(',triggerOutputs()?['body/_hr_assignedmanager_value'],')')",
+                            "item/hr_transactiontype": 123140001
+                          },
+                          "host": {
+                            "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
+                            "connection": "shared_commondataserviceforapps",
+                            "operationId": "CreateRecord"
+                          }
+                        },
+                        "runAfter": {
+                          "Update_a_row_-_update_balance_1": [
+                            "Succeeded"
+                          ]
+                        }
+                      }
+                    }
+                  }
+                },
+                "else": {
+                  "actions": {
+                    "Terminate_1": {
+                      "type": "Terminate",
+                      "inputs": {
+                        "runStatus": "Cancelled"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "runAfter": {
+            "List_rows_-_Find_Existing_Expense": [
+              "Succeeded"
+            ]
+          }
+        }
+      },
+      "case": "Approve"
+    },
+    "Case_-_reject": {
+      "actions": {
+        "For_each": {
+          "type": "Foreach",
+          "foreach": "@outputs('Start_and_wait_for_an_approval_-_manager')?['body/responses']",
+          "actions": {
+            "Update_a_row_1": {
+              "type": "OpenApiConnection",
+              "inputs": {
+                "parameters": {
+                  "entityName": "hr_pettycashrequests",
+                  "recordId": "@triggerOutputs()?['body/hr_pettycashrequestid']",
+                  "item/hr_requesttitle": "@triggerOutputs()?['body/hr_requesttitle']",
+                  "item/hr_approvalstatus": 123140002,
+                  "item/hr_managercomments": "@items('For_each')?['comments']"
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
+                  "connection": "shared_commondataserviceforapps",
+                  "operationId": "UpdateOnlyRecord"
+                }
+              }
+            }
+          }
+        }
+      },
+      "case": "Reject"
+    },
+    "Case_-_clarification": {
+      "actions": {},
+      "case": "Need Clarification"
+    }
+  },
+  "runAfter": {
+    "Start_and_wait_for_an_approval_-_manager": [
+      "Succeeded"
+    ]
+  }
+}
