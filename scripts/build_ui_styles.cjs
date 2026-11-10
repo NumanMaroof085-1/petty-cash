@@ -2,9 +2,9 @@
 const fs = require('node:fs');
 const path = require('node:path');
 const root = path.resolve(__dirname, '..');
-const css = fs.readFileSync(path.join(root, 'pettycash-ui.css'), 'utf8').trim();
+const css = fs.readFileSync(path.join(root, 'shared/styles/pettycash-ui.css'), 'utf8').trim();
 const block = '<!-- PC UI styles: generated from pettycash-ui.css -->\n<style data-pc-ui="v1">\n' + css + '\n</style>\n<!-- /PC UI styles -->';
-for (const file of ['New Petty Cash Request.html', 'My Petty Cash Requests.html', 'Finance Cash Management.html', 'Admin Users.html']) {
+for (const file of ['pages/new-request/New Petty Cash Request.html', 'pages/my-requests/My Petty Cash Requests.html', 'pages/finance/Finance Cash Management.html', 'pages/admin/Admin Users.html']) {
   const target = path.join(root, file), source = fs.readFileSync(target, 'utf8');
   const pattern = /<!-- PC UI styles: generated from pettycash-ui.css -->[\s\S]*?<!-- \/PC UI styles -->/;
   if (!pattern.test(source)) throw new Error('Missing UI style marker in ' + file);

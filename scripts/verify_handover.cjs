@@ -7,6 +7,18 @@ const assert = require('node:assert/strict');
 const { spawnSync } = require('node:child_process');
 const root = path.resolve(__dirname, '..');
 const read = file => fs.readFileSync(path.join(root, file), 'utf8');
+function projectFiles(relative = '') {
+  const result = [];
+  for (const entry of fs.readdirSync(path.join(root, relative), { withFileTypes: true })) {
+    const file = relative ? relative + '/' + entry.name : entry.name;
+    if (['.git', 'tmp', 'documentation/qa', 'documentation/backups'].includes(file)) continue;
+    assert.ok(!entry.isSymbolicLink(), 'Unexpected symlink in project inventory: ' + file);
+    if (entry.isDirectory()) result.push(...projectFiles(file));
+    else if (entry.isFile()) result.push(file);
+  }
+  return result;
+}
+const inventory = projectFiles();
 const arg = process.argv.indexOf('--date');
 const auditDate = arg >= 0 ? process.argv[arg + 1] : '';
 if (!/^\d{4}-\d{2}-\d{2}$/.test(auditDate)) throw new Error('Use --date YYYY-MM-DD for the documentation audit date.');
@@ -15,9 +27,7 @@ function run(args) {
   if (result.status !== 0) throw new Error(args.join(' ') + '\n' + (result.stdout || '') + (result.stderr || ''));
   return result.stdout;
 }
-const docs = ['HANDOVER.md', 'OPERATIONS_RUNBOOK.md', 'HANDOVER_CHECKLIST.md', 'DOCUMENTATION_AUDIT.md',
-  'README.md', 'documentation/README.md', 'ADMIN_PROFILE_SETUP.md', 'FINANCE_SETUP.md',
-  'WEBAPI_SITE_SETTINGS.md', 'UI_REFRESH_SETUP.md', 'SITE_SHELL_HOME_SETUP.md', 'RECEIPT_PDF_SETUP.md', 'ITEM_SUGGESTIONS_SETUP.md', 'PRODUCT_UNITS_SETUP.md', 'CLARIFICATION_SETUP.md', 'CLARIFICATION_UI_SETUP.md', 'APPROVAL_FLOW_REVIEW.md', 'REVIEW_HANDOFF_PLAN.md'];
+const docs = inventory.filter(file => file.endsWith('.md'));
 let checkedLinks = 0;
 for (const file of docs) {
   const body = read(file).replace(/```[\s\S]*?```/g, '');
@@ -31,25 +41,25 @@ for (const file of docs) {
     checkedLinks++;
   }
 }
-const configSource = read('Finance Cash Management.html').match(/<script>\s*([\s\S]*?)\s*<\/script>/)[1];
+const configSource = read('pages/finance/Finance Cash Management.html').match(/<script>\s*([\s\S]*?)\s*<\/script>/)[1];
 const scope = { window: {} }; vm.runInNewContext(configSource, scope);
 assert.equal(scope.window.PC_MODULE_CONFIG.financeFlowId, '0b0976ac-a6d3-f111-a05d-70a8a52176fd');
 assert.equal(scope.window.PC_MODULE_CONFIG.financeSecurityReviewed, true);
-assert.ok(read('Finance Cash Management.html').indexOf('window.PC_MODULE_CONFIG') <
-  read('Finance Cash Management.html').indexOf("{% include 'Petty Cash Modules' %}"));
-assert.match(read('pettycash-modules.js'), /version: "finance-posting-v5"/);
-assert.match(read('pettycash-modules.js'), /clarificationVersion: "clarification-replies-v1"/);
+assert.ok(read('pages/finance/Finance Cash Management.html').indexOf('window.PC_MODULE_CONFIG') <
+  read('pages/finance/Finance Cash Management.html').indexOf("{% include 'Petty Cash Modules' %}"));
+assert.match(read('shared/modules/pettycash-modules.js'), /version: "finance-posting-v5"/);
+assert.match(read('shared/modules/pettycash-modules.js'), /clarificationVersion: "clarification-replies-v1"/);
 const replyScope = { window: {}, Object }; vm.runInNewContext(
-  read('My Petty Cash Requests.html').match(/<script>\s*([\s\S]*?)\s*<\/script>/)[1], replyScope);
+  read('pages/my-requests/My Petty Cash Requests.html').match(/<script>\s*([\s\S]*?)\s*<\/script>/)[1], replyScope);
 assert.equal(replyScope.window.PC_MODULE_CONFIG.clarificationsEnabled, true);
 assert.equal(replyScope.window.PC_MODULE_CONFIG.clarificationFlowId, '0a9693f4-61d8-f111-84ea-70a8a52176fd');
-assert.match(read('pettycash-admin.js'), /const version = "admin-profiles-v3"/);
-assert.match(read('Petty Cash User Context.html'), /web-template-v2-finance/);
+assert.match(read('pages/admin/pettycash-admin.js'), /const version = "admin-profiles-v3"/);
+assert.match(read('shared/identity/Petty Cash User Context.html'), /web-template-v2-finance/);
 for (const name of ['crec6_postingkey', 'hr_cashtransactionid', 'hr_recordedby', 'hr_totalprice', 'hr_othercategory', 'hr_departmentses']) {
-  assert.ok(read('HANDOVER.md').includes(name), 'Missing current schema identifier: ' + name);
+  assert.ok(read('documentation/handover/HANDOVER.md').includes(name), 'Missing current schema identifier: ' + name);
 }
-const fields = read('WEBAPI_SITE_SETTINGS.md');
-assert.match(read('HANDOVER.md'), /\bhr_unit\b/);
+const fields = read('documentation/platform/WEBAPI_SITE_SETTINGS.md');
+assert.match(read('documentation/handover/HANDOVER.md'), /\bhr_unit\b/);
 assert.match(fields, /,hr_unit,/);
 for (const name of ['adx_identity_username', 'adx_identity_logonenabled', 'hr_departmentsid,statecode', 'hr_managercomments']) {
   assert.ok(fields.includes(name), 'Missing combined public field: ' + name);
@@ -59,28 +69,24 @@ const tests = fs.readdirSync(path.join(root, 'tests')).filter(file => file.endsW
 const testOutput = run(['--test', '--test-isolation=none', '--test-reporter=tap', ...tests]);
 const count = label => Number(testOutput.match(new RegExp('^# ' + label + ' (\\d+)$', 'm'))?.[1] || 0);
 assert.ok(count('tests') > 0 && count('tests') === count('pass') && count('fail') === 0, 'Unit suite did not pass');
-const files = [
-  ...fs.readdirSync(root).filter(file => /\.(?:html|js|css|md|docx)$/.test(file)),
-  ...fs.readdirSync(path.join(root, 'scripts')).filter(file => file.endsWith('.cjs')).map(file => 'scripts/' + file),
-  ...tests, 'documentation/README.md', 'finance-cash-request.schema.json',
-  'documentation/flow-snapshots/manager-approval-switch.received-2026-11-05.json',
-  'approval-flow-current.json', 'approval-trigger-current.json',
-  'documentation/flow-snapshots/approval-current-review.2026-11-07.json',
-  'documentation/flow-snapshots/clarification-answer-trigger.received-2026-11-08.json',
-  'documentation/flow-snapshots/clarification-answer-trigger.with-inputs.received-2026-11-08.json',
-  'documentation/flow-snapshots/clarification-answer-response.received-2026-11-09.json',
-  'documentation/flow-snapshots/approval-trigger.resumption.received-2026-11-09.json',
-  'documentation/flow-snapshots/clarification-queue-output.received-2026-11-09.json',
-  'documentation/flow-snapshots/clarification-queue-input.received-2026-11-09.json',
-  'documentation/flow-snapshots/callback-registrations.received-2026-11-09.json',
-  'vendor/jspdf-4.2.1.umd.min.js', 'vendor/jspdf-LICENSE.txt'
-].sort();
+const files = inventory.filter(file =>
+  file !== 'documentation/handover/verification.json' &&
+  (/\.(?:html|js|cjs|css|md|docx|pdf|json|txt|py|ps1)$/.test(file) || file === '.gitignore')
+).sort();
 const manifest = files.map(file => {
   const bytes = fs.readFileSync(path.join(root, file));
   return { file, bytes: bytes.length, sha256: crypto.createHash('sha256').update(bytes).digest('hex'),
-    classification: file.endsWith('.docx') ? 'historical_word_reference' : file === 'Accounts Cash Management.html' ? 'retired_page' : 'source_or_documentation' };
+    classification: file.endsWith('.docx') ? 'historical_word_reference' : file === 'documentation/archive/retired-pages/Accounts Cash Management.html' ? 'retired_page' : 'source_or_documentation' };
 });
 const head = spawnSync('git', ['rev-parse', 'HEAD'], { cwd: root, encoding: 'utf8', windowsHide: true });
+const browserResultsFile = path.join(root, 'documentation', 'qa', 'organization', 'browser-results.json');
+const organizationBrowserResults = fs.existsSync(browserResultsFile) ?
+  JSON.parse(fs.readFileSync(browserResultsFile, 'utf8').replace(/^\uFEFF/, '')) : null;
+if (organizationBrowserResults) {
+  assert.ok(Array.isArray(organizationBrowserResults) && organizationBrowserResults.length === 8 &&
+    organizationBrowserResults.every(result => result.exit_code === 0 && result.mocked_network === true),
+    'Organization browser validation contains a failed/incomplete suite');
+}
 const report = {
   audit_date: auditDate,
   scope: 'Local source and documentation. No native tenant, export, authentication or permission audit.',
@@ -88,12 +94,16 @@ const report = {
   node_version: process.version,
   local_checks: { documentation_links_checked: checkedLinks, generated_templates_consistent: true,
     configured_finance_page_matches_recorded_invocation: true, unit_tests: count('tests'), passed: count('pass'), failed: count('fail') },
-  browser_evidence: 'Prior mocked suites documented in setup guides. Not rerun or represented as native acceptance by this documentation audit.',
+  browser_evidence: organizationBrowserResults ?
+    '9 November organization validation: all eight existing browser suites rerun against moved files; intercepted/mock data only, no tenant acceptance.' :
+    'Prior mocked suites documented in setup guides. Not represented as native acceptance by this documentation audit.',
+  organization: { guide: 'documentation/PROJECT_STRUCTURE.md', report: 'documentation/handover/file-organization.json',
+    browser_results: organizationBrowserResults, application_changes: 'Local relocation only; publishing artifacts preserved.' },
   word_documents: 'Original DOCX files are older references; not reissued or freshly rendered for company handover.',
   native_exports_reviewed: false,
   approval_fragment_review: {
     reviewed_on: '2026-11-07',
-    evidence: 'documentation/flow-snapshots/approval-current-review.2026-11-07.json',
+    evidence: 'flows/approval/snapshots/approval-current-review.2026-11-07.json',
     scope: 'Supplied outer outcome Switch and main trigger only; not a full flow export or runtime audit.',
     native_corrections_confirmed: false,
     user_reported_corrections: {
@@ -111,13 +121,13 @@ const report = {
     enabled_in_page: true, native_deployment_verified: false, native_answer_invocation_verified: false,
     publication_state: 'User reports question card visible and expected clarification feature version/ready true; not independently inspected.',
     publication_user_reported: { confirmed_on: '2026-11-08', question_card_visible: true, expected_version_and_ready: true },
-    next_native_test: '9 November: automatic manager resumption user-confirmed, but final test fails at Condition_-_10k greater() Boolean operand. Instruct full routing Boolean expression equals Expression true, preserving Ready for Boss OR amount >10000; request condition-only current Code view after save. Native fix/recovery and final financial acceptance pending; no blind failed-run resubmission.',
+    next_native_test: '9 November: user defers live-read flow unless manager requests it; current cache limitation retained. Remaining acceptance: boss clarification resumes boss only, final approval one expense/one correct deduction, rejection no expense; confirm diagnostic cleanup, access/password recovery and native handover exports/owners. No further freshness implementation planned.',
     user_reported_native_progress: {
       reported_on: '2026-11-09', initial_manager_approval_and_question_visible: true,
       answer_submitted_and_flow_succeeded: true, new_manager_run_after_answer: true,
       initial_answer_restart_failed_user_reported: true,
       answer_return_status_inspected: true, answer_response_status: 'answered',
-      answer_response_evidence: 'documentation/flow-snapshots/clarification-answer-response.received-2026-11-09.json',
+      answer_response_evidence: 'flows/clarifications/snapshots/clarification-answer-response.received-2026-11-09.json',
       queue_action_status_user_reported: 'Succeeded', queued_row_values_inspected: true,
       queued_workflow_stage: 123140003, queued_approval_status: 123140000,
       current_main_trigger_inspected: true, declared_main_trigger_message: 4,
@@ -125,11 +135,11 @@ const report = {
       fresh_event_recovery_user_reported: 'No main flow run after native stage edits.',
       main_flow_health_user_reported: { status: 'On', flow_checker: 'No warnings/errors', all_runs: 'Only initial successful run' },
       queue_input_parameters_inspected: true,
-      queue_input_evidence: 'documentation/flow-snapshots/clarification-queue-input.received-2026-11-09.json',
+      queue_input_evidence: 'flows/clarifications/snapshots/clarification-queue-input.received-2026-11-09.json',
       queue_request_id: 'b73e9530-92db-f111-84ea-70a8a52176fd',
       connection_status_user_reported: { Dataverse: 'Green tick', Approvals: 'Green tick' },
       callback_registration_read_verified: true,
-      callback_registration_evidence: 'documentation/flow-snapshots/callback-registrations.received-2026-11-09.json',
+      callback_registration_evidence: 'flows/diagnostics/snapshots/callback-registrations.received-2026-11-09.json',
       callback_registration_configuration_matches: true,
       callback_delivery_verified: false,
       controlled_event_delivery_user_reported: true,
@@ -137,18 +147,23 @@ const report = {
       automatic_answer_restart_retest_pending: false,
       automatic_answer_restart_user_reported: true,
       final_approval_test_error_user_reported: { action: 'Condition_-_10k', error: 'greater() received Boolean instead of numeric operand', native_condition_fix_verified: false },
+      subsequent_workflow_progress_user_reported: 'Flows running smoothly; boss approval / Approved shown in logs. Exact corrected condition and ledger results not supplied.',
+      website_freshness_issue_user_reported: true,
+      live_read_freshness_upgrade_implemented: false,
+      live_read_freshness_upgrade_deferred_by_user: true,
+      live_read_freshness_upgrade_resume_condition: 'Only if manager requests it and user resumes work',
       temporary_diagnostic_cleanup_user_confirmed: false,
-      trigger_evidence: 'documentation/flow-snapshots/approval-trigger.resumption.received-2026-11-09.json',
-      queue_values_evidence: 'documentation/flow-snapshots/clarification-queue-output.received-2026-11-09.json',
+      trigger_evidence: 'flows/approval/snapshots/approval-trigger.resumption.received-2026-11-09.json',
+      queue_values_evidence: 'flows/clarifications/snapshots/clarification-queue-output.received-2026-11-09.json',
       clarification_notification_delivery_reported: false
     },
     main_trigger_modified_user_reported: true,
     site_invocation_user_confirmed: '0a9693f4-61d8-f111-84ea-70a8a52176fd',
-    trigger_snapshot: 'documentation/flow-snapshots/clarification-answer-trigger.with-inputs.received-2026-11-08.json',
+    trigger_snapshot: 'flows/clarifications/snapshots/clarification-answer-trigger.with-inputs.received-2026-11-08.json',
     native_trigger_inputs_declared: true,
     trigger_internal_properties: { clarificationId: 'text', answer: 'text_1' },
     page_payload_names: ['clarificationId', 'answer'],
-    native_integration_pending: 'Automatic manager answer-to-review email user-confirmed. Final test blocked on 10k condition Boolean operand error; designer correction instructed but native condition/fix unverified. Final posting/single deduction, boss clarification/rejection, cleanup and independent permission acceptance pending; original missed-event cause unknown.',
+    native_integration_pending: 'Automatic manager resumption and smooth boss approval user-reported. Live-read upgrade explicitly deferred by user; cache lag retained as documented limitation. Final ledger/single deduction, boss clarification/rejection, cleanup, password recovery and independent permission/handover acceptance remain pending.',
     browser_checks: '2026-11-08 intercepted mock reply, denied-read and foreign-link cases passed on desktop/mobile; screenshots inspected, not native acceptance.'
   },
   anonymous_authentication_challenge: {

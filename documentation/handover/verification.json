@@ -1,22 +1,69 @@
 {
   "audit_date": "2026-11-09",
   "scope": "Local source and documentation. No native tenant, export, authentication or permission audit.",
-  "source_commit_before_documentation_changes": "e4a520ebb5be47f5322318b78eb6457ebc4097d7",
+  "source_commit_before_documentation_changes": "5b09fe08b65b6c8512d7bcfd2199c676dd8ba638",
   "node_version": "v24.22.1",
   "local_checks": {
-    "documentation_links_checked": 55,
+    "documentation_links_checked": 119,
     "generated_templates_consistent": true,
     "configured_finance_page_matches_recorded_invocation": true,
     "unit_tests": 157,
     "passed": 157,
     "failed": 0
   },
-  "browser_evidence": "Prior mocked suites documented in setup guides. Not rerun or represented as native acceptance by this documentation audit.",
+  "browser_evidence": "9 November organization validation: all eight existing browser suites rerun against moved files; intercepted/mock data only, no tenant acceptance.",
+  "organization": {
+    "guide": "documentation/PROJECT_STRUCTURE.md",
+    "report": "documentation/handover/file-organization.json",
+    "browser_results": [
+      {
+        "script": "verify_module_pages.cjs",
+        "exit_code": 0,
+        "mocked_network": true
+      },
+      {
+        "script": "verify_admin_page.cjs",
+        "exit_code": 0,
+        "mocked_network": true
+      },
+      {
+        "script": "verify_finance_page.cjs",
+        "exit_code": 0,
+        "mocked_network": true
+      },
+      {
+        "script": "verify_clarification_page.cjs",
+        "exit_code": 0,
+        "mocked_network": true
+      },
+      {
+        "script": "verify_item_suggestions.cjs",
+        "exit_code": 0,
+        "mocked_network": true
+      },
+      {
+        "script": "verify_ui_pages.cjs",
+        "exit_code": 0,
+        "mocked_network": true
+      },
+      {
+        "script": "verify_shell_home.cjs",
+        "exit_code": 0,
+        "mocked_network": true
+      },
+      {
+        "script": "verify_receipt_upload.cjs",
+        "exit_code": 0,
+        "mocked_network": true
+      }
+    ],
+    "application_changes": "Local relocation only; publishing artifacts preserved."
+  },
   "word_documents": "Original DOCX files are older references; not reissued or freshly rendered for company handover.",
   "native_exports_reviewed": false,
   "approval_fragment_review": {
     "reviewed_on": "2026-11-07",
-    "evidence": "documentation/flow-snapshots/approval-current-review.2026-11-07.json",
+    "evidence": "flows/approval/snapshots/approval-current-review.2026-11-07.json",
     "scope": "Supplied outer outcome Switch and main trigger only; not a full flow export or runtime audit.",
     "native_corrections_confirmed": false,
     "user_reported_corrections": {
@@ -46,7 +93,7 @@
       "question_card_visible": true,
       "expected_version_and_ready": true
     },
-    "next_native_test": "9 November: automatic manager resumption user-confirmed, but final test fails at Condition_-_10k greater() Boolean operand. Instruct full routing Boolean expression equals Expression true, preserving Ready for Boss OR amount >10000; request condition-only current Code view after save. Native fix/recovery and final financial acceptance pending; no blind failed-run resubmission.",
+    "next_native_test": "9 November: user defers live-read flow unless manager requests it; current cache limitation retained. Remaining acceptance: boss clarification resumes boss only, final approval one expense/one correct deduction, rejection no expense; confirm diagnostic cleanup, access/password recovery and native handover exports/owners. No further freshness implementation planned.",
     "user_reported_native_progress": {
       "reported_on": "2026-11-09",
       "initial_manager_approval_and_question_visible": true,
@@ -55,7 +102,7 @@
       "initial_answer_restart_failed_user_reported": true,
       "answer_return_status_inspected": true,
       "answer_response_status": "answered",
-      "answer_response_evidence": "documentation/flow-snapshots/clarification-answer-response.received-2026-11-09.json",
+      "answer_response_evidence": "flows/clarifications/snapshots/clarification-answer-response.received-2026-11-09.json",
       "queue_action_status_user_reported": "Succeeded",
       "queued_row_values_inspected": true,
       "queued_workflow_stage": 123140003,
@@ -71,14 +118,14 @@
         "all_runs": "Only initial successful run"
       },
       "queue_input_parameters_inspected": true,
-      "queue_input_evidence": "documentation/flow-snapshots/clarification-queue-input.received-2026-11-09.json",
+      "queue_input_evidence": "flows/clarifications/snapshots/clarification-queue-input.received-2026-11-09.json",
       "queue_request_id": "b73e9530-92db-f111-84ea-70a8a52176fd",
       "connection_status_user_reported": {
         "Dataverse": "Green tick",
         "Approvals": "Green tick"
       },
       "callback_registration_read_verified": true,
-      "callback_registration_evidence": "documentation/flow-snapshots/callback-registrations.received-2026-11-09.json",
+      "callback_registration_evidence": "flows/diagnostics/snapshots/callback-registrations.received-2026-11-09.json",
       "callback_registration_configuration_matches": true,
       "callback_delivery_verified": false,
       "controlled_event_delivery_user_reported": true,
@@ -90,14 +137,19 @@
         "error": "greater() received Boolean instead of numeric operand",
         "native_condition_fix_verified": false
       },
+      "subsequent_workflow_progress_user_reported": "Flows running smoothly; boss approval / Approved shown in logs. Exact corrected condition and ledger results not supplied.",
+      "website_freshness_issue_user_reported": true,
+      "live_read_freshness_upgrade_implemented": false,
+      "live_read_freshness_upgrade_deferred_by_user": true,
+      "live_read_freshness_upgrade_resume_condition": "Only if manager requests it and user resumes work",
       "temporary_diagnostic_cleanup_user_confirmed": false,
-      "trigger_evidence": "documentation/flow-snapshots/approval-trigger.resumption.received-2026-11-09.json",
-      "queue_values_evidence": "documentation/flow-snapshots/clarification-queue-output.received-2026-11-09.json",
+      "trigger_evidence": "flows/approval/snapshots/approval-trigger.resumption.received-2026-11-09.json",
+      "queue_values_evidence": "flows/clarifications/snapshots/clarification-queue-output.received-2026-11-09.json",
       "clarification_notification_delivery_reported": false
     },
     "main_trigger_modified_user_reported": true,
     "site_invocation_user_confirmed": "0a9693f4-61d8-f111-84ea-70a8a52176fd",
-    "trigger_snapshot": "documentation/flow-snapshots/clarification-answer-trigger.with-inputs.received-2026-11-08.json",
+    "trigger_snapshot": "flows/clarifications/snapshots/clarification-answer-trigger.with-inputs.received-2026-11-08.json",
     "native_trigger_inputs_declared": true,
     "trigger_internal_properties": {
       "clarificationId": "text",
@@ -107,7 +159,7 @@
       "clarificationId",
       "answer"
     ],
-    "native_integration_pending": "Automatic manager answer-to-review email user-confirmed. Final test blocked on 10k condition Boolean operand error; designer correction instructed but native condition/fix unverified. Final posting/single deduction, boss clarification/rejection, cleanup and independent permission acceptance pending; original missed-event cause unknown.",
+    "native_integration_pending": "Automatic manager resumption and smooth boss approval user-reported. Live-read upgrade explicitly deferred by user; cache lag retained as documented limitation. Final ledger/single deduction, boss clarification/rejection, cleanup, password recovery and independent permission/handover acceptance remain pending.",
     "browser_checks": "2026-11-08 intercepted mock reply, denied-read and foreign-link cases passed on desktop/mobile; screenshots inspected, not native acceptance."
   },
   "anonymous_authentication_challenge": {
@@ -132,417 +184,441 @@
   "company_acceptance": "Pending native exports, ownership, approval-flow review and live acceptance checklist.",
   "manifest": [
     {
-      "file": "ADMIN_CREDENTIAL_SETUP.md",
-      "bytes": 21661,
-      "sha256": "cf6f03d5aefc1ed5b253c4687f78bce98081eaa9a1e2ae5113f3a27bbc25994c",
+      "file": ".gitignore",
+      "bytes": 147,
+      "sha256": "752cde3373e293945e219b66514e56af168656e36a521a4000b1d54bef3c2712",
       "classification": "source_or_documentation"
     },
     {
-      "file": "ADMIN_PROFILE_SETUP.md",
-      "bytes": 7136,
-      "sha256": "25812ed36d7f1a8d58dde5d964c60a0ccac93cccaef87100cd859de98d7143d8",
+      "file": "README.md",
+      "bytes": 4222,
+      "sha256": "4117ff6469ea1a04e2f2cab5cfb22d53d057a7b6b81994e9882cdf988939bf20",
       "classification": "source_or_documentation"
     },
     {
-      "file": "ADMIN_USER_SETUP.md",
-      "bytes": 28808,
-      "sha256": "57f3513915af7a14c95fa6569760e247a2baaee42dfe32db4b018a28050a7a72",
+      "file": "documentation/PROJECT_STRUCTURE.md",
+      "bytes": 3038,
+      "sha256": "07167465aa0540acc42168d1b3940535908d1151cc61bcbb2a46f1d4e60ac1e7",
       "classification": "source_or_documentation"
     },
     {
-      "file": "APPROVAL_FLOW_REVIEW.md",
-      "bytes": 81430,
-      "sha256": "9b0f92d887f55a72b4af252e988f1a34ce894bbe77dafc57878ec91f1db58b07",
+      "file": "documentation/README.md",
+      "bytes": 1415,
+      "sha256": "0141470465ed15182d90e551d4155ef0c33e11cdbcaf96204f54df97a2975def",
       "classification": "source_or_documentation"
     },
     {
-      "file": "Accounts Cash Management.html",
+      "file": "documentation/archive/README-before-organization.md",
+      "bytes": 21498,
+      "sha256": "8d9d0423a29100f73d5324c95533ef441bca2bcefc6514031cc5211b9ac0777f",
+      "classification": "source_or_documentation"
+    },
+    {
+      "file": "documentation/archive/README.md",
+      "bytes": 876,
+      "sha256": "3be4b03e6d297f5375b3075f3ebca436857d5646b27a0b5a1e860a65de2ce4e9",
+      "classification": "source_or_documentation"
+    },
+    {
+      "file": "documentation/archive/admin/ADMIN_CREDENTIAL_SETUP.md",
+      "bytes": 21332,
+      "sha256": "20f979c4fe07f57ab7f9814d0a55722db9123b43f0552c81e78344379d4c7240",
+      "classification": "source_or_documentation"
+    },
+    {
+      "file": "documentation/archive/admin/ADMIN_USER_SETUP.md",
+      "bytes": 28655,
+      "sha256": "fdb087c185f0e34871304d98932987c68ab5adab96512d057962100e74d576ca",
+      "classification": "source_or_documentation"
+    },
+    {
+      "file": "documentation/archive/finance-repair/repair_open_finance_page.js",
+      "bytes": 1742,
+      "sha256": "5d778f0a14fa6894db9976d257bbf93ca9c91a125a604fc7beab22986f7a98d1",
+      "classification": "source_or_documentation"
+    },
+    {
+      "file": "documentation/archive/retired-pages/Accounts Cash Management.html",
       "bytes": 2184,
       "sha256": "2ad492d40dac0422d7fad5ee511389e0a441716403c6b5b825193cb7a0ff5d7a",
       "classification": "retired_page"
     },
     {
-      "file": "Admin Users.html",
-      "bytes": 24657,
-      "sha256": "3d9abad36449eefc899a0bdd6cc201b3f26788367040b9177792f32aa842c077",
-      "classification": "source_or_documentation"
-    },
-    {
-      "file": "BALANCE_MODULE_SETUP.md",
-      "bytes": 27695,
-      "sha256": "b14972e8b43cabacdef19f7f605d29f781d4571e1074e2027ac4a5fa23561d2c",
-      "classification": "source_or_documentation"
-    },
-    {
-      "file": "CLARIFICATION_SETUP.md",
-      "bytes": 85489,
-      "sha256": "daf6d4138dbb2f1ab3daa3c8f94ca595c1ca6ccffea0704fe28937b2b244d2ce",
-      "classification": "source_or_documentation"
-    },
-    {
-      "file": "CLARIFICATION_UI_SETUP.md",
-      "bytes": 15621,
-      "sha256": "f13bb1ae8f884794397109918b10d16a5cc605ab48805bb4ca83c7602f2f1082",
-      "classification": "source_or_documentation"
-    },
-    {
-      "file": "Configuration document.docx",
+      "file": "documentation/corrected/Configuration document.docx",
       "bytes": 11659,
       "sha256": "35681bad0cd30ad8f4cb52b804c835ac10a1f606ba96ddfb981d2e8f5a61d56d",
       "classification": "historical_word_reference"
     },
     {
-      "file": "DATAVERSE_SETUP.md",
-      "bytes": 15680,
-      "sha256": "4a6425d7f6741f928093c3c0592d69a9bcd61c5f5ca5e1df77f08c748d7d77e5",
+      "file": "documentation/corrected/Configuration document.pdf",
+      "bytes": 120435,
+      "sha256": "196435c25d6314219c8409332d41b44d7b301de20b4ae8f837b16d48b03bf90b",
       "classification": "source_or_documentation"
     },
     {
-      "file": "DOCUMENTATION_AUDIT.md",
-      "bytes": 4750,
-      "sha256": "87ba0800cd14e865e16e1aa9a90235da8e568876a673b411b44174c1a1e2c169",
-      "classification": "source_or_documentation"
-    },
-    {
-      "file": "FINANCE_FLOWCHART.md",
-      "bytes": 11292,
-      "sha256": "e2e976519f92f20af0470e2b87f8b75a49838abb034dce09d15910b8b88226b4",
-      "classification": "source_or_documentation"
-    },
-    {
-      "file": "FINANCE_FLOW_SETUP.md",
-      "bytes": 99004,
-      "sha256": "bd775b0499ffbc635ddc6c336e044b20d3014ab5115b9438f427b8c7962500c6",
-      "classification": "source_or_documentation"
-    },
-    {
-      "file": "FINANCE_SELF_POSTING_SETUP.md",
-      "bytes": 6171,
-      "sha256": "31984ae78c41b2611883c489d85596c74c0fe6fd6b8174ae8d80bc04f093878b",
-      "classification": "source_or_documentation"
-    },
-    {
-      "file": "FINANCE_SETUP.md",
-      "bytes": 28229,
-      "sha256": "f613793906be6d8e79223c4e12245b2f3e54fb8da3ef2eece54165aea6574a82",
-      "classification": "source_or_documentation"
-    },
-    {
-      "file": "Finance Cash Management.html",
-      "bytes": 25962,
-      "sha256": "5365f0be49d36476e932902e191afd3e3593657eae9e1d7b1f45db40829fa72d",
-      "classification": "source_or_documentation"
-    },
-    {
-      "file": "Footer.html",
-      "bytes": 2616,
-      "sha256": "0dbd9d498522f8f688383d856a7277d6d669eb1f4499246ef51dc0f44b23acc2",
-      "classification": "source_or_documentation"
-    },
-    {
-      "file": "HANDOVER.md",
-      "bytes": 18224,
-      "sha256": "c15131640a7c666edca01d30fb4761c3552aef569ede37e4f0cd6037df7fab33",
-      "classification": "source_or_documentation"
-    },
-    {
-      "file": "HANDOVER_CHECKLIST.md",
-      "bytes": 7501,
-      "sha256": "a5d60a27a0c974428bd4036c9762deccdc0aed89c5f3c1542e98564424ae04f7",
-      "classification": "source_or_documentation"
-    },
-    {
-      "file": "Header.html",
-      "bytes": 24147,
-      "sha256": "40ff40986a87c3ffc24ab8d202d31bde673977403f640c15d0cf66193b285fb7",
-      "classification": "source_or_documentation"
-    },
-    {
-      "file": "Home.html",
-      "bytes": 126,
-      "sha256": "15a67697c3b697962f2e3f8b04bd619cfc282327404ab7dddb884962241dde1e",
-      "classification": "source_or_documentation"
-    },
-    {
-      "file": "IMPLEMENTATION_LOG.md",
-      "bytes": 220227,
-      "sha256": "0fcbfcb4ef8886db99739f0c6ce103723d9da724e665bc951768e107a5c6a02c",
-      "classification": "source_or_documentation"
-    },
-    {
-      "file": "ITEM_SUGGESTIONS_SETUP.md",
-      "bytes": 6380,
-      "sha256": "0bad34c8be5ff8c08986e8c2157af916f68be2cbdce97c9dcaeff74944c2cc1a",
-      "classification": "source_or_documentation"
-    },
-    {
-      "file": "MANAGER_APPROVAL_FLOW.md",
-      "bytes": 36265,
-      "sha256": "dbb6fc56258b6533b22340b145b325c7d92f6c8d8e3520525cad1b378d385058",
-      "classification": "source_or_documentation"
-    },
-    {
-      "file": "My Petty Cash Requests.html",
-      "bytes": 25636,
-      "sha256": "344a85fadd53ad53ac0f720c0f90db690ba91d83d5cad73a09077da65588b852",
-      "classification": "source_or_documentation"
-    },
-    {
-      "file": "New Petty Cash Request.html",
-      "bytes": 80347,
-      "sha256": "00c0d51cae19c332714dc8d2fe6998a36e0a8b6b2285b3f2ecf486b720c97ec5",
-      "classification": "source_or_documentation"
-    },
-    {
-      "file": "OPERATIONS_RUNBOOK.md",
-      "bytes": 9016,
-      "sha256": "6765741cfec205852ffff6d43ca727d0c00a2249ae43e35e946532aaf02506fc",
-      "classification": "source_or_documentation"
-    },
-    {
-      "file": "PRODUCT_UNITS_SETUP.md",
-      "bytes": 4828,
-      "sha256": "36bc2c8d671ea52fbafde8e6b03b21d7b0dd734343096829baac6d6b6cd4a841",
-      "classification": "source_or_documentation"
-    },
-    {
-      "file": "Petty Cash App - Database Schema.docx",
+      "file": "documentation/corrected/Petty Cash App - Database Schema.docx",
       "bytes": 13863,
       "sha256": "4cecce3b2a9fb81b734edf8bbad8e2ec1b710ebc1cea55fb5dec1cb13bf2c48d",
       "classification": "historical_word_reference"
     },
     {
-      "file": "Petty Cash Home.html",
-      "bytes": 38598,
-      "sha256": "528aea3666ddd665597a27f14559f590248b88bd768aa494cf2d7c5fe9806c61",
+      "file": "documentation/corrected/Petty Cash App - Database Schema.pdf",
+      "bytes": 136922,
+      "sha256": "8128fe11c90fae272b3ba1d8f846718028bad8d3bdd61f6eef869dd4cabf3659",
       "classification": "source_or_documentation"
     },
     {
-      "file": "Petty Cash Receipts.html",
-      "bytes": 436448,
-      "sha256": "23c637b9598d17fd114dbd665116c133cd71772d0e898eb9c5394615c3e43e6d",
-      "classification": "source_or_documentation"
-    },
-    {
-      "file": "Petty Cash Request System - Project Overview.docx",
+      "file": "documentation/corrected/Petty Cash Request System - Project Overview.docx",
       "bytes": 653345,
       "sha256": "c14715e362aa2cda2143dc2b582a9458d62b9a5a43e2c9d9b298a8266d937103",
       "classification": "historical_word_reference"
     },
     {
-      "file": "Petty Cash User Context.html",
-      "bytes": 1071,
-      "sha256": "83e4a42ee1ab91fb9899ce40c9d961bf1bda8a7f725131b93a7feb0966d246d6",
+      "file": "documentation/corrected/Petty Cash Request System - Project Overview.pdf",
+      "bytes": 89949,
+      "sha256": "2f3133cc5be4c9bf6036f5a495c0876440b1fc352d00e4a5aafe4bc1f57d663a",
       "classification": "source_or_documentation"
     },
     {
-      "file": "README.md",
-      "bytes": 20584,
-      "sha256": "9ba5c0be4aab55d1dbeff43ab654e6ca19ed65aed4950fbb26ca505ff74d4ca3",
+      "file": "documentation/handover/DOCUMENTATION_AUDIT.md",
+      "bytes": 5252,
+      "sha256": "ff63f10c3911b0355086f90cd7de02bf52d3da0d54c4d6a41f83da27aa7b6854",
       "classification": "source_or_documentation"
     },
     {
-      "file": "RECEIPT_PDF_SETUP.md",
-      "bytes": 8265,
-      "sha256": "35c413defffdd74d9fce824f0e6c3bc25d7a2b81408c6c1faeffbe3bb2ce2d0c",
+      "file": "documentation/handover/HANDOVER.md",
+      "bytes": 19339,
+      "sha256": "fab13b01f6103c08f93a428feb818231a23af8b15d4de87dd1c3f5fd239e16c6",
       "classification": "source_or_documentation"
     },
     {
-      "file": "REVIEW_HANDOFF_PLAN.md",
-      "bytes": 55220,
-      "sha256": "afb7a63464fb851163cbd1e6b7c6896ddb2d0b1f33dda8bddebe25d79e990032",
+      "file": "documentation/handover/HANDOVER_CHECKLIST.md",
+      "bytes": 7997,
+      "sha256": "6eab157e29d3cc7a01344c309dd5d7b99126b5a24013a2a47f919375c9550bd7",
       "classification": "source_or_documentation"
     },
     {
-      "file": "SITE_SHELL_HOME_SETUP.md",
-      "bytes": 10770,
-      "sha256": "8392fc9f730dfbb48bd0002e2e4c68d8b6907ad1a6c20ca7118a71161d84acc9",
+      "file": "documentation/handover/IMPLEMENTATION_LOG.md",
+      "bytes": 224472,
+      "sha256": "1e480a50a06d483e3f98bc4479de033f48f45c7c5a881441724437c33fe14cf4",
       "classification": "source_or_documentation"
     },
     {
-      "file": "UI_REFRESH_SETUP.md",
-      "bytes": 8387,
-      "sha256": "39b3dad2e28b17fe09ecc89af1dbb22bbcdcadb0d63fbe7beb5e64725122349c",
+      "file": "documentation/handover/OPERATIONS_RUNBOOK.md",
+      "bytes": 9016,
+      "sha256": "6765741cfec205852ffff6d43ca727d0c00a2249ae43e35e946532aaf02506fc",
       "classification": "source_or_documentation"
     },
     {
-      "file": "WEBAPI_SITE_SETTINGS.md",
-      "bytes": 17446,
-      "sha256": "043f122b06f20232ee6d30d8d2a9647698003aad232fb510299e145a39461f4d",
+      "file": "documentation/handover/file-organization.json",
+      "bytes": 69669,
+      "sha256": "c670e0404c81d4a714aa441c9284361717065203b720ad96c6f14a98a5d32319",
       "classification": "source_or_documentation"
     },
     {
-      "file": "approval-flow-current.json",
+      "file": "documentation/originals/Configuration document.docx",
+      "bytes": 11659,
+      "sha256": "35681bad0cd30ad8f4cb52b804c835ac10a1f606ba96ddfb981d2e8f5a61d56d",
+      "classification": "historical_word_reference"
+    },
+    {
+      "file": "documentation/originals/Petty Cash App - Database Schema.docx",
+      "bytes": 13863,
+      "sha256": "4cecce3b2a9fb81b734edf8bbad8e2ec1b710ebc1cea55fb5dec1cb13bf2c48d",
+      "classification": "historical_word_reference"
+    },
+    {
+      "file": "documentation/originals/Petty Cash Request System - Project Overview.docx",
+      "bytes": 653345,
+      "sha256": "c14715e362aa2cda2143dc2b582a9458d62b9a5a43e2c9d9b298a8266d937103",
+      "classification": "historical_word_reference"
+    },
+    {
+      "file": "documentation/originals/WORD_DOCUMENT_HISTORY.md",
+      "bytes": 3923,
+      "sha256": "e6b26c30d1de149459736b903f3cd1346400721c0f1fb3bf20f9f5593b46b415",
+      "classification": "source_or_documentation"
+    },
+    {
+      "file": "documentation/plans/DATA_FRESHNESS_PLAN.md",
+      "bytes": 4955,
+      "sha256": "9a6e774af9a247556fbc0f58e5b56c8aacbd4fea0daf247e6fa8ab0e43a06852",
+      "classification": "source_or_documentation"
+    },
+    {
+      "file": "documentation/platform/DATAVERSE_SETUP.md",
+      "bytes": 15545,
+      "sha256": "850454f21654dc20512c0495c03720755a37253c1e6860b2c80419e60dc0513d",
+      "classification": "source_or_documentation"
+    },
+    {
+      "file": "documentation/platform/WEBAPI_SITE_SETTINGS.md",
+      "bytes": 17322,
+      "sha256": "3d3421528f54e15b1a6fa0d0576459de41c984f089c2d71abbbf8256b045b075",
+      "classification": "source_or_documentation"
+    },
+    {
+      "file": "flows/README.md",
+      "bytes": 1009,
+      "sha256": "0f9e116ee97099aeb9ff57382ab3d1748cf929df28686272f490c22dd5b27079",
+      "classification": "source_or_documentation"
+    },
+    {
+      "file": "flows/approval/APPROVAL_FLOW_REVIEW.md",
+      "bytes": 81440,
+      "sha256": "1baf6bfdb584803188445b10e2237a9edc642e12712544d3d60aeb8bcdd046b2",
+      "classification": "source_or_documentation"
+    },
+    {
+      "file": "flows/approval/MANAGER_APPROVAL_FLOW.md",
+      "bytes": 36544,
+      "sha256": "44b5aaa1bd75a4129e8fed8a4b235502197993c3e6994bc0fb649c56fb18ca04",
+      "classification": "source_or_documentation"
+    },
+    {
+      "file": "flows/approval/REVIEW_HANDOFF_PLAN.md",
+      "bytes": 57043,
+      "sha256": "a982658f27699eecc1000c8940563514d305ec1825c2aa2397963fa41e33f89b",
+      "classification": "source_or_documentation"
+    },
+    {
+      "file": "flows/approval/approval-flow-current.json",
       "bytes": 52605,
       "sha256": "fe65e66606ce6e6ea334afb45362f4bd28bc2d04fe523bb1872d87f7b01aec6d",
       "classification": "source_or_documentation"
     },
     {
-      "file": "approval-trigger-current.json",
+      "file": "flows/approval/approval-trigger-current.json",
       "bytes": 538,
       "sha256": "015798d74eae98813af4915f95c3009de1e6e14b528ec75fe1b2cbaec78b0d5f",
       "classification": "source_or_documentation"
     },
     {
-      "file": "documentation/README.md",
-      "bytes": 3937,
-      "sha256": "dd3f2086f0505dcd7dbe6922d2e3103128a091160ff42ea8955c9e20cf037823",
-      "classification": "source_or_documentation"
-    },
-    {
-      "file": "documentation/flow-snapshots/approval-current-review.2026-11-07.json",
+      "file": "flows/approval/snapshots/approval-current-review.2026-11-07.json",
       "bytes": 4777,
       "sha256": "84091245d5884a12fa97286cb8da7748ef75e7f921d23266955d746e4c1fca6b",
       "classification": "source_or_documentation"
     },
     {
-      "file": "documentation/flow-snapshots/approval-trigger.resumption.received-2026-11-09.json",
+      "file": "flows/approval/snapshots/approval-trigger.resumption.received-2026-11-09.json",
       "bytes": 773,
       "sha256": "b1c76405193fcffe08e6c1c8e6cdb15c46b2360d95dc453b3e5524d41d5a1c23",
       "classification": "source_or_documentation"
     },
     {
-      "file": "documentation/flow-snapshots/callback-registrations.received-2026-11-09.json",
-      "bytes": 2524,
-      "sha256": "7a23e19a06d57637b8b0e4fcc63ed3784806659b1cf78267c00c71e87d7ba99b",
-      "classification": "source_or_documentation"
-    },
-    {
-      "file": "documentation/flow-snapshots/clarification-answer-response.received-2026-11-09.json",
-      "bytes": 149,
-      "sha256": "ed0d48e09f87700a125d76c61ed6fdef8aa4f17f1748dbe7d18c6c2a4e89c8e2",
-      "classification": "source_or_documentation"
-    },
-    {
-      "file": "documentation/flow-snapshots/clarification-answer-trigger.received-2026-11-08.json",
-      "bytes": 224,
-      "sha256": "91ac65e5d262da8aa4e148c6f858bf7e6d590991c726829b2bdb0f766a053460",
-      "classification": "source_or_documentation"
-    },
-    {
-      "file": "documentation/flow-snapshots/clarification-answer-trigger.with-inputs.received-2026-11-08.json",
-      "bytes": 659,
-      "sha256": "272c07648e500abf0b380090580d4e6a9b103235586e70d334d9e06a75defc76",
-      "classification": "source_or_documentation"
-    },
-    {
-      "file": "documentation/flow-snapshots/clarification-queue-input.received-2026-11-09.json",
-      "bytes": 284,
-      "sha256": "085ba541436507bcfb89e348268f32e4fd36d65cd3e43051895252050cde953b",
-      "classification": "source_or_documentation"
-    },
-    {
-      "file": "documentation/flow-snapshots/clarification-queue-output.received-2026-11-09.json",
-      "bytes": 231,
-      "sha256": "3c23e203dc3015814d29e13d72d341941a7c8038da8072879a17bdd7288a387f",
-      "classification": "source_or_documentation"
-    },
-    {
-      "file": "documentation/flow-snapshots/manager-approval-switch.received-2026-11-05.json",
+      "file": "flows/approval/snapshots/manager-approval-switch.received-2026-11-05.json",
       "bytes": 16094,
       "sha256": "2bae6e3426523e8b16ff01162c0b790c2f0a74b5f8f597879a7ea33b001661da",
       "classification": "source_or_documentation"
     },
     {
-      "file": "finance-cash-request.schema.json",
+      "file": "flows/clarifications/CLARIFICATION_SETUP.md",
+      "bytes": 85627,
+      "sha256": "6f0532a116be04d803328511d6730b49cff7326b59c5e8b2330a4aa4abbbe88d",
+      "classification": "source_or_documentation"
+    },
+    {
+      "file": "flows/clarifications/snapshots/clarification-answer-response.received-2026-11-09.json",
+      "bytes": 149,
+      "sha256": "ed0d48e09f87700a125d76c61ed6fdef8aa4f17f1748dbe7d18c6c2a4e89c8e2",
+      "classification": "source_or_documentation"
+    },
+    {
+      "file": "flows/clarifications/snapshots/clarification-answer-trigger.received-2026-11-08.json",
+      "bytes": 224,
+      "sha256": "91ac65e5d262da8aa4e148c6f858bf7e6d590991c726829b2bdb0f766a053460",
+      "classification": "source_or_documentation"
+    },
+    {
+      "file": "flows/clarifications/snapshots/clarification-answer-trigger.with-inputs.received-2026-11-08.json",
+      "bytes": 659,
+      "sha256": "272c07648e500abf0b380090580d4e6a9b103235586e70d334d9e06a75defc76",
+      "classification": "source_or_documentation"
+    },
+    {
+      "file": "flows/clarifications/snapshots/clarification-queue-input.received-2026-11-09.json",
+      "bytes": 284,
+      "sha256": "085ba541436507bcfb89e348268f32e4fd36d65cd3e43051895252050cde953b",
+      "classification": "source_or_documentation"
+    },
+    {
+      "file": "flows/clarifications/snapshots/clarification-queue-output.received-2026-11-09.json",
+      "bytes": 231,
+      "sha256": "3c23e203dc3015814d29e13d72d341941a7c8038da8072879a17bdd7288a387f",
+      "classification": "source_or_documentation"
+    },
+    {
+      "file": "flows/diagnostics/snapshots/callback-registrations.received-2026-11-09.json",
+      "bytes": 2524,
+      "sha256": "7a23e19a06d57637b8b0e4fcc63ed3784806659b1cf78267c00c71e87d7ba99b",
+      "classification": "source_or_documentation"
+    },
+    {
+      "file": "flows/finance/FINANCE_FLOWCHART.md",
+      "bytes": 11403,
+      "sha256": "740f68da1a0b2cf27d976f466074f806876d3d657e0f8375e43a93ff9b878f3d",
+      "classification": "source_or_documentation"
+    },
+    {
+      "file": "flows/finance/FINANCE_FLOW_SETUP.md",
+      "bytes": 99216,
+      "sha256": "a9292361b5642787f441210f8bd842e5857cdafb8fac19f9a8a84012a778cde8",
+      "classification": "source_or_documentation"
+    },
+    {
+      "file": "flows/finance/FINANCE_SELF_POSTING_SETUP.md",
+      "bytes": 6201,
+      "sha256": "d8bd4a90d0f71f9bb1b881173e4c220d5bb9cd300f3ae79b8d3dcfd748bb2f08",
+      "classification": "source_or_documentation"
+    },
+    {
+      "file": "flows/finance/finance-cash-request.schema.json",
       "bytes": 705,
       "sha256": "c7f65fd110e978ebe555913bbd7ce21ebdb732ab2cf44ea7fa5af5db49f16c36",
       "classification": "source_or_documentation"
     },
     {
-      "file": "pettycash-admin-config.example.js",
+      "file": "pages/README.md",
+      "bytes": 753,
+      "sha256": "0502451145bb3e2df3d949121b6666eaed77e8449edc4cf213c8a7b1de54f17b",
+      "classification": "source_or_documentation"
+    },
+    {
+      "file": "pages/admin/ADMIN_PROFILE_SETUP.md",
+      "bytes": 7076,
+      "sha256": "bf437d74deb4f8b00d0fe64bffcc5c0fe9badb0989c87e1bee63b55764ce3955",
+      "classification": "source_or_documentation"
+    },
+    {
+      "file": "pages/admin/Admin Users.html",
+      "bytes": 24657,
+      "sha256": "3d9abad36449eefc899a0bdd6cc201b3f26788367040b9177792f32aa842c077",
+      "classification": "source_or_documentation"
+    },
+    {
+      "file": "pages/admin/pettycash-admin-config.example.js",
       "bytes": 694,
       "sha256": "9c228e9b77251d7956501e2fea998c685230e28046324c85051ae10a6d2c4542",
       "classification": "source_or_documentation"
     },
     {
-      "file": "pettycash-admin.js",
+      "file": "pages/admin/pettycash-admin.js",
       "bytes": 17927,
       "sha256": "61fc810e89b659763b86b844c1fcdd139ea33da1dd60426c43acd35d0c353907",
       "classification": "source_or_documentation"
     },
     {
-      "file": "pettycash-api.js",
-      "bytes": 51037,
-      "sha256": "6ae5a0ab7aa0bcf05b627f3f321a99f82dfa39ebbf38a42def8bc6f1c2b6d383",
+      "file": "pages/finance/FINANCE_SETUP.md",
+      "bytes": 28640,
+      "sha256": "bf66cc6da12bfb978b19d26412265d4aa5e6e85e96dabe948789e161315f5dc9",
       "classification": "source_or_documentation"
     },
     {
-      "file": "pettycash-home.css",
+      "file": "pages/finance/Finance Cash Management.html",
+      "bytes": 25962,
+      "sha256": "5365f0be49d36476e932902e191afd3e3593657eae9e1d7b1f45db40829fa72d",
+      "classification": "source_or_documentation"
+    },
+    {
+      "file": "pages/home/Home.html",
+      "bytes": 126,
+      "sha256": "15a67697c3b697962f2e3f8b04bd619cfc282327404ab7dddb884962241dde1e",
+      "classification": "source_or_documentation"
+    },
+    {
+      "file": "pages/home/Petty Cash Home.html",
+      "bytes": 38598,
+      "sha256": "528aea3666ddd665597a27f14559f590248b88bd768aa494cf2d7c5fe9806c61",
+      "classification": "source_or_documentation"
+    },
+    {
+      "file": "pages/home/pettycash-home.css",
       "bytes": 8243,
       "sha256": "7b57293c63cb2c90ab5b3944e3ec363a4bb220da0bea42bac7af52d67662069b",
       "classification": "source_or_documentation"
     },
     {
-      "file": "pettycash-home.js",
+      "file": "pages/home/pettycash-home.js",
       "bytes": 3755,
       "sha256": "e25b5104e9275fa09a3e3c6a368406a7fc87e5b942d8f313c3e69cbdaa4e07de",
       "classification": "source_or_documentation"
     },
     {
-      "file": "pettycash-module-config.example.js",
-      "bytes": 558,
-      "sha256": "c52a3041d6b70dee6731e5f7b82a0db810a2ab65d8aab2b33b5e5d75d110e9a6",
+      "file": "pages/my-requests/CLARIFICATION_UI_SETUP.md",
+      "bytes": 16607,
+      "sha256": "a505cc6d4180755cb0d4b7120eac6797dad531df46d13ddd837471fcc4b27675",
       "classification": "source_or_documentation"
     },
     {
-      "file": "pettycash-modules.js",
-      "bytes": 39675,
-      "sha256": "3e648898dcd687d2cbf19aa28d7a7c11bb5269fcf0d854ba6b6297045c263cbf",
+      "file": "pages/my-requests/My Petty Cash Requests.html",
+      "bytes": 25636,
+      "sha256": "344a85fadd53ad53ac0f720c0f90db690ba91d83d5cad73a09077da65588b852",
       "classification": "source_or_documentation"
     },
     {
-      "file": "pettycash-receipts.js",
-      "bytes": 16030,
-      "sha256": "d4d2db4a6e301fc3cf1467ab487c72582992904dbcd5817b48522782bc82d78a",
+      "file": "pages/new-request/ITEM_SUGGESTIONS_SETUP.md",
+      "bytes": 6416,
+      "sha256": "b727eb0edec8827f27d1f61e7eb094a816fcf94d1b16781e323b1a213cecbfbb",
       "classification": "source_or_documentation"
     },
     {
-      "file": "pettycash-shell.css",
-      "bytes": 7973,
-      "sha256": "5640cb78108a1ec0fcfe55a3416099182130658e97dfe47058353cffaf8dbddc",
+      "file": "pages/new-request/New Petty Cash Request.html",
+      "bytes": 80347,
+      "sha256": "00c0d51cae19c332714dc8d2fe6998a36e0a8b6b2285b3f2ecf486b720c97ec5",
       "classification": "source_or_documentation"
     },
     {
-      "file": "pettycash-shell.js",
-      "bytes": 3274,
-      "sha256": "47c1f23bd21747e630f577971dea26a8bb9c96387f32ba71055bcf3bccbbc51e",
+      "file": "pages/new-request/PRODUCT_UNITS_SETUP.md",
+      "bytes": 4925,
+      "sha256": "e2071c558b336ff727c4f47143a43994012a5565412d83b45f534c9be2dd2a4a",
       "classification": "source_or_documentation"
     },
     {
-      "file": "pettycash-ui.css",
-      "bytes": 20989,
-      "sha256": "121a1b7f60bd6eaa3a5a97e7465d5fdab291b5ce0c09f4fa8f408b108290f26e",
+      "file": "pages/new-request/pettycash-api.js",
+      "bytes": 51037,
+      "sha256": "6ae5a0ab7aa0bcf05b627f3f321a99f82dfa39ebbf38a42def8bc6f1c2b6d383",
       "classification": "source_or_documentation"
     },
     {
       "file": "scripts/build_home_template.cjs",
-      "bytes": 1368,
-      "sha256": "286f7f18d57e45d336e6a0e922a67f9cf5770e1a5b704186808be6f7965c2220",
+      "bytes": 1415,
+      "sha256": "373cb406323f208a7c254c4901efa5093dddab37957eb2b7958b77c9e9f85e27",
       "classification": "source_or_documentation"
     },
     {
       "file": "scripts/build_receipt_template.cjs",
-      "bytes": 3035,
-      "sha256": "2d512343a13c885063113a26c9c41d4c47c7121ce4275fb2a34907c2ed83b84a",
+      "bytes": 3067,
+      "sha256": "c506c31e7bad95659a433cd079ccb462a164117fc0580a6d39e80b1668e35cd3",
       "classification": "source_or_documentation"
     },
     {
       "file": "scripts/build_request_page.cjs",
-      "bytes": 1013,
-      "sha256": "4a2b4ae99f81224fcd103bb7ff1f13e2dd3a77b01dcb79a299449d832b85bfab",
+      "bytes": 1049,
+      "sha256": "647d2f711fd2e5cd1d70b4e8d8ca0f9f47db0ec8301954a61d6a22bce592ce52",
       "classification": "source_or_documentation"
     },
     {
       "file": "scripts/build_shell_template.cjs",
-      "bytes": 1308,
-      "sha256": "9ae4ce9c0e991950b96ac8236fe43f5b26a99e9b23dd51aaf02fb0395014a750",
+      "bytes": 1347,
+      "sha256": "5ff03a6e567bb1b1812ef1535f47981e4519c70e93a310c7313237432d41f76a",
       "classification": "source_or_documentation"
     },
     {
       "file": "scripts/build_ui_styles.cjs",
-      "bytes": 1113,
-      "sha256": "98f282f6d006e92efed0084d08f06354a498d46eafe64372eda10b74145918f3",
+      "bytes": 1189,
+      "sha256": "c8caf5fe23a712ddafcd4b4b56ff67c5e241b815b47d7180b7b7ae2ba6776f1a",
+      "classification": "source_or_documentation"
+    },
+    {
+      "file": "scripts/correct_project_docs.py",
+      "bytes": 13449,
+      "sha256": "6eb58b04c2f2afa083b24de5a872ef26119558b3d8bb3e29286dc0be65741a3b",
+      "classification": "source_or_documentation"
+    },
+    {
+      "file": "scripts/finalize_project_docs.py",
+      "bytes": 3770,
+      "sha256": "bbd93c7ed70da26919bb43a38805ca4785daf5ed36d4b13fd1c6ea2f7eac2d2f",
       "classification": "source_or_documentation"
     },
     {
@@ -552,99 +628,195 @@
       "classification": "source_or_documentation"
     },
     {
+      "file": "scripts/render_word_docs.ps1",
+      "bytes": 3142,
+      "sha256": "3811d571625ede039d1eb6c5d513dec224e6427f107fd17592b2c884df281323",
+      "classification": "source_or_documentation"
+    },
+    {
       "file": "scripts/shell_fixtures.cjs",
-      "bytes": 3677,
-      "sha256": "2d9f709339e541283ccd1b49fcff9bfa20d93b5d0e1654cd3d29a4560729d815",
+      "bytes": 3756,
+      "sha256": "b7cb8cd68808dacbc56117a57187e6d8a28d3d462b3c7ee910c842edac585653",
       "classification": "source_or_documentation"
     },
     {
       "file": "scripts/verify_admin_page.cjs",
-      "bytes": 9414,
-      "sha256": "02f6e39f86d576329c56040c1428f6db9360950066738ca20de5cfae9164b906",
+      "bytes": 9381,
+      "sha256": "81fc65e9544dcefcefa4f7c58e7cc64c6b42b91108cf64062d9e4481c6a6da2d",
       "classification": "source_or_documentation"
     },
     {
       "file": "scripts/verify_clarification_page.cjs",
-      "bytes": 7808,
-      "sha256": "39d8834d75e46a09414fcf67c360ee886c6bd63315fe075b99eb03f8e3dc0277",
+      "bytes": 7885,
+      "sha256": "f4a005d4d05a3f304eb6438a02f77aea5f1f0e3748e324ddebe71bfa8c949e21",
       "classification": "source_or_documentation"
     },
     {
       "file": "scripts/verify_finance_page.cjs",
-      "bytes": 19412,
-      "sha256": "bbaaee0d882e786482c1a4f9b8dd9053fb1d4c4881876d1a7217aa4f81543d7c",
+      "bytes": 19501,
+      "sha256": "1f63b542be4d39f64383d53f7562f2354e01ecef2285c73a35ed40ecd8b0f6bf",
       "classification": "source_or_documentation"
     },
     {
       "file": "scripts/verify_handover.cjs",
-      "bytes": 13398,
-      "sha256": "c3bcdb7f3965733f1e2652970067ea4b2764f30421fd8a4c8bfaf02a165f3514",
+      "bytes": 14214,
+      "sha256": "61d116a1f0d7b483a092d6ab0048a338181ba5bd1b11de7cf6bfe041742e3112",
       "classification": "source_or_documentation"
     },
     {
       "file": "scripts/verify_item_suggestions.cjs",
-      "bytes": 14244,
-      "sha256": "60d0537a957115d08b8d82351160b55e48b66df8a3979e155ecb2a34979cfec7",
+      "bytes": 14322,
+      "sha256": "13362f345f8a595c568915748b273d9aafb7e84fd494850ba2be89a3ef273ce6",
       "classification": "source_or_documentation"
     },
     {
       "file": "scripts/verify_module_pages.cjs",
-      "bytes": 8505,
-      "sha256": "b54ea2316995da570c64335d91fd46c8603238b3e3f3c4c5a0701a2afe52deeb",
+      "bytes": 8536,
+      "sha256": "4f12fc8aa78d5505ce972f1038a04f8b155acfc66cdd0d281e5389f29cc28bd9",
       "classification": "source_or_documentation"
     },
     {
       "file": "scripts/verify_receipt_upload.cjs",
-      "bytes": 12687,
-      "sha256": "94e1c8e35e858f99c927c75ca3a9a4d59ceb18af16a2cfe222a99963fcbf1694",
+      "bytes": 12808,
+      "sha256": "2372cb87b5ee7b3fbdddfee5b9ef9f7197a56d6f096ce7c69e6b8b917085a43a",
       "classification": "source_or_documentation"
     },
     {
       "file": "scripts/verify_shell_home.cjs",
-      "bytes": 15989,
-      "sha256": "977997f970f68941e4927aa55857d26e8bf8e45b4972fb91734fd7ec694740d1",
+      "bytes": 16386,
+      "sha256": "0ff6fe9855f40189d16d0ab1c64e1604f47dc812f92236e822247f3a190aa1cb",
       "classification": "source_or_documentation"
     },
     {
       "file": "scripts/verify_ui_pages.cjs",
-      "bytes": 14496,
-      "sha256": "e4ee3008082b9b360d2f81f227396b342220e0bcd310f53e8ac6675c33c3c868",
+      "bytes": 14661,
+      "sha256": "ed33c427e9b002b43be71dd5b4d4ea66e5bf00f3d19bd7b94c239e66cd707c12",
+      "classification": "source_or_documentation"
+    },
+    {
+      "file": "shared/README.md",
+      "bytes": 738,
+      "sha256": "7685ce6c40109e4467d3d058a9e47310e55d800965c4c89952e17b5c2bd27d66",
+      "classification": "source_or_documentation"
+    },
+    {
+      "file": "shared/identity/Petty Cash User Context.html",
+      "bytes": 1071,
+      "sha256": "83e4a42ee1ab91fb9899ce40c9d961bf1bda8a7f725131b93a7feb0966d246d6",
+      "classification": "source_or_documentation"
+    },
+    {
+      "file": "shared/modules/BALANCE_MODULE_SETUP.md",
+      "bytes": 27494,
+      "sha256": "b4aec5e9a4e8dd3da7ef73d6508510ffb6b715fd4a941e4dc431a13527c5f5ea",
+      "classification": "source_or_documentation"
+    },
+    {
+      "file": "shared/modules/pettycash-module-config.example.js",
+      "bytes": 558,
+      "sha256": "c52a3041d6b70dee6731e5f7b82a0db810a2ab65d8aab2b33b5e5d75d110e9a6",
+      "classification": "source_or_documentation"
+    },
+    {
+      "file": "shared/modules/pettycash-modules.js",
+      "bytes": 39675,
+      "sha256": "3e648898dcd687d2cbf19aa28d7a7c11bb5269fcf0d854ba6b6297045c263cbf",
+      "classification": "source_or_documentation"
+    },
+    {
+      "file": "shared/receipts/Petty Cash Receipts.html",
+      "bytes": 436448,
+      "sha256": "23c637b9598d17fd114dbd665116c133cd71772d0e898eb9c5394615c3e43e6d",
+      "classification": "source_or_documentation"
+    },
+    {
+      "file": "shared/receipts/RECEIPT_PDF_SETUP.md",
+      "bytes": 8401,
+      "sha256": "41b4b6bd2c4482a2af2b1a6a76ee7b34a55ed74c99192b31e3fd0b6c974ff993",
+      "classification": "source_or_documentation"
+    },
+    {
+      "file": "shared/receipts/pettycash-receipts.js",
+      "bytes": 16030,
+      "sha256": "d4d2db4a6e301fc3cf1467ab487c72582992904dbcd5817b48522782bc82d78a",
+      "classification": "source_or_documentation"
+    },
+    {
+      "file": "shared/shell/Footer.html",
+      "bytes": 2616,
+      "sha256": "0dbd9d498522f8f688383d856a7277d6d669eb1f4499246ef51dc0f44b23acc2",
+      "classification": "source_or_documentation"
+    },
+    {
+      "file": "shared/shell/Header.html",
+      "bytes": 24147,
+      "sha256": "40ff40986a87c3ffc24ab8d202d31bde673977403f640c15d0cf66193b285fb7",
+      "classification": "source_or_documentation"
+    },
+    {
+      "file": "shared/shell/SITE_SHELL_HOME_SETUP.md",
+      "bytes": 10941,
+      "sha256": "a4b74680f766519f7a4644656f3a8eaaae8d54d59aeaf6ff7bb6e30ead5ed501",
+      "classification": "source_or_documentation"
+    },
+    {
+      "file": "shared/shell/pettycash-shell.css",
+      "bytes": 7973,
+      "sha256": "5640cb78108a1ec0fcfe55a3416099182130658e97dfe47058353cffaf8dbddc",
+      "classification": "source_or_documentation"
+    },
+    {
+      "file": "shared/shell/pettycash-shell.js",
+      "bytes": 3274,
+      "sha256": "47c1f23bd21747e630f577971dea26a8bb9c96387f32ba71055bcf3bccbbc51e",
+      "classification": "source_or_documentation"
+    },
+    {
+      "file": "shared/styles/UI_REFRESH_SETUP.md",
+      "bytes": 8524,
+      "sha256": "f222c1b3de34ad8edff2f48e3fc116cfcacb584d9d4c0efd2da2f3e5b1a63715",
+      "classification": "source_or_documentation"
+    },
+    {
+      "file": "shared/styles/pettycash-ui.css",
+      "bytes": 20989,
+      "sha256": "121a1b7f60bd6eaa3a5a97e7465d5fdab291b5ce0c09f4fa8f408b108290f26e",
       "classification": "source_or_documentation"
     },
     {
       "file": "tests/pettycash-admin.test.cjs",
-      "bytes": 23121,
-      "sha256": "a10896f520660512fb58ff4f1d5d103078615155681cb5a815b18c849d432697",
+      "bytes": 22831,
+      "sha256": "e12be229929f02b3182658626154cfa086e2e28f47fcec864cf8a0d51bfff079",
       "classification": "source_or_documentation"
     },
     {
       "file": "tests/pettycash-api.test.cjs",
-      "bytes": 39560,
-      "sha256": "de6ea8d75632b5741d308ba6204050e41ca2241c44c1374bf6b4a179d4116161",
+      "bytes": 38843,
+      "sha256": "b73c957212829947847905c67e257d2b949ada0780bd4b0c4c595881a9851e88",
       "classification": "source_or_documentation"
     },
     {
       "file": "tests/pettycash-modules.test.cjs",
-      "bytes": 31029,
-      "sha256": "a53723c2b71a1f5eddc38487af7638efd6b9c0182dfd10320cfef3c3ff54143d",
+      "bytes": 30801,
+      "sha256": "cc7af5bf773f98c8be598268c65c6b22145bbbf4a0b4faeff9ab46ca88a7cd56",
       "classification": "source_or_documentation"
     },
     {
       "file": "tests/pettycash-receipts.test.cjs",
-      "bytes": 10702,
-      "sha256": "2bc6568d73be9e3f8146b750438b19766121c31f68709fb3f8067c9ecd3821b2",
+      "bytes": 10752,
+      "sha256": "5a5055eb1b92849c716d5ebd5e1e2055dfda1c9640050516924ed51977f56a9c",
       "classification": "source_or_documentation"
     },
     {
       "file": "tests/pettycash-shell-home.test.cjs",
-      "bytes": 4245,
-      "sha256": "bc85af85b408c18dd94e25bd7b775d66459fb46fcc95ef06fa4b4a89ed83442d",
+      "bytes": 4541,
+      "sha256": "8c55a3d326c499095c25871991756d2c86e4c7b3131f602a41d4b10f2dc61ce6",
       "classification": "source_or_documentation"
     },
     {
       "file": "tests/pettycash-suggestions.test.cjs",
-      "bytes": 11300,
-      "sha256": "7ad4cdb22e4e18ac24518b9aed96a8883d204471e748630ae3595fb4bb7a80c5",
+      "bytes": 11336,
+      "sha256": "c895a56751d9c359a532abf68fb2ff196c1e3f7d9c8a878b38db21c03834ecdd",
       "classification": "source_or_documentation"
     },
     {

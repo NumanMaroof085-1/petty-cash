@@ -1,0 +1,1548 @@
+{
+  "date": "2026-11-09",
+  "scope": "Local files only; no website URLs, Liquid template names, flow IDs, app logic or git history changed.",
+  "moves": {
+    "New Petty Cash Request.html": "pages/new-request/New Petty Cash Request.html",
+    "pettycash-api.js": "pages/new-request/pettycash-api.js",
+    "ITEM_SUGGESTIONS_SETUP.md": "pages/new-request/ITEM_SUGGESTIONS_SETUP.md",
+    "PRODUCT_UNITS_SETUP.md": "pages/new-request/PRODUCT_UNITS_SETUP.md",
+    "My Petty Cash Requests.html": "pages/my-requests/My Petty Cash Requests.html",
+    "CLARIFICATION_UI_SETUP.md": "pages/my-requests/CLARIFICATION_UI_SETUP.md",
+    "Finance Cash Management.html": "pages/finance/Finance Cash Management.html",
+    "FINANCE_SETUP.md": "pages/finance/FINANCE_SETUP.md",
+    "Admin Users.html": "pages/admin/Admin Users.html",
+    "pettycash-admin.js": "pages/admin/pettycash-admin.js",
+    "pettycash-admin-config.example.js": "pages/admin/pettycash-admin-config.example.js",
+    "ADMIN_PROFILE_SETUP.md": "pages/admin/ADMIN_PROFILE_SETUP.md",
+    "Home.html": "pages/home/Home.html",
+    "Petty Cash Home.html": "pages/home/Petty Cash Home.html",
+    "pettycash-home.js": "pages/home/pettycash-home.js",
+    "pettycash-home.css": "pages/home/pettycash-home.css",
+    "pettycash-modules.js": "shared/modules/pettycash-modules.js",
+    "pettycash-module-config.example.js": "shared/modules/pettycash-module-config.example.js",
+    "BALANCE_MODULE_SETUP.md": "shared/modules/BALANCE_MODULE_SETUP.md",
+    "Petty Cash Receipts.html": "shared/receipts/Petty Cash Receipts.html",
+    "pettycash-receipts.js": "shared/receipts/pettycash-receipts.js",
+    "RECEIPT_PDF_SETUP.md": "shared/receipts/RECEIPT_PDF_SETUP.md",
+    "Header.html": "shared/shell/Header.html",
+    "Footer.html": "shared/shell/Footer.html",
+    "pettycash-shell.js": "shared/shell/pettycash-shell.js",
+    "pettycash-shell.css": "shared/shell/pettycash-shell.css",
+    "SITE_SHELL_HOME_SETUP.md": "shared/shell/SITE_SHELL_HOME_SETUP.md",
+    "pettycash-ui.css": "shared/styles/pettycash-ui.css",
+    "UI_REFRESH_SETUP.md": "shared/styles/UI_REFRESH_SETUP.md",
+    "Petty Cash User Context.html": "shared/identity/Petty Cash User Context.html",
+    "FINANCE_FLOW_SETUP.md": "flows/finance/FINANCE_FLOW_SETUP.md",
+    "FINANCE_FLOWCHART.md": "flows/finance/FINANCE_FLOWCHART.md",
+    "FINANCE_SELF_POSTING_SETUP.md": "flows/finance/FINANCE_SELF_POSTING_SETUP.md",
+    "finance-cash-request.schema.json": "flows/finance/finance-cash-request.schema.json",
+    "MANAGER_APPROVAL_FLOW.md": "flows/approval/MANAGER_APPROVAL_FLOW.md",
+    "APPROVAL_FLOW_REVIEW.md": "flows/approval/APPROVAL_FLOW_REVIEW.md",
+    "REVIEW_HANDOFF_PLAN.md": "flows/approval/REVIEW_HANDOFF_PLAN.md",
+    "approval-flow-current.json": "flows/approval/approval-flow-current.json",
+    "approval-trigger-current.json": "flows/approval/approval-trigger-current.json",
+    "CLARIFICATION_SETUP.md": "flows/clarifications/CLARIFICATION_SETUP.md",
+    "DATAVERSE_SETUP.md": "documentation/platform/DATAVERSE_SETUP.md",
+    "WEBAPI_SITE_SETTINGS.md": "documentation/platform/WEBAPI_SITE_SETTINGS.md",
+    "HANDOVER.md": "documentation/handover/HANDOVER.md",
+    "HANDOVER_CHECKLIST.md": "documentation/handover/HANDOVER_CHECKLIST.md",
+    "OPERATIONS_RUNBOOK.md": "documentation/handover/OPERATIONS_RUNBOOK.md",
+    "DOCUMENTATION_AUDIT.md": "documentation/handover/DOCUMENTATION_AUDIT.md",
+    "IMPLEMENTATION_LOG.md": "documentation/handover/IMPLEMENTATION_LOG.md",
+    "DATA_FRESHNESS_PLAN.md": "documentation/plans/DATA_FRESHNESS_PLAN.md",
+    "Petty Cash App - Database Schema.docx": "documentation/originals/Petty Cash App - Database Schema.docx",
+    "Petty Cash Request System - Project Overview.docx": "documentation/originals/Petty Cash Request System - Project Overview.docx",
+    "Configuration document.docx": "documentation/originals/Configuration document.docx",
+    "ADMIN_USER_SETUP.md": "documentation/archive/admin/ADMIN_USER_SETUP.md",
+    "ADMIN_CREDENTIAL_SETUP.md": "documentation/archive/admin/ADMIN_CREDENTIAL_SETUP.md",
+    "Accounts Cash Management.html": "documentation/archive/retired-pages/Accounts Cash Management.html",
+    "scripts/repair_open_finance_page.js": "documentation/archive/finance-repair/repair_open_finance_page.js",
+    "README.md": "documentation/archive/README-before-organization.md",
+    "documentation/README.md": "documentation/originals/WORD_DOCUMENT_HISTORY.md",
+    "documentation/flow-snapshots/approval-current-review.2026-11-07.json": "flows/approval/snapshots/approval-current-review.2026-11-07.json",
+    "documentation/flow-snapshots/approval-trigger.resumption.received-2026-11-09.json": "flows/approval/snapshots/approval-trigger.resumption.received-2026-11-09.json",
+    "documentation/flow-snapshots/callback-registrations.received-2026-11-09.json": "flows/diagnostics/snapshots/callback-registrations.received-2026-11-09.json",
+    "documentation/flow-snapshots/clarification-answer-response.received-2026-11-09.json": "flows/clarifications/snapshots/clarification-answer-response.received-2026-11-09.json",
+    "documentation/flow-snapshots/clarification-answer-trigger.received-2026-11-08.json": "flows/clarifications/snapshots/clarification-answer-trigger.received-2026-11-08.json",
+    "documentation/flow-snapshots/clarification-answer-trigger.with-inputs.received-2026-11-08.json": "flows/clarifications/snapshots/clarification-answer-trigger.with-inputs.received-2026-11-08.json",
+    "documentation/flow-snapshots/clarification-queue-input.received-2026-11-09.json": "flows/clarifications/snapshots/clarification-queue-input.received-2026-11-09.json",
+    "documentation/flow-snapshots/clarification-queue-output.received-2026-11-09.json": "flows/clarifications/snapshots/clarification-queue-output.received-2026-11-09.json",
+    "documentation/flow-snapshots/manager-approval-switch.received-2026-11-05.json": "flows/approval/snapshots/manager-approval-switch.received-2026-11-05.json"
+  },
+  "before": {
+    ".gitignore": {
+      "bytes": 147,
+      "sha256": "752cde3373e293945e219b66514e56af168656e36a521a4000b1d54bef3c2712"
+    },
+    "Accounts Cash Management.html": {
+      "bytes": 2184,
+      "sha256": "2ad492d40dac0422d7fad5ee511389e0a441716403c6b5b825193cb7a0ff5d7a"
+    },
+    "Admin Users.html": {
+      "bytes": 24657,
+      "sha256": "3d9abad36449eefc899a0bdd6cc201b3f26788367040b9177792f32aa842c077"
+    },
+    "ADMIN_CREDENTIAL_SETUP.md": {
+      "bytes": 21661,
+      "sha256": "cf6f03d5aefc1ed5b253c4687f78bce98081eaa9a1e2ae5113f3a27bbc25994c"
+    },
+    "ADMIN_PROFILE_SETUP.md": {
+      "bytes": 7136,
+      "sha256": "25812ed36d7f1a8d58dde5d964c60a0ccac93cccaef87100cd859de98d7143d8"
+    },
+    "ADMIN_USER_SETUP.md": {
+      "bytes": 28808,
+      "sha256": "57f3513915af7a14c95fa6569760e247a2baaee42dfe32db4b018a28050a7a72"
+    },
+    "approval-flow-current.json": {
+      "bytes": 52605,
+      "sha256": "fe65e66606ce6e6ea334afb45362f4bd28bc2d04fe523bb1872d87f7b01aec6d"
+    },
+    "approval-trigger-current.json": {
+      "bytes": 538,
+      "sha256": "015798d74eae98813af4915f95c3009de1e6e14b528ec75fe1b2cbaec78b0d5f"
+    },
+    "APPROVAL_FLOW_REVIEW.md": {
+      "bytes": 81430,
+      "sha256": "9b0f92d887f55a72b4af252e988f1a34ce894bbe77dafc57878ec91f1db58b07"
+    },
+    "BALANCE_MODULE_SETUP.md": {
+      "bytes": 27695,
+      "sha256": "b14972e8b43cabacdef19f7f605d29f781d4571e1074e2027ac4a5fa23561d2c"
+    },
+    "CLARIFICATION_SETUP.md": {
+      "bytes": 85489,
+      "sha256": "daf6d4138dbb2f1ab3daa3c8f94ca595c1ca6ccffea0704fe28937b2b244d2ce"
+    },
+    "CLARIFICATION_UI_SETUP.md": {
+      "bytes": 16401,
+      "sha256": "81abeca6042bbeb3478faa03c77042d3a39e9de092486c1c0e80a723120d92f7"
+    },
+    "Configuration document.docx": {
+      "bytes": 11659,
+      "sha256": "35681bad0cd30ad8f4cb52b804c835ac10a1f606ba96ddfb981d2e8f5a61d56d"
+    },
+    "DATAVERSE_SETUP.md": {
+      "bytes": 15680,
+      "sha256": "4a6425d7f6741f928093c3c0592d69a9bcd61c5f5ca5e1df77f08c748d7d77e5"
+    },
+    "DATA_FRESHNESS_PLAN.md": {
+      "bytes": 4940,
+      "sha256": "64559e2908c39f3be0bb447fd84b4cf8c4cd2c0548316e026b7bbc3028763b04"
+    },
+    "DOCUMENTATION_AUDIT.md": {
+      "bytes": 4750,
+      "sha256": "87ba0800cd14e865e16e1aa9a90235da8e568876a673b411b44174c1a1e2c169"
+    },
+    "Finance Cash Management.html": {
+      "bytes": 25962,
+      "sha256": "5365f0be49d36476e932902e191afd3e3593657eae9e1d7b1f45db40829fa72d"
+    },
+    "finance-cash-request.schema.json": {
+      "bytes": 705,
+      "sha256": "c7f65fd110e978ebe555913bbd7ce21ebdb732ab2cf44ea7fa5af5db49f16c36"
+    },
+    "FINANCE_FLOWCHART.md": {
+      "bytes": 11292,
+      "sha256": "e2e976519f92f20af0470e2b87f8b75a49838abb034dce09d15910b8b88226b4"
+    },
+    "FINANCE_FLOW_SETUP.md": {
+      "bytes": 99004,
+      "sha256": "bd775b0499ffbc635ddc6c336e044b20d3014ab5115b9438f427b8c7962500c6"
+    },
+    "FINANCE_SELF_POSTING_SETUP.md": {
+      "bytes": 6171,
+      "sha256": "31984ae78c41b2611883c489d85596c74c0fe6fd6b8174ae8d80bc04f093878b"
+    },
+    "FINANCE_SETUP.md": {
+      "bytes": 28229,
+      "sha256": "f613793906be6d8e79223c4e12245b2f3e54fb8da3ef2eece54165aea6574a82"
+    },
+    "Footer.html": {
+      "bytes": 2616,
+      "sha256": "0dbd9d498522f8f688383d856a7277d6d669eb1f4499246ef51dc0f44b23acc2"
+    },
+    "HANDOVER.md": {
+      "bytes": 18224,
+      "sha256": "c15131640a7c666edca01d30fb4761c3552aef569ede37e4f0cd6037df7fab33"
+    },
+    "HANDOVER_CHECKLIST.md": {
+      "bytes": 7977,
+      "sha256": "dcd45e67e522536f04f1a3a71489db2a8f0f5a3b339c2921d19c8e301af6caea"
+    },
+    "Header.html": {
+      "bytes": 24147,
+      "sha256": "40ff40986a87c3ffc24ab8d202d31bde673977403f640c15d0cf66193b285fb7"
+    },
+    "Home.html": {
+      "bytes": 126,
+      "sha256": "15a67697c3b697962f2e3f8b04bd619cfc282327404ab7dddb884962241dde1e"
+    },
+    "IMPLEMENTATION_LOG.md": {
+      "bytes": 222024,
+      "sha256": "607e4d18774a4135cb0655dc3bf4cac2d91edbd588629db0e5d390761219c0ad"
+    },
+    "ITEM_SUGGESTIONS_SETUP.md": {
+      "bytes": 6380,
+      "sha256": "0bad34c8be5ff8c08986e8c2157af916f68be2cbdce97c9dcaeff74944c2cc1a"
+    },
+    "MANAGER_APPROVAL_FLOW.md": {
+      "bytes": 36265,
+      "sha256": "dbb6fc56258b6533b22340b145b325c7d92f6c8d8e3520525cad1b378d385058"
+    },
+    "My Petty Cash Requests.html": {
+      "bytes": 25636,
+      "sha256": "344a85fadd53ad53ac0f720c0f90db690ba91d83d5cad73a09077da65588b852"
+    },
+    "New Petty Cash Request.html": {
+      "bytes": 80347,
+      "sha256": "00c0d51cae19c332714dc8d2fe6998a36e0a8b6b2285b3f2ecf486b720c97ec5"
+    },
+    "OPERATIONS_RUNBOOK.md": {
+      "bytes": 9016,
+      "sha256": "6765741cfec205852ffff6d43ca727d0c00a2249ae43e35e946532aaf02506fc"
+    },
+    "Petty Cash App - Database Schema.docx": {
+      "bytes": 13863,
+      "sha256": "4cecce3b2a9fb81b734edf8bbad8e2ec1b710ebc1cea55fb5dec1cb13bf2c48d"
+    },
+    "Petty Cash Home.html": {
+      "bytes": 38598,
+      "sha256": "528aea3666ddd665597a27f14559f590248b88bd768aa494cf2d7c5fe9806c61"
+    },
+    "Petty Cash Receipts.html": {
+      "bytes": 436448,
+      "sha256": "23c637b9598d17fd114dbd665116c133cd71772d0e898eb9c5394615c3e43e6d"
+    },
+    "Petty Cash Request System - Project Overview.docx": {
+      "bytes": 653345,
+      "sha256": "c14715e362aa2cda2143dc2b582a9458d62b9a5a43e2c9d9b298a8266d937103"
+    },
+    "Petty Cash User Context.html": {
+      "bytes": 1071,
+      "sha256": "83e4a42ee1ab91fb9899ce40c9d961bf1bda8a7f725131b93a7feb0966d246d6"
+    },
+    "pettycash-admin-config.example.js": {
+      "bytes": 694,
+      "sha256": "9c228e9b77251d7956501e2fea998c685230e28046324c85051ae10a6d2c4542"
+    },
+    "pettycash-admin.js": {
+      "bytes": 17927,
+      "sha256": "61fc810e89b659763b86b844c1fcdd139ea33da1dd60426c43acd35d0c353907"
+    },
+    "pettycash-api.js": {
+      "bytes": 51037,
+      "sha256": "6ae5a0ab7aa0bcf05b627f3f321a99f82dfa39ebbf38a42def8bc6f1c2b6d383"
+    },
+    "pettycash-home.css": {
+      "bytes": 8243,
+      "sha256": "7b57293c63cb2c90ab5b3944e3ec363a4bb220da0bea42bac7af52d67662069b"
+    },
+    "pettycash-home.js": {
+      "bytes": 3755,
+      "sha256": "e25b5104e9275fa09a3e3c6a368406a7fc87e5b942d8f313c3e69cbdaa4e07de"
+    },
+    "pettycash-module-config.example.js": {
+      "bytes": 558,
+      "sha256": "c52a3041d6b70dee6731e5f7b82a0db810a2ab65d8aab2b33b5e5d75d110e9a6"
+    },
+    "pettycash-modules.js": {
+      "bytes": 39675,
+      "sha256": "3e648898dcd687d2cbf19aa28d7a7c11bb5269fcf0d854ba6b6297045c263cbf"
+    },
+    "pettycash-receipts.js": {
+      "bytes": 16030,
+      "sha256": "d4d2db4a6e301fc3cf1467ab487c72582992904dbcd5817b48522782bc82d78a"
+    },
+    "pettycash-shell.css": {
+      "bytes": 7973,
+      "sha256": "5640cb78108a1ec0fcfe55a3416099182130658e97dfe47058353cffaf8dbddc"
+    },
+    "pettycash-shell.js": {
+      "bytes": 3274,
+      "sha256": "47c1f23bd21747e630f577971dea26a8bb9c96387f32ba71055bcf3bccbbc51e"
+    },
+    "pettycash-ui.css": {
+      "bytes": 20989,
+      "sha256": "121a1b7f60bd6eaa3a5a97e7465d5fdab291b5ce0c09f4fa8f408b108290f26e"
+    },
+    "PRODUCT_UNITS_SETUP.md": {
+      "bytes": 4828,
+      "sha256": "36bc2c8d671ea52fbafde8e6b03b21d7b0dd734343096829baac6d6b6cd4a841"
+    },
+    "README.md": {
+      "bytes": 20584,
+      "sha256": "9ba5c0be4aab55d1dbeff43ab654e6ca19ed65aed4950fbb26ca505ff74d4ca3"
+    },
+    "RECEIPT_PDF_SETUP.md": {
+      "bytes": 8265,
+      "sha256": "35c413defffdd74d9fce824f0e6c3bc25d7a2b81408c6c1faeffbe3bb2ce2d0c"
+    },
+    "REVIEW_HANDOFF_PLAN.md": {
+      "bytes": 56928,
+      "sha256": "8f16c4e688718adcc37ed27dfb4bb6f64548ea669ef58e61cef4d6168e5d135d"
+    },
+    "SITE_SHELL_HOME_SETUP.md": {
+      "bytes": 10770,
+      "sha256": "8392fc9f730dfbb48bd0002e2e4c68d8b6907ad1a6c20ca7118a71161d84acc9"
+    },
+    "UI_REFRESH_SETUP.md": {
+      "bytes": 8387,
+      "sha256": "39b3dad2e28b17fe09ecc89af1dbb22bbcdcadb0d63fbe7beb5e64725122349c"
+    },
+    "WEBAPI_SITE_SETTINGS.md": {
+      "bytes": 17446,
+      "sha256": "043f122b06f20232ee6d30d8d2a9647698003aad232fb510299e145a39461f4d"
+    },
+    "documentation/README.md": {
+      "bytes": 3937,
+      "sha256": "dd3f2086f0505dcd7dbe6922d2e3103128a091160ff42ea8955c9e20cf037823"
+    },
+    "scripts/build_home_template.cjs": {
+      "bytes": 1368,
+      "sha256": "286f7f18d57e45d336e6a0e922a67f9cf5770e1a5b704186808be6f7965c2220"
+    },
+    "scripts/build_receipt_template.cjs": {
+      "bytes": 3035,
+      "sha256": "2d512343a13c885063113a26c9c41d4c47c7121ce4275fb2a34907c2ed83b84a"
+    },
+    "scripts/build_request_page.cjs": {
+      "bytes": 1013,
+      "sha256": "4a2b4ae99f81224fcd103bb7ff1f13e2dd3a77b01dcb79a299449d832b85bfab"
+    },
+    "scripts/build_shell_template.cjs": {
+      "bytes": 1308,
+      "sha256": "9ae4ce9c0e991950b96ac8236fe43f5b26a99e9b23dd51aaf02fb0395014a750"
+    },
+    "scripts/build_ui_styles.cjs": {
+      "bytes": 1113,
+      "sha256": "98f282f6d006e92efed0084d08f06354a498d46eafe64372eda10b74145918f3"
+    },
+    "scripts/correct_project_docs.py": {
+      "bytes": 13552,
+      "sha256": "6ee6fb612cac3da634f68b75729c677974e54d03ab0ef04688e06bb3177ba135"
+    },
+    "scripts/finalize_project_docs.py": {
+      "bytes": 3777,
+      "sha256": "43a288a42ddd1d375ae3535d376a417b5c78ca21eabc546f81de416ccc4ac947"
+    },
+    "scripts/liquid_fixture.cjs": {
+      "bytes": 7533,
+      "sha256": "c0995f02a09f0b4c88f52924af40764a4716811125e3d2f8a276836e585c996c"
+    },
+    "scripts/render_word_docs.ps1": {
+      "bytes": 3142,
+      "sha256": "3811d571625ede039d1eb6c5d513dec224e6427f107fd17592b2c884df281323"
+    },
+    "scripts/repair_open_finance_page.js": {
+      "bytes": 1742,
+      "sha256": "5d778f0a14fa6894db9976d257bbf93ca9c91a125a604fc7beab22986f7a98d1"
+    },
+    "scripts/shell_fixtures.cjs": {
+      "bytes": 3677,
+      "sha256": "2d9f709339e541283ccd1b49fcff9bfa20d93b5d0e1654cd3d29a4560729d815"
+    },
+    "scripts/verify_admin_page.cjs": {
+      "bytes": 9414,
+      "sha256": "02f6e39f86d576329c56040c1428f6db9360950066738ca20de5cfae9164b906"
+    },
+    "scripts/verify_clarification_page.cjs": {
+      "bytes": 7808,
+      "sha256": "39d8834d75e46a09414fcf67c360ee886c6bd63315fe075b99eb03f8e3dc0277"
+    },
+    "scripts/verify_finance_page.cjs": {
+      "bytes": 19412,
+      "sha256": "bbaaee0d882e786482c1a4f9b8dd9053fb1d4c4881876d1a7217aa4f81543d7c"
+    },
+    "scripts/verify_handover.cjs": {
+      "bytes": 13804,
+      "sha256": "891e4016053903f47f6ef2dacfad24267a2439d9d76cf6bcf33fbd04ab42f76a"
+    },
+    "scripts/verify_item_suggestions.cjs": {
+      "bytes": 14244,
+      "sha256": "60d0537a957115d08b8d82351160b55e48b66df8a3979e155ecb2a34979cfec7"
+    },
+    "scripts/verify_module_pages.cjs": {
+      "bytes": 8505,
+      "sha256": "b54ea2316995da570c64335d91fd46c8603238b3e3f3c4c5a0701a2afe52deeb"
+    },
+    "scripts/verify_receipt_upload.cjs": {
+      "bytes": 12687,
+      "sha256": "94e1c8e35e858f99c927c75ca3a9a4d59ceb18af16a2cfe222a99963fcbf1694"
+    },
+    "scripts/verify_shell_home.cjs": {
+      "bytes": 15989,
+      "sha256": "977997f970f68941e4927aa55857d26e8bf8e45b4972fb91734fd7ec694740d1"
+    },
+    "scripts/verify_ui_pages.cjs": {
+      "bytes": 14496,
+      "sha256": "e4ee3008082b9b360d2f81f227396b342220e0bcd310f53e8ac6675c33c3c868"
+    },
+    "tests/pettycash-admin.test.cjs": {
+      "bytes": 23121,
+      "sha256": "a10896f520660512fb58ff4f1d5d103078615155681cb5a815b18c849d432697"
+    },
+    "tests/pettycash-api.test.cjs": {
+      "bytes": 39560,
+      "sha256": "de6ea8d75632b5741d308ba6204050e41ca2241c44c1374bf6b4a179d4116161"
+    },
+    "tests/pettycash-modules.test.cjs": {
+      "bytes": 31029,
+      "sha256": "a53723c2b71a1f5eddc38487af7638efd6b9c0182dfd10320cfef3c3ff54143d"
+    },
+    "tests/pettycash-receipts.test.cjs": {
+      "bytes": 10702,
+      "sha256": "2bc6568d73be9e3f8146b750438b19766121c31f68709fb3f8067c9ecd3821b2"
+    },
+    "tests/pettycash-shell-home.test.cjs": {
+      "bytes": 4245,
+      "sha256": "bc85af85b408c18dd94e25bd7b775d66459fb46fcc95ef06fa4b4a89ed83442d"
+    },
+    "tests/pettycash-suggestions.test.cjs": {
+      "bytes": 11300,
+      "sha256": "7ad4cdb22e4e18ac24518b9aed96a8883d204471e748630ae3595fb4bb7a80c5"
+    },
+    "vendor/jspdf-4.2.1.umd.min.js": {
+      "bytes": 420165,
+      "sha256": "e6551fcdc32f09d6853b2c5126d18d01d9447e0da618a41a11ebeee0f6c20d54"
+    },
+    "vendor/jspdf-LICENSE.txt": {
+      "bytes": 1142,
+      "sha256": "dc388ec35ff463288cdde3588a36fd4ed12a45deff053243b37309acc9ef583b"
+    },
+    "documentation/corrected/Configuration document.docx": {
+      "bytes": 11659,
+      "sha256": "35681bad0cd30ad8f4cb52b804c835ac10a1f606ba96ddfb981d2e8f5a61d56d"
+    },
+    "documentation/corrected/Configuration document.pdf": {
+      "bytes": 120435,
+      "sha256": "196435c25d6314219c8409332d41b44d7b301de20b4ae8f837b16d48b03bf90b"
+    },
+    "documentation/corrected/Petty Cash App - Database Schema.docx": {
+      "bytes": 13863,
+      "sha256": "4cecce3b2a9fb81b734edf8bbad8e2ec1b710ebc1cea55fb5dec1cb13bf2c48d"
+    },
+    "documentation/corrected/Petty Cash App - Database Schema.pdf": {
+      "bytes": 136922,
+      "sha256": "8128fe11c90fae272b3ba1d8f846718028bad8d3bdd61f6eef869dd4cabf3659"
+    },
+    "documentation/corrected/Petty Cash Request System - Project Overview.docx": {
+      "bytes": 653345,
+      "sha256": "c14715e362aa2cda2143dc2b582a9458d62b9a5a43e2c9d9b298a8266d937103"
+    },
+    "documentation/corrected/Petty Cash Request System - Project Overview.pdf": {
+      "bytes": 89949,
+      "sha256": "2f3133cc5be4c9bf6036f5a495c0876440b1fc352d00e4a5aafe4bc1f57d663a"
+    },
+    "documentation/flow-snapshots/approval-current-review.2026-11-07.json": {
+      "bytes": 4777,
+      "sha256": "84091245d5884a12fa97286cb8da7748ef75e7f921d23266955d746e4c1fca6b"
+    },
+    "documentation/flow-snapshots/approval-trigger.resumption.received-2026-11-09.json": {
+      "bytes": 773,
+      "sha256": "b1c76405193fcffe08e6c1c8e6cdb15c46b2360d95dc453b3e5524d41d5a1c23"
+    },
+    "documentation/flow-snapshots/callback-registrations.received-2026-11-09.json": {
+      "bytes": 2524,
+      "sha256": "7a23e19a06d57637b8b0e4fcc63ed3784806659b1cf78267c00c71e87d7ba99b"
+    },
+    "documentation/flow-snapshots/clarification-answer-response.received-2026-11-09.json": {
+      "bytes": 149,
+      "sha256": "ed0d48e09f87700a125d76c61ed6fdef8aa4f17f1748dbe7d18c6c2a4e89c8e2"
+    },
+    "documentation/flow-snapshots/clarification-answer-trigger.received-2026-11-08.json": {
+      "bytes": 224,
+      "sha256": "91ac65e5d262da8aa4e148c6f858bf7e6d590991c726829b2bdb0f766a053460"
+    },
+    "documentation/flow-snapshots/clarification-answer-trigger.with-inputs.received-2026-11-08.json": {
+      "bytes": 659,
+      "sha256": "272c07648e500abf0b380090580d4e6a9b103235586e70d334d9e06a75defc76"
+    },
+    "documentation/flow-snapshots/clarification-queue-input.received-2026-11-09.json": {
+      "bytes": 284,
+      "sha256": "085ba541436507bcfb89e348268f32e4fd36d65cd3e43051895252050cde953b"
+    },
+    "documentation/flow-snapshots/clarification-queue-output.received-2026-11-09.json": {
+      "bytes": 231,
+      "sha256": "3c23e203dc3015814d29e13d72d341941a7c8038da8072879a17bdd7288a387f"
+    },
+    "documentation/flow-snapshots/manager-approval-switch.received-2026-11-05.json": {
+      "bytes": 16094,
+      "sha256": "2bae6e3426523e8b16ff01162c0b790c2f0a74b5f8f597879a7ea33b001661da"
+    },
+    "documentation/handover/verification.json": {
+      "bytes": 26902,
+      "sha256": "c4630ec2f534ce7f29c71c0d555e640ecb677b36f2eff3eba905f9d8753d2c99"
+    },
+    "documentation/backups/2026-11-01-shell/Footer.original.html": {
+      "bytes": 2077,
+      "sha256": "288aeecefaf3f53232ed9ba54ad3ad62236e7ffdddd6d4dce6c59d59f7a43f48"
+    },
+    "documentation/backups/2026-11-01-shell/Header.original.html": {
+      "bytes": 12076,
+      "sha256": "1c2840d83e289c075d74b978bd62b42c5324ede97f18d82af15eec71d858562f"
+    },
+    "documentation/qa/clarifications/denied-desktop.png": {
+      "bytes": 113243,
+      "sha256": "883bbcb9fbf38aaf459587b47b7234139513c0a98e9fab5e78fe0d02b455b18f"
+    },
+    "documentation/qa/clarifications/denied-mobile.png": {
+      "bytes": 69540,
+      "sha256": "eec40254ae2fbb048931f2d5de668c6f9a3c9b4296503f3bf694e6cbe64ac77e"
+    },
+    "documentation/qa/clarifications/foreign-link-desktop.png": {
+      "bytes": 129797,
+      "sha256": "d059a46b0783b896bb953a89383d73f55fd05cb3458b4a0f2202f7c21cb1b242"
+    },
+    "documentation/qa/clarifications/foreign-link-mobile.png": {
+      "bytes": 84455,
+      "sha256": "2049a21f5c5ce2f56c64da6c67f4094320ab2855a07b3295f3af7e76768f5c55"
+    },
+    "documentation/qa/clarifications/replies-desktop.png": {
+      "bytes": 113902,
+      "sha256": "177d94881a408d04bd5fb5bdcf30bbabdc1750fff12e86c53bc41e8cfb75cf3b"
+    },
+    "documentation/qa/clarifications/replies-mobile.png": {
+      "bytes": 69777,
+      "sha256": "f00fe3de4cc11020b6028d812db312bbefe8697440dce2689880c5056a5929f8"
+    },
+    "documentation/qa/finance/finance-desktop.png": {
+      "bytes": 69885,
+      "sha256": "7b27d1573d82f6a9fec543680058bbb74bd8f4b022209b1ce5f299a8ce47091c"
+    },
+    "documentation/qa/finance/finance-mobile.png": {
+      "bytes": 63678,
+      "sha256": "2099cc53ea8977fd8be5f6d4f020ca6a06dda82f823b69202fafba781dc96df8"
+    },
+    "documentation/qa/pages/accounts-desktop.png": {
+      "bytes": 69839,
+      "sha256": "2f89c9e31c5b21cf7fa039fed29eb4efa3c28360debe9a2a204e6d0966bdbf76"
+    },
+    "documentation/qa/pages/accounts-mobile.png": {
+      "bytes": 61980,
+      "sha256": "05c345f7bd34327947d3d5219fb67984bec7e6e4cdf9224ecb36da938364726b"
+    },
+    "documentation/qa/pages/admin-desktop.png": {
+      "bytes": 45961,
+      "sha256": "21c2797379c2d1ef46aff99250d131059c6b6c916a7036021f4e8bae75555e09"
+    },
+    "documentation/qa/pages/admin-mobile.png": {
+      "bytes": 43674,
+      "sha256": "025e694d06677fecd03357f53df84c876af65c9834b243a9f9a8264733fb78b5"
+    },
+    "documentation/qa/pages/expense-no-manager-desktop.png": {
+      "bytes": 138586,
+      "sha256": "c8b0c5d2708b4f07dd8c05713f403cbf9f1f8faf7d5925d727e36bae78871ed4"
+    },
+    "documentation/qa/pages/expense-no-manager-mobile.png": {
+      "bytes": 97278,
+      "sha256": "ee8ca6ae90afc63d96f08c618be083dffb86a9d1f9e2379a8f83b54096db3f08"
+    },
+    "documentation/qa/pages/expense-profile-denied-desktop.png": {
+      "bytes": 138322,
+      "sha256": "7a782166ef274d3ffe2f7aad370471c14280d60b0f1379bea34632032e84154f"
+    },
+    "documentation/qa/pages/expense-profile-denied-mobile.png": {
+      "bytes": 97171,
+      "sha256": "6749b6be8c55c6d042b0d197d921768272f25235ca253996fc7c28a1069d293f"
+    },
+    "documentation/qa/pages/requests-desktop.png": {
+      "bytes": 101157,
+      "sha256": "4ec1cae156b3ad22d11a188ce947352625ed25288e8451ab6d8e0752192e225f"
+    },
+    "documentation/qa/pages/requests-mobile.png": {
+      "bytes": 58983,
+      "sha256": "87025f35d8622d6dc6a687ff5df8dde53d19f518983c7888650ea8a466adddff"
+    },
+    "documentation/qa/shell/anonymous-1440.png": {
+      "bytes": 43601,
+      "sha256": "019e91d0024a0417eebbe67f16261adfbbe1825615f2af0d153dd421c9cff6b3"
+    },
+    "documentation/qa/shell/anonymous-390.png": {
+      "bytes": 34470,
+      "sha256": "f042238ad1cd7e8a5055caa728624b521ad09af525436bd52d377e20e1dfc0ad"
+    },
+    "documentation/qa/shell/both-1440.png": {
+      "bytes": 100741,
+      "sha256": "b1f1ee8e7a3a7852c33ef2716a0718eed6922615a62dc8fd28bce13ec22c2d6b"
+    },
+    "documentation/qa/shell/both-390.png": {
+      "bytes": 71843,
+      "sha256": "b2b86e2cf80b90f3037e19ae542c9700343e8644a40f95c4fa2dde3779d65b11"
+    },
+    "documentation/qa/shell/employee-1440.png": {
+      "bytes": 97238,
+      "sha256": "95fae6d7f3d05925299115b2b6adf067f5f662ed16a314c69001a9401fb3dae1"
+    },
+    "documentation/qa/shell/employee-390.png": {
+      "bytes": 66440,
+      "sha256": "216ca82c8848bfce1ed5879b32b0b38b7ea27f49b495d34c550f0e9416da067b"
+    },
+    "documentation/qa/shell/mobile-menu.png": {
+      "bytes": 81158,
+      "sha256": "066e6074cd73f90a1cb66dcc1c28e10141811146a67d10eb8fbc2019217af888"
+    },
+    "documentation/qa/suggestions/card-desktop.png": {
+      "bytes": 6102,
+      "sha256": "eee4fd6c6b2ddc932a45df9719763e594282501b0218d6affa48d0f63f4877c4"
+    },
+    "documentation/qa/suggestions/card-mobile.png": {
+      "bytes": 6252,
+      "sha256": "a9ffaeb610a0afe3a74f9923f20ade158c4766d42b9c91b36436104f034198dc"
+    },
+    "documentation/qa/suggestions/units-desktop.png": {
+      "bytes": 25420,
+      "sha256": "aec83032fbdb0f1948068c5303a8a0ffa3fcbda3d5717de6ed73d2e69b126e96"
+    },
+    "documentation/qa/suggestions/units-mobile.png": {
+      "bytes": 63714,
+      "sha256": "3bd5b36c0e0fa48518ddd374f61f80c802f6b2468cd8e614ab9021edd036d8b5"
+    },
+    "documentation/qa/ui/admin-desktop.png": {
+      "bytes": 45326,
+      "sha256": "d8b456c959f9d50936fe232f6dd122509ec3aaa649725d71ccf222d925da1f1f"
+    },
+    "documentation/qa/ui/admin-mobile.png": {
+      "bytes": 42193,
+      "sha256": "9ca20801f3028bbf663872294e5b3c9c597e65fdfb6d7251d5d6adc7dd33b22b"
+    },
+    "documentation/qa/ui/finance-desktop.png": {
+      "bytes": 73233,
+      "sha256": "b6f899e7703065a23d3c8d1fe7b2c1f27c6713e231c751e2b9444598f9f11264"
+    },
+    "documentation/qa/ui/finance-mobile.png": {
+      "bytes": 64053,
+      "sha256": "bef0954593d7a68d40a8b9582a19abbadd14fcc26d07013d8289cbfceb1059b2"
+    },
+    "documentation/qa/ui/request-desktop.png": {
+      "bytes": 146286,
+      "sha256": "2e08997653e4335610061da97de28bac8dbd16b0e3cc4b7551156b6efbf08169"
+    },
+    "documentation/qa/ui/request-mobile.png": {
+      "bytes": 107405,
+      "sha256": "bdfb8284666adf563402dd5d92dda56197c0b926b13c9e7352f33d7e1bce268c"
+    },
+    "documentation/qa/ui/requests-desktop.png": {
+      "bytes": 105102,
+      "sha256": "1513a0451203cd82b48ef604b8de6f4d1419611f20a0c58d28c612d2b671dafb"
+    },
+    "documentation/qa/ui/requests-mobile.png": {
+      "bytes": 65312,
+      "sha256": "bf6cf043acfe49c16bd52c7faa0d82ceed6f29204f6d2e80fc0a6cd66250213c"
+    },
+    "tmp/pdfs/picker-desktop.png": {
+      "bytes": 40376,
+      "sha256": "c39b084469b8e40dbbaa0c09f5ad4ee5ceeb5632da5948a2b9240ebf7836267e"
+    },
+    "tmp/pdfs/picker-mobile.png": {
+      "bytes": 35186,
+      "sha256": "8eb6c612d9a58d1a48a5f4acacb29d1da02d8ffd013cf68faf1298212c8432c3"
+    },
+    "tmp/pdfs/receipt-page-1.png": {
+      "bytes": 48220,
+      "sha256": "494aae45ceb023f948e5ce81a72d21d83272f0148bb90607e96f19d03ea94d81"
+    },
+    "tmp/pdfs/receipt-page-2.png": {
+      "bytes": 54919,
+      "sha256": "896cb8cb8ad4fde3b1200d22666eca1cce08f64415d9de0dba966e9d87981faf"
+    },
+    "tmp/pdfs/receipt-page-3.png": {
+      "bytes": 427361,
+      "sha256": "e4890a96b673f18f34a1bb578c6f1bd0e782640b9fb06c42433fef7fbe27dc83"
+    },
+    "tmp/pdfs/receipt-page-4.png": {
+      "bytes": 85029,
+      "sha256": "5cd17e798ae34e527c9a711e51ebb4876e19a8a70dce9c7e44e2545945d23e16"
+    },
+    "tmp/pdfs/receipt-preview.pdf": {
+      "bytes": 335350,
+      "sha256": "b3e80bf20dde10dbe19cecc1c49ba03014fb23578fab06676504a065b9ba7acc"
+    }
+  },
+  "removed": {
+    "tmp/pdfs/picker-desktop.png": {
+      "bytes": 40376,
+      "sha256": "c39b084469b8e40dbbaa0c09f5ad4ee5ceeb5632da5948a2b9240ebf7836267e",
+      "reason": "Regenerable synthetic receipt QA output under ignored tmp/pdfs; not a user receipt."
+    },
+    "tmp/pdfs/picker-mobile.png": {
+      "bytes": 35186,
+      "sha256": "8eb6c612d9a58d1a48a5f4acacb29d1da02d8ffd013cf68faf1298212c8432c3",
+      "reason": "Regenerable synthetic receipt QA output under ignored tmp/pdfs; not a user receipt."
+    },
+    "tmp/pdfs/receipt-page-1.png": {
+      "bytes": 48220,
+      "sha256": "494aae45ceb023f948e5ce81a72d21d83272f0148bb90607e96f19d03ea94d81",
+      "reason": "Regenerable synthetic receipt QA output under ignored tmp/pdfs; not a user receipt."
+    },
+    "tmp/pdfs/receipt-page-2.png": {
+      "bytes": 54919,
+      "sha256": "896cb8cb8ad4fde3b1200d22666eca1cce08f64415d9de0dba966e9d87981faf",
+      "reason": "Regenerable synthetic receipt QA output under ignored tmp/pdfs; not a user receipt."
+    },
+    "tmp/pdfs/receipt-page-3.png": {
+      "bytes": 427361,
+      "sha256": "e4890a96b673f18f34a1bb578c6f1bd0e782640b9fb06c42433fef7fbe27dc83",
+      "reason": "Regenerable synthetic receipt QA output under ignored tmp/pdfs; not a user receipt."
+    },
+    "tmp/pdfs/receipt-page-4.png": {
+      "bytes": 85029,
+      "sha256": "5cd17e798ae34e527c9a711e51ebb4876e19a8a70dce9c7e44e2545945d23e16",
+      "reason": "Regenerable synthetic receipt QA output under ignored tmp/pdfs; not a user receipt."
+    },
+    "tmp/pdfs/receipt-preview.pdf": {
+      "bytes": 335350,
+      "sha256": "b3e80bf20dde10dbe19cecc1c49ba03014fb23578fab06676504a065b9ba7acc",
+      "reason": "Regenerable synthetic receipt QA output under ignored tmp/pdfs; not a user receipt."
+    }
+  },
+  "tool_reference_updates": [
+    "scripts/build_home_template.cjs",
+    "scripts/build_receipt_template.cjs",
+    "scripts/build_request_page.cjs",
+    "scripts/build_shell_template.cjs",
+    "scripts/build_ui_styles.cjs",
+    "scripts/correct_project_docs.py",
+    "scripts/finalize_project_docs.py",
+    "scripts/shell_fixtures.cjs",
+    "scripts/verify_admin_page.cjs",
+    "scripts/verify_clarification_page.cjs",
+    "scripts/verify_finance_page.cjs",
+    "scripts/verify_handover.cjs",
+    "scripts/verify_item_suggestions.cjs",
+    "scripts/verify_module_pages.cjs",
+    "scripts/verify_receipt_upload.cjs",
+    "scripts/verify_shell_home.cjs",
+    "scripts/verify_ui_pages.cjs",
+    "tests/pettycash-admin.test.cjs",
+    "tests/pettycash-api.test.cjs",
+    "tests/pettycash-modules.test.cjs",
+    "tests/pettycash-receipts.test.cjs",
+    "tests/pettycash-shell-home.test.cjs",
+    "tests/pettycash-suggestions.test.cjs"
+  ],
+  "documentation_reference_updates": [
+    "documentation/archive/README-before-organization.md",
+    "documentation/handover/DOCUMENTATION_AUDIT.md",
+    "documentation/handover/HANDOVER.md",
+    "documentation/handover/HANDOVER_CHECKLIST.md",
+    "documentation/handover/IMPLEMENTATION_LOG.md",
+    "documentation/originals/WORD_DOCUMENT_HISTORY.md",
+    "documentation/plans/DATA_FRESHNESS_PLAN.md",
+    "documentation/platform/DATAVERSE_SETUP.md",
+    "documentation/platform/WEBAPI_SITE_SETTINGS.md",
+    "documentation/archive/admin/ADMIN_CREDENTIAL_SETUP.md",
+    "documentation/archive/admin/ADMIN_USER_SETUP.md",
+    "flows/approval/APPROVAL_FLOW_REVIEW.md",
+    "flows/approval/MANAGER_APPROVAL_FLOW.md",
+    "flows/approval/REVIEW_HANDOFF_PLAN.md",
+    "flows/clarifications/CLARIFICATION_SETUP.md",
+    "flows/finance/FINANCE_FLOWCHART.md",
+    "flows/finance/FINANCE_FLOW_SETUP.md",
+    "flows/finance/FINANCE_SELF_POSTING_SETUP.md",
+    "pages/admin/ADMIN_PROFILE_SETUP.md",
+    "pages/finance/FINANCE_SETUP.md",
+    "pages/my-requests/CLARIFICATION_UI_SETUP.md",
+    "pages/new-request/ITEM_SUGGESTIONS_SETUP.md",
+    "pages/new-request/PRODUCT_UNITS_SETUP.md",
+    "shared/modules/BALANCE_MODULE_SETUP.md",
+    "shared/receipts/RECEIPT_PDF_SETUP.md",
+    "shared/shell/SITE_SHELL_HOME_SETUP.md",
+    "shared/styles/UI_REFRESH_SETUP.md"
+  ],
+  "move_bytes_verified_before_reference_updates": true,
+  "preservation": {
+    "all_existing_files_accounted_for": true,
+    "retained_existing_files": 140,
+    "removed_temporary_files": 7,
+    "removed_temporary_bytes": 1026441,
+    "protected_files_byte_identical": 85,
+    "unexpected_changes": []
+  },
+  "protected_files": [
+    {
+      "old": "Accounts Cash Management.html",
+      "file": "documentation/archive/retired-pages/Accounts Cash Management.html",
+      "sha256": "2ad492d40dac0422d7fad5ee511389e0a441716403c6b5b825193cb7a0ff5d7a"
+    },
+    {
+      "old": "Admin Users.html",
+      "file": "pages/admin/Admin Users.html",
+      "sha256": "3d9abad36449eefc899a0bdd6cc201b3f26788367040b9177792f32aa842c077"
+    },
+    {
+      "old": "approval-flow-current.json",
+      "file": "flows/approval/approval-flow-current.json",
+      "sha256": "fe65e66606ce6e6ea334afb45362f4bd28bc2d04fe523bb1872d87f7b01aec6d"
+    },
+    {
+      "old": "approval-trigger-current.json",
+      "file": "flows/approval/approval-trigger-current.json",
+      "sha256": "015798d74eae98813af4915f95c3009de1e6e14b528ec75fe1b2cbaec78b0d5f"
+    },
+    {
+      "old": "Configuration document.docx",
+      "file": "documentation/originals/Configuration document.docx",
+      "sha256": "35681bad0cd30ad8f4cb52b804c835ac10a1f606ba96ddfb981d2e8f5a61d56d"
+    },
+    {
+      "old": "Finance Cash Management.html",
+      "file": "pages/finance/Finance Cash Management.html",
+      "sha256": "5365f0be49d36476e932902e191afd3e3593657eae9e1d7b1f45db40829fa72d"
+    },
+    {
+      "old": "finance-cash-request.schema.json",
+      "file": "flows/finance/finance-cash-request.schema.json",
+      "sha256": "c7f65fd110e978ebe555913bbd7ce21ebdb732ab2cf44ea7fa5af5db49f16c36"
+    },
+    {
+      "old": "Footer.html",
+      "file": "shared/shell/Footer.html",
+      "sha256": "0dbd9d498522f8f688383d856a7277d6d669eb1f4499246ef51dc0f44b23acc2"
+    },
+    {
+      "old": "Header.html",
+      "file": "shared/shell/Header.html",
+      "sha256": "40ff40986a87c3ffc24ab8d202d31bde673977403f640c15d0cf66193b285fb7"
+    },
+    {
+      "old": "Home.html",
+      "file": "pages/home/Home.html",
+      "sha256": "15a67697c3b697962f2e3f8b04bd619cfc282327404ab7dddb884962241dde1e"
+    },
+    {
+      "old": "My Petty Cash Requests.html",
+      "file": "pages/my-requests/My Petty Cash Requests.html",
+      "sha256": "344a85fadd53ad53ac0f720c0f90db690ba91d83d5cad73a09077da65588b852"
+    },
+    {
+      "old": "New Petty Cash Request.html",
+      "file": "pages/new-request/New Petty Cash Request.html",
+      "sha256": "00c0d51cae19c332714dc8d2fe6998a36e0a8b6b2285b3f2ecf486b720c97ec5"
+    },
+    {
+      "old": "Petty Cash App - Database Schema.docx",
+      "file": "documentation/originals/Petty Cash App - Database Schema.docx",
+      "sha256": "4cecce3b2a9fb81b734edf8bbad8e2ec1b710ebc1cea55fb5dec1cb13bf2c48d"
+    },
+    {
+      "old": "Petty Cash Home.html",
+      "file": "pages/home/Petty Cash Home.html",
+      "sha256": "528aea3666ddd665597a27f14559f590248b88bd768aa494cf2d7c5fe9806c61"
+    },
+    {
+      "old": "Petty Cash Receipts.html",
+      "file": "shared/receipts/Petty Cash Receipts.html",
+      "sha256": "23c637b9598d17fd114dbd665116c133cd71772d0e898eb9c5394615c3e43e6d"
+    },
+    {
+      "old": "Petty Cash Request System - Project Overview.docx",
+      "file": "documentation/originals/Petty Cash Request System - Project Overview.docx",
+      "sha256": "c14715e362aa2cda2143dc2b582a9458d62b9a5a43e2c9d9b298a8266d937103"
+    },
+    {
+      "old": "Petty Cash User Context.html",
+      "file": "shared/identity/Petty Cash User Context.html",
+      "sha256": "83e4a42ee1ab91fb9899ce40c9d961bf1bda8a7f725131b93a7feb0966d246d6"
+    },
+    {
+      "old": "pettycash-admin-config.example.js",
+      "file": "pages/admin/pettycash-admin-config.example.js",
+      "sha256": "9c228e9b77251d7956501e2fea998c685230e28046324c85051ae10a6d2c4542"
+    },
+    {
+      "old": "pettycash-admin.js",
+      "file": "pages/admin/pettycash-admin.js",
+      "sha256": "61fc810e89b659763b86b844c1fcdd139ea33da1dd60426c43acd35d0c353907"
+    },
+    {
+      "old": "pettycash-api.js",
+      "file": "pages/new-request/pettycash-api.js",
+      "sha256": "6ae5a0ab7aa0bcf05b627f3f321a99f82dfa39ebbf38a42def8bc6f1c2b6d383"
+    },
+    {
+      "old": "pettycash-home.css",
+      "file": "pages/home/pettycash-home.css",
+      "sha256": "7b57293c63cb2c90ab5b3944e3ec363a4bb220da0bea42bac7af52d67662069b"
+    },
+    {
+      "old": "pettycash-home.js",
+      "file": "pages/home/pettycash-home.js",
+      "sha256": "e25b5104e9275fa09a3e3c6a368406a7fc87e5b942d8f313c3e69cbdaa4e07de"
+    },
+    {
+      "old": "pettycash-module-config.example.js",
+      "file": "shared/modules/pettycash-module-config.example.js",
+      "sha256": "c52a3041d6b70dee6731e5f7b82a0db810a2ab65d8aab2b33b5e5d75d110e9a6"
+    },
+    {
+      "old": "pettycash-modules.js",
+      "file": "shared/modules/pettycash-modules.js",
+      "sha256": "3e648898dcd687d2cbf19aa28d7a7c11bb5269fcf0d854ba6b6297045c263cbf"
+    },
+    {
+      "old": "pettycash-receipts.js",
+      "file": "shared/receipts/pettycash-receipts.js",
+      "sha256": "d4d2db4a6e301fc3cf1467ab487c72582992904dbcd5817b48522782bc82d78a"
+    },
+    {
+      "old": "pettycash-shell.css",
+      "file": "shared/shell/pettycash-shell.css",
+      "sha256": "5640cb78108a1ec0fcfe55a3416099182130658e97dfe47058353cffaf8dbddc"
+    },
+    {
+      "old": "pettycash-shell.js",
+      "file": "shared/shell/pettycash-shell.js",
+      "sha256": "47c1f23bd21747e630f577971dea26a8bb9c96387f32ba71055bcf3bccbbc51e"
+    },
+    {
+      "old": "pettycash-ui.css",
+      "file": "shared/styles/pettycash-ui.css",
+      "sha256": "121a1b7f60bd6eaa3a5a97e7465d5fdab291b5ce0c09f4fa8f408b108290f26e"
+    },
+    {
+      "old": "scripts/repair_open_finance_page.js",
+      "file": "documentation/archive/finance-repair/repair_open_finance_page.js",
+      "sha256": "5d778f0a14fa6894db9976d257bbf93ca9c91a125a604fc7beab22986f7a98d1"
+    },
+    {
+      "old": "vendor/jspdf-4.2.1.umd.min.js",
+      "file": "vendor/jspdf-4.2.1.umd.min.js",
+      "sha256": "e6551fcdc32f09d6853b2c5126d18d01d9447e0da618a41a11ebeee0f6c20d54"
+    },
+    {
+      "old": "vendor/jspdf-LICENSE.txt",
+      "file": "vendor/jspdf-LICENSE.txt",
+      "sha256": "dc388ec35ff463288cdde3588a36fd4ed12a45deff053243b37309acc9ef583b"
+    },
+    {
+      "old": "documentation/corrected/Configuration document.docx",
+      "file": "documentation/corrected/Configuration document.docx",
+      "sha256": "35681bad0cd30ad8f4cb52b804c835ac10a1f606ba96ddfb981d2e8f5a61d56d"
+    },
+    {
+      "old": "documentation/corrected/Configuration document.pdf",
+      "file": "documentation/corrected/Configuration document.pdf",
+      "sha256": "196435c25d6314219c8409332d41b44d7b301de20b4ae8f837b16d48b03bf90b"
+    },
+    {
+      "old": "documentation/corrected/Petty Cash App - Database Schema.docx",
+      "file": "documentation/corrected/Petty Cash App - Database Schema.docx",
+      "sha256": "4cecce3b2a9fb81b734edf8bbad8e2ec1b710ebc1cea55fb5dec1cb13bf2c48d"
+    },
+    {
+      "old": "documentation/corrected/Petty Cash App - Database Schema.pdf",
+      "file": "documentation/corrected/Petty Cash App - Database Schema.pdf",
+      "sha256": "8128fe11c90fae272b3ba1d8f846718028bad8d3bdd61f6eef869dd4cabf3659"
+    },
+    {
+      "old": "documentation/corrected/Petty Cash Request System - Project Overview.docx",
+      "file": "documentation/corrected/Petty Cash Request System - Project Overview.docx",
+      "sha256": "c14715e362aa2cda2143dc2b582a9458d62b9a5a43e2c9d9b298a8266d937103"
+    },
+    {
+      "old": "documentation/corrected/Petty Cash Request System - Project Overview.pdf",
+      "file": "documentation/corrected/Petty Cash Request System - Project Overview.pdf",
+      "sha256": "2f3133cc5be4c9bf6036f5a495c0876440b1fc352d00e4a5aafe4bc1f57d663a"
+    },
+    {
+      "old": "documentation/flow-snapshots/approval-current-review.2026-11-07.json",
+      "file": "flows/approval/snapshots/approval-current-review.2026-11-07.json",
+      "sha256": "84091245d5884a12fa97286cb8da7748ef75e7f921d23266955d746e4c1fca6b"
+    },
+    {
+      "old": "documentation/flow-snapshots/approval-trigger.resumption.received-2026-11-09.json",
+      "file": "flows/approval/snapshots/approval-trigger.resumption.received-2026-11-09.json",
+      "sha256": "b1c76405193fcffe08e6c1c8e6cdb15c46b2360d95dc453b3e5524d41d5a1c23"
+    },
+    {
+      "old": "documentation/flow-snapshots/callback-registrations.received-2026-11-09.json",
+      "file": "flows/diagnostics/snapshots/callback-registrations.received-2026-11-09.json",
+      "sha256": "7a23e19a06d57637b8b0e4fcc63ed3784806659b1cf78267c00c71e87d7ba99b"
+    },
+    {
+      "old": "documentation/flow-snapshots/clarification-answer-response.received-2026-11-09.json",
+      "file": "flows/clarifications/snapshots/clarification-answer-response.received-2026-11-09.json",
+      "sha256": "ed0d48e09f87700a125d76c61ed6fdef8aa4f17f1748dbe7d18c6c2a4e89c8e2"
+    },
+    {
+      "old": "documentation/flow-snapshots/clarification-answer-trigger.received-2026-11-08.json",
+      "file": "flows/clarifications/snapshots/clarification-answer-trigger.received-2026-11-08.json",
+      "sha256": "91ac65e5d262da8aa4e148c6f858bf7e6d590991c726829b2bdb0f766a053460"
+    },
+    {
+      "old": "documentation/flow-snapshots/clarification-answer-trigger.with-inputs.received-2026-11-08.json",
+      "file": "flows/clarifications/snapshots/clarification-answer-trigger.with-inputs.received-2026-11-08.json",
+      "sha256": "272c07648e500abf0b380090580d4e6a9b103235586e70d334d9e06a75defc76"
+    },
+    {
+      "old": "documentation/flow-snapshots/clarification-queue-input.received-2026-11-09.json",
+      "file": "flows/clarifications/snapshots/clarification-queue-input.received-2026-11-09.json",
+      "sha256": "085ba541436507bcfb89e348268f32e4fd36d65cd3e43051895252050cde953b"
+    },
+    {
+      "old": "documentation/flow-snapshots/clarification-queue-output.received-2026-11-09.json",
+      "file": "flows/clarifications/snapshots/clarification-queue-output.received-2026-11-09.json",
+      "sha256": "3c23e203dc3015814d29e13d72d341941a7c8038da8072879a17bdd7288a387f"
+    },
+    {
+      "old": "documentation/flow-snapshots/manager-approval-switch.received-2026-11-05.json",
+      "file": "flows/approval/snapshots/manager-approval-switch.received-2026-11-05.json",
+      "sha256": "2bae6e3426523e8b16ff01162c0b790c2f0a74b5f8f597879a7ea33b001661da"
+    },
+    {
+      "old": "documentation/backups/2026-11-01-shell/Footer.original.html",
+      "file": "documentation/backups/2026-11-01-shell/Footer.original.html",
+      "sha256": "288aeecefaf3f53232ed9ba54ad3ad62236e7ffdddd6d4dce6c59d59f7a43f48"
+    },
+    {
+      "old": "documentation/backups/2026-11-01-shell/Header.original.html",
+      "file": "documentation/backups/2026-11-01-shell/Header.original.html",
+      "sha256": "1c2840d83e289c075d74b978bd62b42c5324ede97f18d82af15eec71d858562f"
+    },
+    {
+      "old": "documentation/qa/clarifications/denied-desktop.png",
+      "file": "documentation/qa/clarifications/denied-desktop.png",
+      "sha256": "883bbcb9fbf38aaf459587b47b7234139513c0a98e9fab5e78fe0d02b455b18f"
+    },
+    {
+      "old": "documentation/qa/clarifications/denied-mobile.png",
+      "file": "documentation/qa/clarifications/denied-mobile.png",
+      "sha256": "eec40254ae2fbb048931f2d5de668c6f9a3c9b4296503f3bf694e6cbe64ac77e"
+    },
+    {
+      "old": "documentation/qa/clarifications/foreign-link-desktop.png",
+      "file": "documentation/qa/clarifications/foreign-link-desktop.png",
+      "sha256": "d059a46b0783b896bb953a89383d73f55fd05cb3458b4a0f2202f7c21cb1b242"
+    },
+    {
+      "old": "documentation/qa/clarifications/foreign-link-mobile.png",
+      "file": "documentation/qa/clarifications/foreign-link-mobile.png",
+      "sha256": "2049a21f5c5ce2f56c64da6c67f4094320ab2855a07b3295f3af7e76768f5c55"
+    },
+    {
+      "old": "documentation/qa/clarifications/replies-desktop.png",
+      "file": "documentation/qa/clarifications/replies-desktop.png",
+      "sha256": "177d94881a408d04bd5fb5bdcf30bbabdc1750fff12e86c53bc41e8cfb75cf3b"
+    },
+    {
+      "old": "documentation/qa/clarifications/replies-mobile.png",
+      "file": "documentation/qa/clarifications/replies-mobile.png",
+      "sha256": "f00fe3de4cc11020b6028d812db312bbefe8697440dce2689880c5056a5929f8"
+    },
+    {
+      "old": "documentation/qa/finance/finance-desktop.png",
+      "file": "documentation/qa/finance/finance-desktop.png",
+      "sha256": "7b27d1573d82f6a9fec543680058bbb74bd8f4b022209b1ce5f299a8ce47091c"
+    },
+    {
+      "old": "documentation/qa/finance/finance-mobile.png",
+      "file": "documentation/qa/finance/finance-mobile.png",
+      "sha256": "2099cc53ea8977fd8be5f6d4f020ca6a06dda82f823b69202fafba781dc96df8"
+    },
+    {
+      "old": "documentation/qa/pages/accounts-desktop.png",
+      "file": "documentation/qa/pages/accounts-desktop.png",
+      "sha256": "2f89c9e31c5b21cf7fa039fed29eb4efa3c28360debe9a2a204e6d0966bdbf76"
+    },
+    {
+      "old": "documentation/qa/pages/accounts-mobile.png",
+      "file": "documentation/qa/pages/accounts-mobile.png",
+      "sha256": "05c345f7bd34327947d3d5219fb67984bec7e6e4cdf9224ecb36da938364726b"
+    },
+    {
+      "old": "documentation/qa/pages/admin-desktop.png",
+      "file": "documentation/qa/pages/admin-desktop.png",
+      "sha256": "21c2797379c2d1ef46aff99250d131059c6b6c916a7036021f4e8bae75555e09"
+    },
+    {
+      "old": "documentation/qa/pages/admin-mobile.png",
+      "file": "documentation/qa/pages/admin-mobile.png",
+      "sha256": "025e694d06677fecd03357f53df84c876af65c9834b243a9f9a8264733fb78b5"
+    },
+    {
+      "old": "documentation/qa/pages/expense-no-manager-desktop.png",
+      "file": "documentation/qa/pages/expense-no-manager-desktop.png",
+      "sha256": "c8b0c5d2708b4f07dd8c05713f403cbf9f1f8faf7d5925d727e36bae78871ed4"
+    },
+    {
+      "old": "documentation/qa/pages/expense-no-manager-mobile.png",
+      "file": "documentation/qa/pages/expense-no-manager-mobile.png",
+      "sha256": "ee8ca6ae90afc63d96f08c618be083dffb86a9d1f9e2379a8f83b54096db3f08"
+    },
+    {
+      "old": "documentation/qa/pages/expense-profile-denied-desktop.png",
+      "file": "documentation/qa/pages/expense-profile-denied-desktop.png",
+      "sha256": "7a782166ef274d3ffe2f7aad370471c14280d60b0f1379bea34632032e84154f"
+    },
+    {
+      "old": "documentation/qa/pages/expense-profile-denied-mobile.png",
+      "file": "documentation/qa/pages/expense-profile-denied-mobile.png",
+      "sha256": "6749b6be8c55c6d042b0d197d921768272f25235ca253996fc7c28a1069d293f"
+    },
+    {
+      "old": "documentation/qa/pages/requests-desktop.png",
+      "file": "documentation/qa/pages/requests-desktop.png",
+      "sha256": "4ec1cae156b3ad22d11a188ce947352625ed25288e8451ab6d8e0752192e225f"
+    },
+    {
+      "old": "documentation/qa/pages/requests-mobile.png",
+      "file": "documentation/qa/pages/requests-mobile.png",
+      "sha256": "87025f35d8622d6dc6a687ff5df8dde53d19f518983c7888650ea8a466adddff"
+    },
+    {
+      "old": "documentation/qa/shell/anonymous-1440.png",
+      "file": "documentation/qa/shell/anonymous-1440.png",
+      "sha256": "019e91d0024a0417eebbe67f16261adfbbe1825615f2af0d153dd421c9cff6b3"
+    },
+    {
+      "old": "documentation/qa/shell/anonymous-390.png",
+      "file": "documentation/qa/shell/anonymous-390.png",
+      "sha256": "f042238ad1cd7e8a5055caa728624b521ad09af525436bd52d377e20e1dfc0ad"
+    },
+    {
+      "old": "documentation/qa/shell/both-1440.png",
+      "file": "documentation/qa/shell/both-1440.png",
+      "sha256": "b1f1ee8e7a3a7852c33ef2716a0718eed6922615a62dc8fd28bce13ec22c2d6b"
+    },
+    {
+      "old": "documentation/qa/shell/both-390.png",
+      "file": "documentation/qa/shell/both-390.png",
+      "sha256": "b2b86e2cf80b90f3037e19ae542c9700343e8644a40f95c4fa2dde3779d65b11"
+    },
+    {
+      "old": "documentation/qa/shell/employee-1440.png",
+      "file": "documentation/qa/shell/employee-1440.png",
+      "sha256": "95fae6d7f3d05925299115b2b6adf067f5f662ed16a314c69001a9401fb3dae1"
+    },
+    {
+      "old": "documentation/qa/shell/employee-390.png",
+      "file": "documentation/qa/shell/employee-390.png",
+      "sha256": "216ca82c8848bfce1ed5879b32b0b38b7ea27f49b495d34c550f0e9416da067b"
+    },
+    {
+      "old": "documentation/qa/shell/mobile-menu.png",
+      "file": "documentation/qa/shell/mobile-menu.png",
+      "sha256": "066e6074cd73f90a1cb66dcc1c28e10141811146a67d10eb8fbc2019217af888"
+    },
+    {
+      "old": "documentation/qa/suggestions/card-desktop.png",
+      "file": "documentation/qa/suggestions/card-desktop.png",
+      "sha256": "eee4fd6c6b2ddc932a45df9719763e594282501b0218d6affa48d0f63f4877c4"
+    },
+    {
+      "old": "documentation/qa/suggestions/card-mobile.png",
+      "file": "documentation/qa/suggestions/card-mobile.png",
+      "sha256": "a9ffaeb610a0afe3a74f9923f20ade158c4766d42b9c91b36436104f034198dc"
+    },
+    {
+      "old": "documentation/qa/suggestions/units-desktop.png",
+      "file": "documentation/qa/suggestions/units-desktop.png",
+      "sha256": "aec83032fbdb0f1948068c5303a8a0ffa3fcbda3d5717de6ed73d2e69b126e96"
+    },
+    {
+      "old": "documentation/qa/suggestions/units-mobile.png",
+      "file": "documentation/qa/suggestions/units-mobile.png",
+      "sha256": "3bd5b36c0e0fa48518ddd374f61f80c802f6b2468cd8e614ab9021edd036d8b5"
+    },
+    {
+      "old": "documentation/qa/ui/admin-desktop.png",
+      "file": "documentation/qa/ui/admin-desktop.png",
+      "sha256": "d8b456c959f9d50936fe232f6dd122509ec3aaa649725d71ccf222d925da1f1f"
+    },
+    {
+      "old": "documentation/qa/ui/admin-mobile.png",
+      "file": "documentation/qa/ui/admin-mobile.png",
+      "sha256": "9ca20801f3028bbf663872294e5b3c9c597e65fdfb6d7251d5d6adc7dd33b22b"
+    },
+    {
+      "old": "documentation/qa/ui/finance-desktop.png",
+      "file": "documentation/qa/ui/finance-desktop.png",
+      "sha256": "b6f899e7703065a23d3c8d1fe7b2c1f27c6713e231c751e2b9444598f9f11264"
+    },
+    {
+      "old": "documentation/qa/ui/finance-mobile.png",
+      "file": "documentation/qa/ui/finance-mobile.png",
+      "sha256": "bef0954593d7a68d40a8b9582a19abbadd14fcc26d07013d8289cbfceb1059b2"
+    },
+    {
+      "old": "documentation/qa/ui/request-desktop.png",
+      "file": "documentation/qa/ui/request-desktop.png",
+      "sha256": "2e08997653e4335610061da97de28bac8dbd16b0e3cc4b7551156b6efbf08169"
+    },
+    {
+      "old": "documentation/qa/ui/request-mobile.png",
+      "file": "documentation/qa/ui/request-mobile.png",
+      "sha256": "bdfb8284666adf563402dd5d92dda56197c0b926b13c9e7352f33d7e1bce268c"
+    },
+    {
+      "old": "documentation/qa/ui/requests-desktop.png",
+      "file": "documentation/qa/ui/requests-desktop.png",
+      "sha256": "1513a0451203cd82b48ef604b8de6f4d1419611f20a0c58d28c612d2b671dafb"
+    },
+    {
+      "old": "documentation/qa/ui/requests-mobile.png",
+      "file": "documentation/qa/ui/requests-mobile.png",
+      "sha256": "bf6cf043acfe49c16bd52c7faa0d82ceed6f29204f6d2e80fc0a6cd66250213c"
+    }
+  ],
+  "reference_or_documentation_changes": [
+    {
+      "old": "ADMIN_CREDENTIAL_SETUP.md",
+      "file": "documentation/archive/admin/ADMIN_CREDENTIAL_SETUP.md",
+      "before_sha256": "cf6f03d5aefc1ed5b253c4687f78bce98081eaa9a1e2ae5113f3a27bbc25994c",
+      "after_sha256": "20f979c4fe07f57ab7f9814d0a55722db9123b43f0552c81e78344379d4c7240"
+    },
+    {
+      "old": "ADMIN_PROFILE_SETUP.md",
+      "file": "pages/admin/ADMIN_PROFILE_SETUP.md",
+      "before_sha256": "25812ed36d7f1a8d58dde5d964c60a0ccac93cccaef87100cd859de98d7143d8",
+      "after_sha256": "bf437d74deb4f8b00d0fe64bffcc5c0fe9badb0989c87e1bee63b55764ce3955"
+    },
+    {
+      "old": "ADMIN_USER_SETUP.md",
+      "file": "documentation/archive/admin/ADMIN_USER_SETUP.md",
+      "before_sha256": "57f3513915af7a14c95fa6569760e247a2baaee42dfe32db4b018a28050a7a72",
+      "after_sha256": "fdb087c185f0e34871304d98932987c68ab5adab96512d057962100e74d576ca"
+    },
+    {
+      "old": "APPROVAL_FLOW_REVIEW.md",
+      "file": "flows/approval/APPROVAL_FLOW_REVIEW.md",
+      "before_sha256": "9b0f92d887f55a72b4af252e988f1a34ce894bbe77dafc57878ec91f1db58b07",
+      "after_sha256": "1baf6bfdb584803188445b10e2237a9edc642e12712544d3d60aeb8bcdd046b2"
+    },
+    {
+      "old": "BALANCE_MODULE_SETUP.md",
+      "file": "shared/modules/BALANCE_MODULE_SETUP.md",
+      "before_sha256": "b14972e8b43cabacdef19f7f605d29f781d4571e1074e2027ac4a5fa23561d2c",
+      "after_sha256": "b4aec5e9a4e8dd3da7ef73d6508510ffb6b715fd4a941e4dc431a13527c5f5ea"
+    },
+    {
+      "old": "CLARIFICATION_SETUP.md",
+      "file": "flows/clarifications/CLARIFICATION_SETUP.md",
+      "before_sha256": "daf6d4138dbb2f1ab3daa3c8f94ca595c1ca6ccffea0704fe28937b2b244d2ce",
+      "after_sha256": "6f0532a116be04d803328511d6730b49cff7326b59c5e8b2330a4aa4abbbe88d"
+    },
+    {
+      "old": "CLARIFICATION_UI_SETUP.md",
+      "file": "pages/my-requests/CLARIFICATION_UI_SETUP.md",
+      "before_sha256": "81abeca6042bbeb3478faa03c77042d3a39e9de092486c1c0e80a723120d92f7",
+      "after_sha256": "a505cc6d4180755cb0d4b7120eac6797dad531df46d13ddd837471fcc4b27675"
+    },
+    {
+      "old": "DATAVERSE_SETUP.md",
+      "file": "documentation/platform/DATAVERSE_SETUP.md",
+      "before_sha256": "4a6425d7f6741f928093c3c0592d69a9bcd61c5f5ca5e1df77f08c748d7d77e5",
+      "after_sha256": "850454f21654dc20512c0495c03720755a37253c1e6860b2c80419e60dc0513d"
+    },
+    {
+      "old": "DATA_FRESHNESS_PLAN.md",
+      "file": "documentation/plans/DATA_FRESHNESS_PLAN.md",
+      "before_sha256": "64559e2908c39f3be0bb447fd84b4cf8c4cd2c0548316e026b7bbc3028763b04",
+      "after_sha256": "9a6e774af9a247556fbc0f58e5b56c8aacbd4fea0daf247e6fa8ab0e43a06852"
+    },
+    {
+      "old": "DOCUMENTATION_AUDIT.md",
+      "file": "documentation/handover/DOCUMENTATION_AUDIT.md",
+      "before_sha256": "87ba0800cd14e865e16e1aa9a90235da8e568876a673b411b44174c1a1e2c169",
+      "after_sha256": "ff63f10c3911b0355086f90cd7de02bf52d3da0d54c4d6a41f83da27aa7b6854"
+    },
+    {
+      "old": "FINANCE_FLOWCHART.md",
+      "file": "flows/finance/FINANCE_FLOWCHART.md",
+      "before_sha256": "e2e976519f92f20af0470e2b87f8b75a49838abb034dce09d15910b8b88226b4",
+      "after_sha256": "740f68da1a0b2cf27d976f466074f806876d3d657e0f8375e43a93ff9b878f3d"
+    },
+    {
+      "old": "FINANCE_FLOW_SETUP.md",
+      "file": "flows/finance/FINANCE_FLOW_SETUP.md",
+      "before_sha256": "bd775b0499ffbc635ddc6c336e044b20d3014ab5115b9438f427b8c7962500c6",
+      "after_sha256": "a9292361b5642787f441210f8bd842e5857cdafb8fac19f9a8a84012a778cde8"
+    },
+    {
+      "old": "FINANCE_SELF_POSTING_SETUP.md",
+      "file": "flows/finance/FINANCE_SELF_POSTING_SETUP.md",
+      "before_sha256": "31984ae78c41b2611883c489d85596c74c0fe6fd6b8174ae8d80bc04f093878b",
+      "after_sha256": "d8bd4a90d0f71f9bb1b881173e4c220d5bb9cd300f3ae79b8d3dcfd748bb2f08"
+    },
+    {
+      "old": "FINANCE_SETUP.md",
+      "file": "pages/finance/FINANCE_SETUP.md",
+      "before_sha256": "f613793906be6d8e79223c4e12245b2f3e54fb8da3ef2eece54165aea6574a82",
+      "after_sha256": "bf66cc6da12bfb978b19d26412265d4aa5e6e85e96dabe948789e161315f5dc9"
+    },
+    {
+      "old": "HANDOVER.md",
+      "file": "documentation/handover/HANDOVER.md",
+      "before_sha256": "c15131640a7c666edca01d30fb4761c3552aef569ede37e4f0cd6037df7fab33",
+      "after_sha256": "fab13b01f6103c08f93a428feb818231a23af8b15d4de87dd1c3f5fd239e16c6"
+    },
+    {
+      "old": "HANDOVER_CHECKLIST.md",
+      "file": "documentation/handover/HANDOVER_CHECKLIST.md",
+      "before_sha256": "dcd45e67e522536f04f1a3a71489db2a8f0f5a3b339c2921d19c8e301af6caea",
+      "after_sha256": "6eab157e29d3cc7a01344c309dd5d7b99126b5a24013a2a47f919375c9550bd7"
+    },
+    {
+      "old": "IMPLEMENTATION_LOG.md",
+      "file": "documentation/handover/IMPLEMENTATION_LOG.md",
+      "before_sha256": "607e4d18774a4135cb0655dc3bf4cac2d91edbd588629db0e5d390761219c0ad",
+      "after_sha256": "1e480a50a06d483e3f98bc4479de033f48f45c7c5a881441724437c33fe14cf4"
+    },
+    {
+      "old": "ITEM_SUGGESTIONS_SETUP.md",
+      "file": "pages/new-request/ITEM_SUGGESTIONS_SETUP.md",
+      "before_sha256": "0bad34c8be5ff8c08986e8c2157af916f68be2cbdce97c9dcaeff74944c2cc1a",
+      "after_sha256": "b727eb0edec8827f27d1f61e7eb094a816fcf94d1b16781e323b1a213cecbfbb"
+    },
+    {
+      "old": "MANAGER_APPROVAL_FLOW.md",
+      "file": "flows/approval/MANAGER_APPROVAL_FLOW.md",
+      "before_sha256": "dbb6fc56258b6533b22340b145b325c7d92f6c8d8e3520525cad1b378d385058",
+      "after_sha256": "44b5aaa1bd75a4129e8fed8a4b235502197993c3e6994bc0fb649c56fb18ca04"
+    },
+    {
+      "old": "PRODUCT_UNITS_SETUP.md",
+      "file": "pages/new-request/PRODUCT_UNITS_SETUP.md",
+      "before_sha256": "36bc2c8d671ea52fbafde8e6b03b21d7b0dd734343096829baac6d6b6cd4a841",
+      "after_sha256": "e2071c558b336ff727c4f47143a43994012a5565412d83b45f534c9be2dd2a4a"
+    },
+    {
+      "old": "README.md",
+      "file": "documentation/archive/README-before-organization.md",
+      "before_sha256": "9ba5c0be4aab55d1dbeff43ab654e6ca19ed65aed4950fbb26ca505ff74d4ca3",
+      "after_sha256": "8d9d0423a29100f73d5324c95533ef441bca2bcefc6514031cc5211b9ac0777f"
+    },
+    {
+      "old": "RECEIPT_PDF_SETUP.md",
+      "file": "shared/receipts/RECEIPT_PDF_SETUP.md",
+      "before_sha256": "35c413defffdd74d9fce824f0e6c3bc25d7a2b81408c6c1faeffbe3bb2ce2d0c",
+      "after_sha256": "41b4b6bd2c4482a2af2b1a6a76ee7b34a55ed74c99192b31e3fd0b6c974ff993"
+    },
+    {
+      "old": "REVIEW_HANDOFF_PLAN.md",
+      "file": "flows/approval/REVIEW_HANDOFF_PLAN.md",
+      "before_sha256": "8f16c4e688718adcc37ed27dfb4bb6f64548ea669ef58e61cef4d6168e5d135d",
+      "after_sha256": "a982658f27699eecc1000c8940563514d305ec1825c2aa2397963fa41e33f89b"
+    },
+    {
+      "old": "SITE_SHELL_HOME_SETUP.md",
+      "file": "shared/shell/SITE_SHELL_HOME_SETUP.md",
+      "before_sha256": "8392fc9f730dfbb48bd0002e2e4c68d8b6907ad1a6c20ca7118a71161d84acc9",
+      "after_sha256": "a4b74680f766519f7a4644656f3a8eaaae8d54d59aeaf6ff7bb6e30ead5ed501"
+    },
+    {
+      "old": "UI_REFRESH_SETUP.md",
+      "file": "shared/styles/UI_REFRESH_SETUP.md",
+      "before_sha256": "39b3dad2e28b17fe09ecc89af1dbb22bbcdcadb0d63fbe7beb5e64725122349c",
+      "after_sha256": "f222c1b3de34ad8edff2f48e3fc116cfcacb584d9d4c0efd2da2f3e5b1a63715"
+    },
+    {
+      "old": "WEBAPI_SITE_SETTINGS.md",
+      "file": "documentation/platform/WEBAPI_SITE_SETTINGS.md",
+      "before_sha256": "043f122b06f20232ee6d30d8d2a9647698003aad232fb510299e145a39461f4d",
+      "after_sha256": "3d3421528f54e15b1a6fa0d0576459de41c984f089c2d71abbbf8256b045b075"
+    },
+    {
+      "old": "documentation/README.md",
+      "file": "documentation/originals/WORD_DOCUMENT_HISTORY.md",
+      "before_sha256": "dd3f2086f0505dcd7dbe6922d2e3103128a091160ff42ea8955c9e20cf037823",
+      "after_sha256": "e6b26c30d1de149459736b903f3cd1346400721c0f1fb3bf20f9f5593b46b415"
+    },
+    {
+      "old": "scripts/build_home_template.cjs",
+      "file": "scripts/build_home_template.cjs",
+      "before_sha256": "286f7f18d57e45d336e6a0e922a67f9cf5770e1a5b704186808be6f7965c2220",
+      "after_sha256": "373cb406323f208a7c254c4901efa5093dddab37957eb2b7958b77c9e9f85e27"
+    },
+    {
+      "old": "scripts/build_receipt_template.cjs",
+      "file": "scripts/build_receipt_template.cjs",
+      "before_sha256": "2d512343a13c885063113a26c9c41d4c47c7121ce4275fb2a34907c2ed83b84a",
+      "after_sha256": "c506c31e7bad95659a433cd079ccb462a164117fc0580a6d39e80b1668e35cd3"
+    },
+    {
+      "old": "scripts/build_request_page.cjs",
+      "file": "scripts/build_request_page.cjs",
+      "before_sha256": "4a2b4ae99f81224fcd103bb7ff1f13e2dd3a77b01dcb79a299449d832b85bfab",
+      "after_sha256": "647d2f711fd2e5cd1d70b4e8d8ca0f9f47db0ec8301954a61d6a22bce592ce52"
+    },
+    {
+      "old": "scripts/build_shell_template.cjs",
+      "file": "scripts/build_shell_template.cjs",
+      "before_sha256": "9ae4ce9c0e991950b96ac8236fe43f5b26a99e9b23dd51aaf02fb0395014a750",
+      "after_sha256": "5ff03a6e567bb1b1812ef1535f47981e4519c70e93a310c7313237432d41f76a"
+    },
+    {
+      "old": "scripts/build_ui_styles.cjs",
+      "file": "scripts/build_ui_styles.cjs",
+      "before_sha256": "98f282f6d006e92efed0084d08f06354a498d46eafe64372eda10b74145918f3",
+      "after_sha256": "c8caf5fe23a712ddafcd4b4b56ff67c5e241b815b47d7180b7b7ae2ba6776f1a"
+    },
+    {
+      "old": "scripts/correct_project_docs.py",
+      "file": "scripts/correct_project_docs.py",
+      "before_sha256": "6ee6fb612cac3da634f68b75729c677974e54d03ab0ef04688e06bb3177ba135",
+      "after_sha256": "6eb58b04c2f2afa083b24de5a872ef26119558b3d8bb3e29286dc0be65741a3b"
+    },
+    {
+      "old": "scripts/finalize_project_docs.py",
+      "file": "scripts/finalize_project_docs.py",
+      "before_sha256": "43a288a42ddd1d375ae3535d376a417b5c78ca21eabc546f81de416ccc4ac947",
+      "after_sha256": "bbd93c7ed70da26919bb43a38805ca4785daf5ed36d4b13fd1c6ea2f7eac2d2f"
+    },
+    {
+      "old": "scripts/shell_fixtures.cjs",
+      "file": "scripts/shell_fixtures.cjs",
+      "before_sha256": "2d9f709339e541283ccd1b49fcff9bfa20d93b5d0e1654cd3d29a4560729d815",
+      "after_sha256": "b7cb8cd68808dacbc56117a57187e6d8a28d3d462b3c7ee910c842edac585653"
+    },
+    {
+      "old": "scripts/verify_admin_page.cjs",
+      "file": "scripts/verify_admin_page.cjs",
+      "before_sha256": "02f6e39f86d576329c56040c1428f6db9360950066738ca20de5cfae9164b906",
+      "after_sha256": "81fc65e9544dcefcefa4f7c58e7cc64c6b42b91108cf64062d9e4481c6a6da2d"
+    },
+    {
+      "old": "scripts/verify_clarification_page.cjs",
+      "file": "scripts/verify_clarification_page.cjs",
+      "before_sha256": "39d8834d75e46a09414fcf67c360ee886c6bd63315fe075b99eb03f8e3dc0277",
+      "after_sha256": "f4a005d4d05a3f304eb6438a02f77aea5f1f0e3748e324ddebe71bfa8c949e21"
+    },
+    {
+      "old": "scripts/verify_finance_page.cjs",
+      "file": "scripts/verify_finance_page.cjs",
+      "before_sha256": "bbaaee0d882e786482c1a4f9b8dd9053fb1d4c4881876d1a7217aa4f81543d7c",
+      "after_sha256": "1f63b542be4d39f64383d53f7562f2354e01ecef2285c73a35ed40ecd8b0f6bf"
+    },
+    {
+      "old": "scripts/verify_handover.cjs",
+      "file": "scripts/verify_handover.cjs",
+      "before_sha256": "891e4016053903f47f6ef2dacfad24267a2439d9d76cf6bcf33fbd04ab42f76a",
+      "after_sha256": "61d116a1f0d7b483a092d6ab0048a338181ba5bd1b11de7cf6bfe041742e3112"
+    },
+    {
+      "old": "scripts/verify_item_suggestions.cjs",
+      "file": "scripts/verify_item_suggestions.cjs",
+      "before_sha256": "60d0537a957115d08b8d82351160b55e48b66df8a3979e155ecb2a34979cfec7",
+      "after_sha256": "13362f345f8a595c568915748b273d9aafb7e84fd494850ba2be89a3ef273ce6"
+    },
+    {
+      "old": "scripts/verify_module_pages.cjs",
+      "file": "scripts/verify_module_pages.cjs",
+      "before_sha256": "b54ea2316995da570c64335d91fd46c8603238b3e3f3c4c5a0701a2afe52deeb",
+      "after_sha256": "4f12fc8aa78d5505ce972f1038a04f8b155acfc66cdd0d281e5389f29cc28bd9"
+    },
+    {
+      "old": "scripts/verify_receipt_upload.cjs",
+      "file": "scripts/verify_receipt_upload.cjs",
+      "before_sha256": "94e1c8e35e858f99c927c75ca3a9a4d59ceb18af16a2cfe222a99963fcbf1694",
+      "after_sha256": "2372cb87b5ee7b3fbdddfee5b9ef9f7197a56d6f096ce7c69e6b8b917085a43a"
+    },
+    {
+      "old": "scripts/verify_shell_home.cjs",
+      "file": "scripts/verify_shell_home.cjs",
+      "before_sha256": "977997f970f68941e4927aa55857d26e8bf8e45b4972fb91734fd7ec694740d1",
+      "after_sha256": "0ff6fe9855f40189d16d0ab1c64e1604f47dc812f92236e822247f3a190aa1cb"
+    },
+    {
+      "old": "scripts/verify_ui_pages.cjs",
+      "file": "scripts/verify_ui_pages.cjs",
+      "before_sha256": "e4ee3008082b9b360d2f81f227396b342220e0bcd310f53e8ac6675c33c3c868",
+      "after_sha256": "ed33c427e9b002b43be71dd5b4d4ea66e5bf00f3d19bd7b94c239e66cd707c12"
+    },
+    {
+      "old": "tests/pettycash-admin.test.cjs",
+      "file": "tests/pettycash-admin.test.cjs",
+      "before_sha256": "a10896f520660512fb58ff4f1d5d103078615155681cb5a815b18c849d432697",
+      "after_sha256": "e12be229929f02b3182658626154cfa086e2e28f47fcec864cf8a0d51bfff079"
+    },
+    {
+      "old": "tests/pettycash-api.test.cjs",
+      "file": "tests/pettycash-api.test.cjs",
+      "before_sha256": "de6ea8d75632b5741d308ba6204050e41ca2241c44c1374bf6b4a179d4116161",
+      "after_sha256": "b73c957212829947847905c67e257d2b949ada0780bd4b0c4c595881a9851e88"
+    },
+    {
+      "old": "tests/pettycash-modules.test.cjs",
+      "file": "tests/pettycash-modules.test.cjs",
+      "before_sha256": "a53723c2b71a1f5eddc38487af7638efd6b9c0182dfd10320cfef3c3ff54143d",
+      "after_sha256": "cc7af5bf773f98c8be598268c65c6b22145bbbf4a0b4faeff9ab46ca88a7cd56"
+    },
+    {
+      "old": "tests/pettycash-receipts.test.cjs",
+      "file": "tests/pettycash-receipts.test.cjs",
+      "before_sha256": "2bc6568d73be9e3f8146b750438b19766121c31f68709fb3f8067c9ecd3821b2",
+      "after_sha256": "5a5055eb1b92849c716d5ebd5e1e2055dfda1c9640050516924ed51977f56a9c"
+    },
+    {
+      "old": "tests/pettycash-shell-home.test.cjs",
+      "file": "tests/pettycash-shell-home.test.cjs",
+      "before_sha256": "bc85af85b408c18dd94e25bd7b775d66459fb46fcc95ef06fa4b4a89ed83442d",
+      "after_sha256": "8c55a3d326c499095c25871991756d2c86e4c7b3131f602a41d4b10f2dc61ce6"
+    },
+    {
+      "old": "tests/pettycash-suggestions.test.cjs",
+      "file": "tests/pettycash-suggestions.test.cjs",
+      "before_sha256": "7ad4cdb22e4e18ac24518b9aed96a8883d204471e748630ae3595fb4bb7a80c5",
+      "after_sha256": "c895a56751d9c359a532abf68fb2ff196c1e3f7d9c8a878b38db21c03834ecdd"
+    }
+  ],
+  "generated_report_paths": [
+    "documentation/handover/verification.json"
+  ],
+  "temporary_migration_utilities_removed_after_validation": [
+    "tmp/organize_workspace.py",
+    "tmp/finalize_organization.py"
+  ],
+  "browser_validation": [
+    {
+      "script": "verify_module_pages.cjs",
+      "exit_code": 0,
+      "mocked_network": true
+    },
+    {
+      "script": "verify_admin_page.cjs",
+      "exit_code": 0,
+      "mocked_network": true
+    },
+    {
+      "script": "verify_finance_page.cjs",
+      "exit_code": 0,
+      "mocked_network": true
+    },
+    {
+      "script": "verify_clarification_page.cjs",
+      "exit_code": 0,
+      "mocked_network": true
+    },
+    {
+      "script": "verify_item_suggestions.cjs",
+      "exit_code": 0,
+      "mocked_network": true
+    },
+    {
+      "script": "verify_ui_pages.cjs",
+      "exit_code": 0,
+      "mocked_network": true
+    },
+    {
+      "script": "verify_shell_home.cjs",
+      "exit_code": 0,
+      "mocked_network": true
+    },
+    {
+      "script": "verify_receipt_upload.cjs",
+      "exit_code": 0,
+      "mocked_network": true
+    }
+  ],
+  "local_validation": {
+    "documentation_links_checked": 119,
+    "generated_templates_consistent": true,
+    "configured_finance_page_matches_recorded_invocation": true,
+    "unit_tests": 157,
+    "passed": 157,
+    "failed": 0
+  }
+}

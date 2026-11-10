@@ -10,7 +10,7 @@ const { chromium } = runtimeRequire('playwright');
 const sharp = runtimeRequire('sharp');
 const { PDFDocument } = runtimeRequire('pdf-lib');
 const root = path.resolve(__dirname, '..');
-const output = path.join(root, 'tmp', 'pdfs');
+const output = process.env.PC_QA_OUTPUT_ROOT ? path.join(process.env.PC_QA_OUTPUT_ROOT, 'receipts') : path.join(root, 'tmp', 'pdfs');
 const employee = '11111111-1111-4111-8111-111111111111';
 const department = '22222222-2222-4222-8222-222222222222';
 const manager = '33333333-3333-4333-8333-333333333333';
@@ -51,7 +51,7 @@ async function renderPdf(bytes) {
     await receipt('RECEIPT B', 1600, 1000, '#dcfce7', true),
     await receipt('LONG RECEIPT', 600, 3000, '#dbeafe'),
     await receipt('ROTATION TEST', 1200, 700, '#fef3c7', true, 6)];
-  let receiptTemplate = fs.readFileSync(path.join(root, 'Petty Cash Receipts.html'), 'utf8')
+  let receiptTemplate = fs.readFileSync(path.join(root, 'shared/receipts/Petty Cash Receipts.html'), 'utf8')
     .replace('{% raw %}', '').replace('{% endraw %}', '');
   let sample;
   const browser = await chromium.launch({ headless: true, executablePath: 'C:/Program Files/Google/Chrome/Application/chrome.exe' });
@@ -60,7 +60,7 @@ async function renderPdf(bytes) {
       const page = await browser.newPage({ viewport: { width: 1100, height: 900 } });
       const calls = [], writes = [], records = new Map(), errors = []; let seq = 0, rejectedUpload = false;
       page.on('pageerror', error => errors.push(error.message));
-      let fragment = fs.readFileSync(path.join(root, 'New Petty Cash Request.html'), 'utf8')
+      let fragment = fs.readFileSync(path.join(root, 'pages/new-request/New Petty Cash Request.html'), 'utf8')
         .replace("{% include 'Petty Cash User Context' %}", '<input id="portalUserId" value="' + employee + '" hidden>')
         .replace("{% include 'Petty Cash Modules' %}", '<script>window.PettyCashModules={readBalance:async()=>0,money:()=>"Rs 0.00",balanceMeaning:()=>"Settled"};</script>')
         .replace("{% include 'Petty Cash Receipts' %}", () => receiptTemplate);

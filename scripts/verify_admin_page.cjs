@@ -14,7 +14,7 @@ const mockConfig = { creationEnabled: true, securityReviewed: true, departmentId
   contactDepartmentNavigation: 'hr_TestDepartment', contactManagerNavigation: 'hr_TestManager',
   roleValues: { Employee: 10, Manager: 20, Accounts: 30, Admin: 40 } };
 (async () => {
-  const qa = path.join(root, 'documentation', 'qa', 'pages');
+  const qa = path.join(process.env.PC_QA_OUTPUT_ROOT || path.join(root, 'documentation', 'qa'), 'pages');
   fs.mkdirSync(qa, { recursive: true });
   const browser = await chromium.launch({ headless: true, executablePath: 'C:/Program Files/Google/Chrome/Application/chrome.exe' });
   try {
@@ -22,7 +22,7 @@ const mockConfig = { creationEnabled: true, securityReviewed: true, departmentId
       const page = await browser.newPage({ viewport: { width: 1200, height: 900 } });
       const errors = [], calls = []; let payload;
       page.on('pageerror', error => errors.push(error.message));
-      const contextSource = fs.readFileSync(path.join(root, 'Petty Cash User Context.html'), 'utf8');
+      const contextSource = fs.readFileSync(path.join(root, 'shared/identity/Petty Cash User Context.html'), 'utf8');
       const context = contextSource.replace(/\{\{ user.id \| escape \}\}/g, admin)
         .replace(/\{\{ user.fullname \| escape \}\}/g, 'Test administrator')
         .replace(/\{\{ user.emailaddress1 \| escape \}\}/g, 'admin@example.test')
@@ -32,9 +32,9 @@ const mockConfig = { creationEnabled: true, securityReviewed: true, departmentId
       const writeMode = ['enabled', 'rejected', 'verification-retry'].includes(mode);
       const config = { ...mockConfig, creationEnabled: mode === 'disabled' ? false : true,
         departmentIdColumn: mode === 'unconfigured' ? '' : mockConfig.departmentIdColumn };
-      let fragment = fs.readFileSync(path.join(root, 'Admin Users.html'), 'utf8')
+      let fragment = fs.readFileSync(path.join(root, 'pages/admin/Admin Users.html'), 'utf8')
         .replace("{% include 'Petty Cash User Context' %}", () => context)
-        .replace("{% include 'Petty Cash Admin' %}", () => '<script>window.PC_ADMIN_CONFIG=' + JSON.stringify(config) + ';</script><script>' + fs.readFileSync(path.join(root, 'pettycash-admin.js'), 'utf8') + '</script>');
+        .replace("{% include 'Petty Cash Admin' %}", () => '<script>window.PC_ADMIN_CONFIG=' + JSON.stringify(config) + ';</script><script>' + fs.readFileSync(path.join(root, 'pages/admin/pettycash-admin.js'), 'utf8') + '</script>');
       assert.doesNotMatch(fragment, /\{%|\{\{/);
       if (mode === 'legacy-html') fragment = fragment.replace('<form id="pcAdminForm" hidden>',
         '<form id="pcAdminForm" hidden><input id="pcAdminPassword" type="password">');

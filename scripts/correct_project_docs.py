@@ -50,7 +50,7 @@ def main():
     spec.loader.exec_module(helper)
     names = ["Petty Cash App - Database Schema.docx", "Petty Cash Request System - Project Overview.docx", "Configuration document.docx"]
     for name in names:
-        source = ROOT / name
+        source = ROOT / "documentation" / "originals" / name
         backup = BACKUP / name
         if not backup.exists():
             shutil.copy2(source, backup)

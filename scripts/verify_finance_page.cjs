@@ -13,7 +13,7 @@ const ledgerRow = (employeeId, type, amount, reference = 'CT-TEST') => ({ _hr_em
   _hr_linkedrequest_value: type === 123140001 ? transaction : null, hr_transactiontype: type,
   hr_amount: amount, hr_transactionreference: reference, createdon: '2026-10-29T08:00:00Z', hr_notespurpose: 'Synthetic test movement' });
 (async () => {
-  const output = path.join(root, 'documentation', 'qa', 'finance'); fs.mkdirSync(output, { recursive: true });
+  const output = path.join(process.env.PC_QA_OUTPUT_ROOT || path.join(root, 'documentation', 'qa'), 'finance'); fs.mkdirSync(output, { recursive: true });
   const browser = await chromium.launch({ headless: true, executablePath: 'C:/Program Files/Google/Chrome/Application/chrome.exe' });
   try {
     for (const mode of ['readonly', 'retry', 'posted', 'refresh-failed', 'invalid-refresh', 'self-posting', 'self-posting-legacy', 'employee', 'admin-only', 'accounts-only', 'signed-out', 'bad-ledger', 'race']) {
@@ -29,15 +29,15 @@ const ledgerRow = (employeeId, type, amount, reference = 'CT-TEST') => ({ _hr_em
         [other, [ledgerRow(other, 123140000, 500, 'CT-OTHER')]],
         [actor, [ledgerRow(actor, 123140000, 250, 'CT-SELF')]]]);
       page.on('pageerror', error => errors.push(error.message));
-      const context = fs.readFileSync(path.join(root, 'Petty Cash User Context.html'), 'utf8')
+      const context = fs.readFileSync(path.join(root, 'shared/identity/Petty Cash User Context.html'), 'utf8')
         .replace(/\{\{ user.id \| escape \}\}/g, mode === 'signed-out' ? '' : actor)
         .replace(/\{\{ user.fullname \| escape \}\}/g, 'Finance test user')
         .replace(/\{\{ user.emailaddress1 \| escape \}\}/g, 'finance@example.test')
         .replace("{% if user.roles contains 'Petty Cash Accounts' %}true{% else %}false{% endif %}", mode === 'accounts-only' ? 'true' : 'false')
         .replace("{% if user.roles contains 'Petty Cash Finance' %}true{% else %}false{% endif %}", String(allowed))
         .replace("{% if user.roles contains 'Petty Cash Admin' %}true{% else %}false{% endif %}", mode === 'admin-only' ? 'true' : 'false');
-      const helper = fs.readFileSync(path.join(root, 'pettycash-modules.js'), 'utf8');
-      const fragment = fs.readFileSync(path.join(root, 'Finance Cash Management.html'), 'utf8')
+      const helper = fs.readFileSync(path.join(root, 'shared/modules/pettycash-modules.js'), 'utf8');
+      const fragment = fs.readFileSync(path.join(root, 'pages/finance/Finance Cash Management.html'), 'utf8')
         .replace(/    <p id="pcFinanceSelfPostingNotice"[^\n]*\n/, mode === 'self-posting-legacy' ? '' : '$&')
         // Reproduce Studio's independent inline hiding and repeated template include.
         .replace('id="pcFinanceForm" hidden', 'id="pcFinanceForm" hidden style="display:none"')

@@ -2,7 +2,7 @@ const { test } = require('node:test');
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const vm = require('node:vm');
-const source = fs.readFileSync('pettycash-api.js', 'utf8');
+const source = fs.readFileSync('pages/new-request/pettycash-api.js', 'utf8');
 function fixture(items = [{ name: '', quantity: '1', price: '' }]) {
   let document;
   class Element {
@@ -60,7 +60,7 @@ test('suggestion card precedes Itemized Details and initially renders user-provi
   assert.deepEqual(h.nodes.pcSuggestionItems.children.map(button => button.textContent), ['Petrol', 'Hotel', 'Food']);
   assert.ok(h.nodes.pcSuggestionItems.children.every(button => button.type === 'button' && !button.disabled));
   assert.equal(h.rows[0].fields.name.value, ''); assert.equal(h.calls.length, 0);
-  const html = fs.readFileSync('New Petty Cash Request.html', 'utf8');
+  const html = fs.readFileSync('pages/new-request/New Petty Cash Request.html', 'utf8');
   assert.ok(html.indexOf('id="pcSuggestionCard"') < html.indexOf('<!-- Section 2: Itemized Details -->'));
   assert.match(html, /id="pcSuggestionStatus" role="status" aria-live="polite"/);
 });

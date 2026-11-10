@@ -10,7 +10,7 @@ const employee = '11111111-1111-4111-8111-111111111111';
 const department = '22222222-2222-4222-8222-222222222222';
 const manager = '33333333-3333-4333-8333-333333333333';
 (async () => {
-  const qa = path.join(root, 'documentation', 'qa', 'suggestions');
+  const qa = path.join(process.env.PC_QA_OUTPUT_ROOT || path.join(root, 'documentation', 'qa'), 'suggestions');
   fs.mkdirSync(qa, { recursive: true });
   const browser = await chromium.launch({ headless: true, executablePath: 'C:/Program Files/Google/Chrome/Application/chrome.exe' });
   try {
@@ -18,9 +18,9 @@ const manager = '33333333-3333-4333-8333-333333333333';
       const page = await browser.newPage({ viewport: { width: 1100, height: 900 } });
       const writes = [], errors = [], records = new Map(); let sequence = 0, uploadFailed = false;
       page.on('pageerror', error => errors.push(error.message));
-      const receipt = fs.readFileSync(path.join(root, 'Petty Cash Receipts.html'), 'utf8')
+      const receipt = fs.readFileSync(path.join(root, 'shared/receipts/Petty Cash Receipts.html'), 'utf8')
         .replace('{% raw %}', '').replace('{% endraw %}', '');
-      const fragment = fs.readFileSync(path.join(root, 'New Petty Cash Request.html'), 'utf8')
+      const fragment = fs.readFileSync(path.join(root, 'pages/new-request/New Petty Cash Request.html'), 'utf8')
         .replace("{% include 'Petty Cash User Context' %}", '<input type="hidden" id="portalUserId" value="' + employee + '">')
         .replace("{% include 'Petty Cash Modules' %}", '<script>window.PettyCashModules={readBalance:async()=>0,money:()=>"Rs 0.00",balanceMeaning:()=>"Settled"};</script>')
         .replace("{% include 'Petty Cash Receipts' %}", () => receipt);

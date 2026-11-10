@@ -2,9 +2,9 @@
 const fs = require('node:fs');
 const path = require('node:path');
 const root = path.resolve(__dirname, '..');
-const target = path.join(root, 'Header.html'), source = fs.readFileSync(target, 'utf8');
-const css = fs.readFileSync(path.join(root, 'pettycash-shell.css'), 'utf8').trim();
-const script = fs.readFileSync(path.join(root, 'pettycash-shell.js'), 'utf8').trim();
+const target = path.join(root, 'shared/shell/Header.html'), source = fs.readFileSync(target, 'utf8');
+const css = fs.readFileSync(path.join(root, 'shared/shell/pettycash-shell.css'), 'utf8').trim();
+const script = fs.readFileSync(path.join(root, 'shared/shell/pettycash-shell.js'), 'utf8').trim();
 if (/<\/script|\{%|\{\{/i.test(script)) throw new Error('Shell script is not safe for a Web Template');
 for (const marker of ['PC SHELL STYLES', 'PC SHELL SCRIPT']) if (!source.includes('<!-- ' + marker + ' -->')) throw new Error('Missing shell marker');
 const generated = source.replace(/<!-- PC SHELL STYLES -->[\s\S]*?<!-- \/PC SHELL STYLES -->/, () =>

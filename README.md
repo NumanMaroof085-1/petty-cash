@@ -1,248 +1,75 @@
 # Petty Cash Request System
 
-**8 November clarification upgrade:** the user reports My Requests question UI
-published and its version/ready checks correct. Main-flow resumption is reported
-configured and both trigger inputs are inspected; native email/answer delivery
-and end-to-end behavior are not yet tested. See [CLARIFICATION_UI_SETUP.md](CLARIFICATION_UI_SETUP.md)
-and [CLARIFICATION_SETUP.md](CLARIFICATION_SETUP.md). Company acceptance is pending.
+Power Pages website backed by Dataverse and Power Automate. Start with the
+[handover guide](documentation/handover/HANDOVER.md),
+[acceptance checklist](documentation/handover/HANDOVER_CHECKLIST.md), or
+[project folder guide](documentation/PROJECT_STRUCTURE.md).
 
-## Company handover start here
+## Find the files
 
-**Current documentation baseline: 2 November 2026.** Use
-[HANDOVER.md](HANDOVER.md) for the current architecture, data/role/configuration
-inventory and deployment map; [OPERATIONS_RUNBOOK.md](OPERATIONS_RUNBOOK.md) for
-normal use/support; [HANDOVER_CHECKLIST.md](HANDOVER_CHECKLIST.md) for required
-native exports, ownership and acceptance; and
-[DOCUMENTATION_AUDIT.md](DOCUMENTATION_AUDIT.md) for corrections and limitations.
+| Folder | Contents |
+|---|---|
+| [pages/](pages/README.md) | New Request, My Requests, Finance, Admin and Home; each page's source and related guides |
+| [shared/](shared/README.md) | Reused balance/clarification module, receipts, user context, header/footer and common styles |
+| [flows/](flows/README.md) | Finance, approval and clarification flow guides, contracts and supplied JSON snapshots |
+| [documentation/](documentation/README.md) | Handover, platform configuration, original/corrected Word files, QA and deferred plans |
+| `scripts/` | Build tools and local verification scripts |
+| `tests/` | Automated regression tests |
+| `vendor/` | Pinned jsPDF library and its license |
 
-The documentation collection is organized for handover, but final company
-acceptance is pending. Source fragments and diagrams are not native website/
-Dataverse/flow exports. Older Word documents and build/troubleshooting narratives
-below are historical and must not override the current handover guide.
+The folder move changes local organization only. Website partial URLs, Liquid
+Web Template names, flow IDs, security configuration and published app contents
+are unchanged. Open files from their new locations; do not create extra tenant
+pages/templates just because local folders changed.
 
-Power Pages saves employee expense requests, products, and receipts through its
-session-authenticated Dataverse Web API. The user reports Finance posting working
-and a manager approval flow built separately. Complete native definitions and
-acceptance evidence remain required; ERP integration is not established.
+## Main publishing sources
 
-## Header, footer and home — 2026-11-01
+| Power Pages destination | Local source |
+|---|---|
+| New request page | [New Petty Cash Request.html](<pages/new-request/New Petty Cash Request.html>) |
+| My Requests page (`My-Requests`) | [My Petty Cash Requests.html](<pages/my-requests/My Petty Cash Requests.html>) |
+| Finance page | [Finance Cash Management.html](<pages/finance/Finance Cash Management.html>) |
+| Admin page | [Admin Users.html](<pages/admin/Admin Users.html>) |
+| Home page / Home Web Template | [Home.html](pages/home/Home.html) / [Petty Cash Home.html](<pages/home/Petty Cash Home.html>) |
+| Header / Footer Web Templates | [Header.html](shared/shell/Header.html) / [Footer.html](shared/shell/Footer.html) |
+| Petty Cash Modules Web Template | [pettycash-modules.js](shared/modules/pettycash-modules.js), inside script tags |
+| Petty Cash Admin Web Template | [pettycash-admin.js](pages/admin/pettycash-admin.js), inside script tags |
+| Petty Cash Receipts Web Template | [Petty Cash Receipts.html](<shared/receipts/Petty Cash Receipts.html>) already includes the wrapper/library |
+| Petty Cash User Context Web Template | [Petty Cash User Context.html](<shared/identity/Petty Cash User Context.html>) |
 
-User confirmed publication on 2 November 2026, and separately confirmed manager
-approval duplicate protection complete. Native export/acceptance review remains
-part of the handover checklist; the instructions below also cover maintenance.
+Keep the working site configuration when publishing. Reusable `.example.js`
+configuration remains intentionally disabled. Never publish archived material
+as the current implementation.
 
-The supplied Header/Footer templates are restyled and a new Home workspace is
-ready locally. Publish Header.html and Footer.html into their existing Web
-Templates, create **Petty Cash Home** from its complete HTML, and replace the
-existing Home page content with Home.html's one include. See
-[SITE_SHELL_HOME_SETUP.md](SITE_SHELL_HOME_SETUP.md) for exact steps and QA limits.
-The four application pages and their working Finance configuration are unchanged.
-Existing branding, managed navigation and native account controls are retained;
-Home adds read-only balance/recent-request views and role-specific quick actions.
+## Build and verify
 
-## UI refresh — 2026-10-31
-
-New request, My Requests, Finance and Admin now share a simpler responsive design.
-My Requests adds local search/status filters and counts. See
-[UI_REFRESH_SETUP.md](UI_REFRESH_SETUP.md) for the exact page/template updates,
-local screenshots and checks. **Preserve the working Finance page's live
-PC_MODULE_CONFIG when publishing its redesigned HTML.** No new Web Files,
-templates, columns, permissions or flows are required. Login/header/footer/home
-were outside that four-page change; the separate revision above covers the shell
-and Home. Login remains unchanged. Neither UI revision was published by the assistant.
-
-## Product units — 2026-11-02
-
-New request now requires a unit for every product line and saves it to the
-user-confirmed `hr_unit` text column. Add `hr_unit` to the line-item Web API
-fields before publishing the updated request HTML. See
-[PRODUCT_UNITS_SETUP.md](PRODUCT_UNITS_SETUP.md) for the 23 common units,
-configuration, fractional quantities and deployment checks. This change is
-implemented and tested locally. On 3 November the user confirmed successful live
-unit saving and supplied a screenshot with all setup checks passing.
-
-## Files
-
-- `CLARIFICATION_SETUP.md`: in-progress clarification upgrade; user-reported custom responses/Switch, table creation checkpoint and remaining notification/reply/resume work. Not a completed feature.
-
-- `Header.html` / `Footer.html`: complete restyled versions of the user-supplied existing Web Templates, preserving managed navigation, editable branding, account controls and locale accessibility links.
-- `HANDOVER.md`, `OPERATIONS_RUNBOOK.md`, `HANDOVER_CHECKLIST.md`, `DOCUMENTATION_AUDIT.md`: current company handover set; `documentation/handover/verification.json` records the local audit/source snapshot.
-- `Home.html`: one include for the existing Home page; `Petty Cash Home.html`: complete new Home Web Template with signed-in balance/history and anonymous welcome.
-- `pettycash-shell.css` / `pettycash-shell.js`: header/footer styles and navigation-only enhancement, embedded by `scripts/build_shell_template.cjs`.
-- `pettycash-home.css` / `pettycash-home.js`: Home design and read-only data refresh, embedded by `scripts/build_home_template.cjs`; no new posting/configuration path.
-- `SITE_SHELL_HOME_SETUP.md`: publication, configuration, preserved behavior, backups and native-vs-mocked QA limits.
-- `tests/pettycash-shell-home.test.cjs` / `scripts/verify_shell_home.cjs`: nine new source/fixture checks and 12 browser scenarios, plus integration around the existing pages. `scripts/liquid_fixture.cjs` and `shell_fixtures.cjs` are local-only synthetic renderers, not Power Pages engines.
-
-- `New Petty Cash Request.html`: the Power Pages page fragment, including its script and shared template includes.
-- `pettycash-api.js`: the same client script, kept separately for development.
-- `scripts/build_request_page.cjs`: mirrors the canonical request script into its HTML; supports `--check`.
-- `PRODUCT_UNITS_SETUP.md`: line-item `hr_unit` text column, dropdown behavior, Web API setup and publication steps.
-- `ITEM_SUGGESTIONS_SETUP.md`: frontend category-name shortcuts, non-destructive row selection, editable starter lists, save/retry locks and request-HTML-only deployment.
-- `Petty Cash Receipts.html`: complete generated Source for the new Petty Cash Receipts Web Template; pinned PDF library and receipt module already wrapped.
-- `pettycash-receipts.js`: up to 10 ordered JPG/PNG images combined locally into one previewable PDF, or one unchanged existing PDF; limits and safe preparation cache.
-- `RECEIPT_PDF_SETUP.md`: dependency, two-part website deployment, limits, retry behavior and live test checklist.
-- `tests/pettycash-api.test.cjs`: local regression tests using simulated portal and Dataverse responses.
-- `DATAVERSE_SETUP.md`: required mappings, site settings, permissions, and live verification steps.
-- `WEBAPI_SITE_SETTINGS.md`: prepared explicit field lists and the remaining live mapping checks.
-- `My Petty Cash Requests.html`: source for the live employee page named **My Requests**; balance and request-status dashboard. Filename retained; confirmed partial URL `My-Requests`.
-- `Finance Cash Management.html`: Finance-only employee balance, cash-given/returned form, preview/confirmation and ledger history. Posting disabled until the secured backend is configured.
-- `FINANCE_SETUP.md`: current Finance role/read permissions, publication, posting-flow contract and remaining live checks. Flow setup and successful behavior are user-reported; no tenant deployment was performed by the assistant.
-- `FINANCE_FLOWCHART.md`: Finance flowchart and action-name map, website balance calculation, retry behavior, and remaining work before production sign-off. Separately user-created approval flow is documented below.
-- `FINANCE_SELF_POSTING_SETUP.md`: v4 own-account Add/Returned restriction, own-history access, native Finance flow condition and live checks. User reports condition/script installed; native denial tests remain unverified.
-- `MANAGER_APPROVAL_FLOW.md`: 2026-10-31 user-created approval flow screenshot inventory, visible expense-transaction fields, Contact-summary distinction and unverified readiness/deduplication settings. No flow modifications performed by the assistant.
-- `FINANCE_FLOW_SETUP.md`: current simpler Finance flow (validate, save once, confirm saved event, website refreshes balance), final six-output response setup and deployment checklist. Earlier in-flow ledger-scan recipe is superseded. Not an importable or tenant-tested flow.
-- `finance-cash-request.schema.json`: regex-free request eventData/Parse JSON schema; Contact IDs still require native lookup validation, and text posting keys require escaped OData filters. Not an importable flow or authorization implementation.
-- `Accounts Cash Management.html`: retired historical draft; do not publish it alongside Finance. New shared code leaves it disabled.
-- `pettycash-modules.js`: canonical shared ledger/dashboard/Finance JavaScript (finance-posting-v5); paste inside script tags in the `Petty Cash Modules` Web Template. Adds local request filters/counts, blocks own-account cash movements while retaining own history, confirms postings separately from ledger refresh, and preserves saved confirmation if refresh fails. Native self-posting flow guard still required.
-- `scripts/repair_open_finance_page.js`: one-time Console repair for an already-open page with a pending movement: adds the required AJAX header and aliases actual lowercase response names without reloading, submitting, or replacing the operation key. Permanent transport fix is in pettycash-modules.js; see the current Finance flow guide.
-- `Petty Cash User Context.html`: shared escaped identity and cosmetic Admin/Finance role markers (web-template-v2-finance); actual server page/table/flow permissions remain mandatory.
-- `pettycash-module-config.example.js`: reusable blank/disabled Finance configuration. The Finance HTML separately retains this site's user-confirmed invocation GUID and reviewed=true setting; do not overwrite it with the example. Old Accounts config flags no longer enable posting.
-- `BALANCE_MODULE_SETUP.md`: exact confirmed ledger mappings, roles/permissions, new page deployment, and backend contract.
-- `Admin Users.html`: seven-field profile-only edition, with separate username and zero new balance. No password controls; use Management Change Password on the saved Contact. Paired page/template deployment required.
-- `pettycash-admin.js`: version admin-profiles-v3 for Petty Cash Admin template; public profile-only POST/read-back, duplicate checks, safe retries and redacted errors. Shorter messages and explicit authorized form visibility; no password path, ledger entries or existing-user/balance updates.
-- `pettycash-ui.css`: scoped design source, embedded into each of the four page fragments by `scripts/build_ui_styles.cjs`; do not upload separately.
-- `UI_REFRESH_SETUP.md`: UI behavior, exact publication/configuration preservation, responsive QA and scope.
-- `scripts/verify_ui_pages.cjs`: mocked browser checks and desktop/mobile screenshots for all four pages, local filtering, empty/error states, narrow screens and host-style isolation.
-- `pettycash-admin-config.example.js`: mirrored in Admin Users.html; profile creation enabled for the user-reviewed admin-only setup. Missing script configuration still defaults to disabled; old credential switches are removed.
-- `ADMIN_PROFILE_SETUP.md`: current Admin configuration, password-free API union, deployment, security boundaries and separate Management password setup.
-- `ADMIN_USER_SETUP.md`: current Admin permissions/metadata/deployment checklist and unresolved native login/email provisioning.
-- `ADMIN_CREDENTIAL_SETUP.md`: historical failed credential experiment and supported Management test results; superseded by ADMIN_PROFILE_SETUP.md. Do not re-enable that path.
-- `IMPLEMENTATION_LOG.md`: dated inventory of every new page/function/column/configuration requirement and its deployment state.
-- `scripts/correct_project_docs.py` / `scripts/finalize_project_docs.py`: historical tools for the old Word correction milestone; their expectations include superseded key/role names. Do not use them as a current release/finalization procedure.
-- The three root Word documents and copies under `documentation/corrected/` are older references. A prior 13-page Office-export review did not approve the later Finance/Admin/receipt/UI/Home changes. They must be reissued and freshly reviewed if the company requires current Word deliverables; otherwise use HANDOVER.md.
-
-## Earlier request integration notes
-
-The narrative below records earlier implementation stages. Current handover
-status and Finance behavior are defined in HANDOVER.md; historical references
-to undelivered Accounts modules/blank configs are not current instructions.
-
-Balance viewing uses only the signed-in Contact GUID and the authorized cash
-ledger, independently of department/manager profile readiness. Deploy the
-updated request-page HTML for this fix; shared templates and permissions are
-unchanged. Request submission still waits for the Contact profile and requires its Department
-and Reports To Manager lookups. It reads only that employee Contact, not the
-manager's Contact; the manager GUID comes from the employee profile lookup and
-is still bound and verified on the Request. Self Read plus a separate proposed
-Append-only manager binding permission has user-confirmed live submission
-success. User's console screenshot also confirms a manager Contact balance
-read is denied with HTTP 403. Other role/record and Request/ledger isolation
-tests remain pending; this single check is not a full security certification.
-This corrects the earlier Append-To-only instruction after the user's association
-403: Contact is the lookup target in Power Pages' permission check, not the source.
-It checks that the requested columns are readable
-before saving, sends one complete header payload, and reads the saved fields back.
-It then saves and verifies each product before uploading the receipt. The user
-confirmed that `hr_totalprice` is a Simple currency column, so the client now
-saves Quantity multiplied by Unit Price on each line and verifies it. Each
-line total is rounded to two decimal places; the displayed and saved grand
-total is the sum of those rounded line totals.
-
-A receipt is mandatory. The page accepts one PDF or up to 10 JPG/PNG images
-combined locally into one PDF before request writes. Previews create no records;
-partial-save retries retain the exact prepared PDF. Publish the new receipt
-Web Template and updated HTML together; see RECEIPT_PDF_SETUP.md.
-The form rejects a missing receipt before any API
-calls or writes, and does not report success if its upload fails. This is a
-client-side requirement; server-side completeness validation remains necessary.
-
-Errors never cause selected fields, lookups, or categories to be removed from a
-payload. Success is shown only after these operations succeed. Confirmed partial
-saves can resume on the same open page, without recreating already saved rows.
-Ambiguous create results stop further attempts and display a reference for an
-administrator to check.
-
-The user confirmed that `hr_othercategory` (schema name `hr_OtherCategory`)
-belongs to the **Petty Cash Line Item** table, not the request table. Both
-scripts now save and verify its text on every line when the form category is
-Others. Standard categories omit it. Header payloads, read checks, and field
-settings no longer include it. The form has one category for the whole request,
-so every product receives the same category and Other Category description.
-
-The request's `hr_department` column (schema name `hr_Department`) and the
-Department entity set `hr_departmentses` are confirmed. Both scripts use that
-entity set for reads and lookup bindings.
-
-The user also confirmed the Department table logical name `hr_departments` and
-its text/name column `hr_departmentname`. Site settings now use the correct
-table name, and Department read checks select that known name column. The
-client does not need to guess the Department GUID-key column name.
-
-The Department lookup's exact navigation property and other configuration
-values still need live verification if the binding fails. A lookup column's
-schema name does not prove its navigation property. The configured Pending and
-Not Synced choice integers also require confirmation; they are sent explicitly
-instead of depending on table defaults.
-
-## Run local checks
-
-With Node.js 22 or later:
+Run from this project folder with Node.js:
 
 ```powershell
-node --check pettycash-api.js
-node scripts/build_receipt_template.cjs
-node --test --test-isolation=none tests/pettycash-api.test.cjs tests/pettycash-modules.test.cjs tests/pettycash-admin.test.cjs tests/pettycash-receipts.test.cjs tests/pettycash-suggestions.test.cjs
+node scripts/build_request_page.cjs --check
+node scripts/build_ui_styles.cjs --check
+node scripts/build_home_template.cjs --check
+node scripts/build_shell_template.cjs --check
+node scripts/verify_handover.cjs --date 2026-11-09
 ```
 
-These tests make no network requests. They verify field preservation, read-back
-checks, sign-in requirements, duplicate-click handling, partial-save retries,
-receipt failures, mapping overrides, and synchronization of the two scripts.
+Omit `--check` from a build command only when regenerating its HTML after a
+source change. `build_receipt_template.cjs` regenerates the bundled receipts
+template from local pinned assets; `--fetch` is an explicit dependency download.
+Use the actual audit date for subsequent handover audits. Browser verification
+scripts use the existing local Playwright runtime and intercepted test data.
+Set `PC_QA_OUTPUT_ROOT` to a separate folder when retaining existing QA evidence.
 
-## Historical deployment notes
+## Current status and history
 
-All three pages first include `{% include 'Petty Cash User Context' %}`, then
-load the shared script through `{% include 'Petty Cash Modules' %}`. Create the
-User Context template using the complete matching local HTML file; do not also
-retain the old hidden identity inputs in page Copy. The Modules template Source must contain
-the complete `pettycash-modules.js` wrapped in script tags; the user reports the
-template created on 2026-10-13 and its global object loaded. Its identity probe
-renders the real signed-in GUID; the page-copy inputs instead rendered column
-names. After the separate context template instructions, the user confirmed
-the request-page balance displays live. Nonzero totals and cross-user access
-are not yet verified. Remove the temporary identity probe from Modules Source.
-No JavaScript Web File upload is required.
-The request's inline script remains embedded;
-do not additionally load `pettycash-api.js`. The two new page fragments load
-the same shared script. Follow BALANCE_MODULE_SETUP.md for their deployment.
+Manager clarification -> employee answer -> automatic new approval email is
+user-confirmed working. Final financial, boss/rejection, access and handover
+checks are tracked in the acceptance checklist. The live-read/cache freshness
+upgrade is [deferred at the user's request](documentation/plans/DATA_FRESHNESS_PLAN.md).
+ERP synchronization is not an established delivered capability.
 
-Cash Transaction table metadata and choice integers were confirmed by the
-user. The ledger drives displayed signed balances; the Admin creation form now
-initializes a new Contact summary to zero only. Existing summaries are not
-directly updated by the browser. Cash posting is a prepared client contract,
-not a deployed flow or server-side posting implementation. On 2026-10-13 the
-user reported Posting Key `crec6_postingkey` (schema `crec6_PostingKey`) created
-with its alternate key Active. This replaces the earlier proposed `hr_postingkey`.
-The user also confirmed the Cash Transaction field list/enabled setting and
-Contact-scoped Read-only permission assigned to Authenticated Users. Other
-Accounts page/flows and broader live authorization tests remain unconfirmed.
-The user reports the employee dashboard working under the page name `My Requests`;
-its confirmed partial URL is `My-Requests`. Signed-out/cross-employee tests remain
-unconfirmed. Preserve the configured URL casing; no page/source rename is needed.
-The reviewed
-2026-10-12 Word snapshots retain the old posting-key proposal and Web File
-deployment approach and page-inline user context; use BALANCE_MODULE_SETUP.md
-and IMPLEMENTATION_LOG.md for the current mapping and Web Template deployment.
-
-Confirm the mappings and portal configuration in `DATAVERSE_SETUP.md`, then
-replace the custom code of the New Petty Cash Request page with the HTML file.
-That file already contains the script. Do not additionally load the standalone
-JavaScript on the same page.
-
-The user confirmed the earlier request submission works live. No new module
-deployment or authenticated balance/flow verification has been performed from
-this workspace. Local tests do not verify your tenant's actual metadata,
-permissions, file-column behavior, or Power Automate flows.
-
-## Submission and approval boundaries
-
-The header, products, and receipt are separate operations, not a database
-transaction. Retry state is kept in memory on the current page only; reloading
-or closing the page loses it. Inspect partial requests before attempting a new
-submission. Existing incomplete requests are not automatically repaired.
-
-Do not trigger financial processing merely because the header was created. The
-approval workflow must wait for a server-validated complete submission. A next
-step is a completion flag or submission state checked on the server, or an atomic
-header-and-products deep insert after verifying the collection relationship.
-Neither a browser verification nor a sequence of Power Automate Add a new row
-actions alone provides an atomic transaction or trusted financial validation.
+The full earlier README is preserved in the
+[archive](documentation/archive/README-before-organization.md). Supplied flow
+snapshots and older Word documents are evidence/reference material; they are
+not complete current native exports. See the
+[implementation log](documentation/handover/IMPLEMENTATION_LOG.md) for the change history.

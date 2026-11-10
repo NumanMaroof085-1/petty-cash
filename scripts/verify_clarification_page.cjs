@@ -13,17 +13,17 @@ const another = '44444444-4444-4444-8444-444444444444';
 const processed = '55555555-5555-4555-8555-555555555555';
 const flow = '66666666-6666-4666-8666-666666666666';
 (async () => {
-  const qa = path.join(root, 'documentation', 'qa', 'clarifications'); fs.mkdirSync(qa, { recursive: true });
+  const qa = path.join(process.env.PC_QA_OUTPUT_ROOT || path.join(root, 'documentation', 'qa'), 'clarifications'); fs.mkdirSync(qa, { recursive: true });
   const browser = await chromium.launch({ headless: true, executablePath: 'C:/Program Files/Google/Chrome/Application/chrome.exe' });
   try {
     for (const mode of ['replies', 'denied', 'foreign-link']) {
       const page = await browser.newPage({ viewport: { width: 1280, height: 950 } });
       const errors = [], posts = []; let failFirst = true, deny = mode === 'denied';
       page.on('pageerror', error => errors.push(error.message));
-      let html = fs.readFileSync(path.join(root, 'My Petty Cash Requests.html'), 'utf8')
+      let html = fs.readFileSync(path.join(root, 'pages/my-requests/My Petty Cash Requests.html'), 'utf8')
         .replace("{% include 'Petty Cash User Context' %}", () => '<input type="hidden" id="pcModuleUserId" value="' + employee + '">')
         .replace(/clarificationFlowId: "[^"]*"/, 'clarificationFlowId: "' + flow + '"')
-        .replace("{% include 'Petty Cash Modules' %}", () => '<script>' + fs.readFileSync(path.join(root, 'pettycash-modules.js'), 'utf8') + '</script>');
+        .replace("{% include 'Petty Cash Modules' %}", () => '<script>' + fs.readFileSync(path.join(root, 'shared/modules/pettycash-modules.js'), 'utf8') + '</script>');
       const row = (id, state = 123140000) => ({ hr_requestclarificationid: id, _hr_employee_value: employee,
         _hr_request_value: request, hr_question: 'Explain <img src=x onerror=alert(1)> taxi fare.',
         hr_clarificationreference: 'CL-' + id.slice(0, 4), hr_answer: state === 123140002 ? 'Earlier answer.' : null,

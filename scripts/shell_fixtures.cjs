@@ -29,14 +29,14 @@ function context({ signedIn = true, finance = false, admin = false, fullname = '
   };
 }
 function includes() {
-  return { 'Petty Cash User Context': read('Petty Cash User Context.html'), 'Petty Cash Modules': '<script>' + read('pettycash-modules.js') + '</script>',
-    'Petty Cash Home': read('Petty Cash Home.html'),
+  return { 'Petty Cash User Context': read('shared/identity/Petty Cash User Context.html'), 'Petty Cash Modules': '<script>' + read('shared/modules/pettycash-modules.js') + '</script>',
+    'Petty Cash Home': read('pages/home/Petty Cash Home.html'),
     Search: '<form action="/search/" role="search"><label for="q">Search the site</label><input id="q" name="q" type="search"><button type="submit">Search</button></form>',
     'Languages Dropdown': '<ul class="dropdown-menu"><li><a class="dropdown-item" href="/fr/">Français</a></li><li><a class="dropdown-item" href="/">English</a></li></ul>' };
 }
-function fragments(options = {}, page = 'Home.html') {
+function fragments(options = {}, page = 'pages/home/Home.html') {
   const scope = context(options), partials = includes();
-  return { header: render(read('Header.html'), scope, partials), footer: render(read('Footer.html'), scope, partials),
+  return { header: render(read('shared/shell/Header.html'), scope, partials), footer: render(read('shared/shell/Footer.html'), scope, partials),
     page: render(read(page), scope, partials) };
 }
 module.exports = { context, includes, fragments, read, employee };

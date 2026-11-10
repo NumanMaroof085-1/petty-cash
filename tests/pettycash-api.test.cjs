@@ -3,7 +3,7 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const vm = require('node:vm');
 
-const source = fs.readFileSync('pettycash-api.js', 'utf8');
+const source = fs.readFileSync('pages/new-request/pettycash-api.js', 'utf8');
 const ids = {
   employee: '11111111-1111-4111-8111-111111111111',
   department: '22222222-2222-4222-8222-222222222222',
@@ -443,7 +443,7 @@ test('required receipt is uploaded before success for standard categories too', 
 });
 
 test('receipt input is marked required in the HTML', () => {
-  const html = fs.readFileSync('New Petty Cash Request.html', 'utf8');
+  const html = fs.readFileSync('pages/new-request/New Petty Cash Request.html', 'utf8');
   assert.match(html, /<input[^>]*id="fileReceipt"[^>]*\brequired\b/);
 });
 
@@ -648,7 +648,7 @@ test('Dataverse cdscode takes precedence over nested wrapper codes', async () =>
 });
 
 test('embedded HTML script matches the standalone script', () => {
-  const html = fs.readFileSync('New Petty Cash Request.html', 'utf8');
+  const html = fs.readFileSync('pages/new-request/New Petty Cash Request.html', 'utf8');
   const embedded = html.match(/<script>([\s\S]*?)<\/script>/)[1];
   assert.equal(embedded.replace(/\r\n/g, '\n').trim(), source.replace(/\r\n/g, '\n').trim());
   new vm.Script(embedded);

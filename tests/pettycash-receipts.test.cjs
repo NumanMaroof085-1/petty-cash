@@ -2,7 +2,7 @@ const { test } = require('node:test');
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const vm = require('node:vm');
-const source = fs.readFileSync('pettycash-receipts.js', 'utf8');
+const source = fs.readFileSync('shared/receipts/pettycash-receipts.js', 'utf8');
 function fixture(options = {}) {
   const active = new Set(), revoked = [], pages = [], decodes = [], canvases = [];
   class Element {
@@ -164,10 +164,10 @@ test('long and landscape receipts get appropriate pages without altering aspect 
 });
 test('receipt module has no external conversion/storage calls; template includes pinned local library and current module', () => {
   assert.doesNotMatch(source, /\bfetch\s*\(|localStorage|sessionStorage|https:\/\//);
-  const template = fs.readFileSync('Petty Cash Receipts.html', 'utf8');
+  const template = fs.readFileSync('shared/receipts/Petty Cash Receipts.html', 'utf8');
   assert.ok(template.includes(source));
   assert.match(template, /jsPDF 4\.2\.1/);
-  const html = fs.readFileSync('New Petty Cash Request.html', 'utf8');
+  const html = fs.readFileSync('pages/new-request/New Petty Cash Request.html', 'utf8');
   assert.equal(html.split("{% include 'Petty Cash Receipts' %}").length - 1, 1);
   assert.match(html, /id="fileReceipt"[^>]*\bmultiple\b/);
   assert.doesNotMatch(html, /accept="image\/\*/);

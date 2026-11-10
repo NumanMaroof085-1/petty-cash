@@ -2,7 +2,7 @@ const { test } = require('node:test');
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const vm = require('node:vm');
-const script = fs.readFileSync('pettycash-admin.js', 'utf8');
+const script = fs.readFileSync('pages/admin/pettycash-admin.js', 'utf8');
 const admin = '11111111-1111-4111-8111-111111111111';
 const manager = '22222222-2222-4222-8222-222222222222';
 const department = '33333333-3333-4333-8333-333333333333';
@@ -46,7 +46,7 @@ function harness({ overrides = {}, allowed = true, signedIn = true, fetcher, mis
   return { api: root.PettyCashAdmin, calls };
 }
 test('admin page has seven profile fields, no password/balance input, and matching reviewed configuration', () => {
-  const html = fs.readFileSync('Admin Users.html', 'utf8');
+  const html = fs.readFileSync('pages/admin/Admin Users.html', 'utf8');
   assert.equal(html.split("{% include 'Petty Cash User Context' %}").length - 1, 1);
   assert.equal(html.split("{% include 'Petty Cash Admin' %}").length - 1, 1);
   assert.ok(html.indexOf("{% include 'Petty Cash User Context' %}") < html.indexOf("{% include 'Petty Cash Admin' %}"));
@@ -56,7 +56,7 @@ test('admin page has seven profile fields, no password/balance input, and matchi
   assert.match(html, /id="pcAdminUsername"/);
   assert.match(html, /Change Password/);
   assert.doesNotMatch(script, /<\/script|\{%|\{\{/i);
-  const example = fs.readFileSync('pettycash-admin-config.example.js', 'utf8');
+  const example = fs.readFileSync('pages/admin/pettycash-admin-config.example.js', 'utf8');
   const embedded = html.match(/<script>\s*([\s\S]*?)\s*<\/script>/);
   assert.ok(embedded, 'Page includes its reviewed configuration');
   assert.equal(embedded[1].trim(), example.trim(), 'Embedded configuration matches canonical configuration');
@@ -70,13 +70,13 @@ test('admin page has seven profile fields, no password/balance input, and matchi
   assert.match(example, /Employee: 123140000/);
 });
 test('shared context renders an escaped signed-in identity and cosmetic Admin-role indicator', () => {
-  const source = fs.readFileSync('Petty Cash User Context.html', 'utf8');
+  const source = fs.readFileSync('shared/identity/Petty Cash User Context.html', 'utf8');
   assert.equal(source.split('id="pcAdminAllowed"').length - 1, 1);
   assert.match(source, /user\.roles contains 'Petty Cash Admin' %\}true\{% else %\}false/);
 });
 test('confirmed Department GUID configuration is used for reads, not the text name column', async () => {
   const example = { window: {} };
-  vm.runInNewContext(fs.readFileSync('pettycash-admin-config.example.js', 'utf8'), example);
+  vm.runInNewContext(fs.readFileSync('pages/admin/pettycash-admin-config.example.js', 'utf8'), example);
   assert.equal(example.window.PC_ADMIN_CONFIG.departmentIdColumn, 'hr_departmentsid');
   assert.equal(example.window.PC_ADMIN_CONFIG.creationEnabled, true);
   assert.equal(example.window.PC_ADMIN_CONFIG.securityReviewed, true);
@@ -94,7 +94,7 @@ test('confirmed Department GUID configuration is used for reads, not the text na
 });
 test('confirmed configuration produces exact profile-only POST and either release gate blocks writes', async () => {
   const example = { window: {} };
-  vm.runInNewContext(fs.readFileSync('pettycash-admin-config.example.js', 'utf8'), example);
+  vm.runInNewContext(fs.readFileSync('pages/admin/pettycash-admin-config.example.js', 'utf8'), example);
   const actual = example.window.PC_ADMIN_CONFIG;
   assert.equal(actual.contactDepartmentNavigation, 'hr_Department');
   assert.equal(actual.contactManagerNavigation, 'hr_ReportsToManager');

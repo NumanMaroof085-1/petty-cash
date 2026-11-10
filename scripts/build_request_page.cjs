@@ -2,8 +2,8 @@
 const fs = require('node:fs');
 const path = require('node:path');
 const root = path.resolve(__dirname, '..');
-const target = path.join(root, 'New Petty Cash Request.html');
-const source = fs.readFileSync(target, 'utf8'), script = fs.readFileSync(path.join(root, 'pettycash-api.js'), 'utf8').trim();
+const target = path.join(root, 'pages/new-request/New Petty Cash Request.html');
+const source = fs.readFileSync(target, 'utf8'), script = fs.readFileSync(path.join(root, 'pages/new-request/pettycash-api.js'), 'utf8').trim();
 if ((source.match(/<script>/g) || []).length !== 1 || !/<script>[\s\S]*?<\/script>\s*$/.test(source)) throw new Error('Review request page script layout before rebuilding.');
 if (/<\/script|\{%|\{\{/i.test(script)) throw new Error('Request script is not safe for inline publication.');
 const generated = source.replace(/<script>[\s\S]*?<\/script>\s*$/, () => '<script>\n' + script + '\n</script>\n');

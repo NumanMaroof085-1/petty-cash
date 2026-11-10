@@ -2,14 +2,14 @@ const { test } = require('node:test');
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const vm = require('node:vm');
-const script = fs.readFileSync('pettycash-modules.js', 'utf8');
+const script = fs.readFileSync('shared/modules/pettycash-modules.js', 'utf8');
 const employee = '11111111-1111-4111-8111-111111111111';
 const other = '22222222-2222-4222-8222-222222222222';
 const flow = '33333333-3333-4333-8333-333333333333';
 const transaction = '44444444-4444-4444-8444-444444444444';
 test('all page fragments include the shared Web Template once without requesting the blocked Web File', () => {
   const include = "{% include 'Petty Cash Modules' %}";
-  for (const file of ['New Petty Cash Request.html', 'My Petty Cash Requests.html', 'Accounts Cash Management.html', 'Finance Cash Management.html']) {
+  for (const file of ['pages/new-request/New Petty Cash Request.html', 'pages/my-requests/My Petty Cash Requests.html', 'documentation/archive/retired-pages/Accounts Cash Management.html', 'pages/finance/Finance Cash Management.html']) {
     const html = fs.readFileSync(file, 'utf8');
     assert.equal(html.split(include).length - 1, 1, file);
     const contextInclude = "{% include 'Petty Cash User Context' %}";
@@ -18,7 +18,7 @@ test('all page fragments include the shared Web Template once without requesting
     assert.doesNotMatch(html, /\{\{\s*user\.|id=["'](?:portalUserId|pcModuleUserId|pcAccountsAllowed)["']/i,
       'Do not duplicate user-context fields in editable page HTML: ' + file);
     assert.doesNotMatch(html, /<script\b[^>]*src=["']\/pettycash-modules\.js["']/i, file);
-    if (file === 'New Petty Cash Request.html') {
+    if (file === 'pages/new-request/New Petty Cash Request.html') {
       assert.ok(html.indexOf(include) < html.indexOf('<script>'), 'Shared helpers load before submission script');
     }
   }
@@ -27,13 +27,13 @@ test('all page fragments include the shared Web Template once without requesting
   new vm.Script(script);
 });
 test('the employee page is titled My Requests without changing its module identity', () => {
-  const html = fs.readFileSync('My Petty Cash Requests.html', 'utf8');
+  const html = fs.readFileSync('pages/my-requests/My Petty Cash Requests.html', 'utf8');
   assert.match(html, /<h2>My Requests<\/h2>/);
   assert.match(html, /data-pc-page="requests"/);
 });
 
 test('the shared user-context template preserves input IDs, escapes values, and checks the Accounts role', () => {
-  const source = fs.readFileSync('Petty Cash User Context.html', 'utf8');
+  const source = fs.readFileSync('shared/identity/Petty Cash User Context.html', 'utf8');
   for (const id of ['portalUserId', 'portalUserName', 'portalUserEmail', 'pcModuleUserId', 'pcAccountsAllowed']) {
     assert.equal(source.split('id="' + id + '"').length - 1, 1, id);
   }
@@ -131,14 +131,14 @@ test('a missing Contact balance column is not silently displayed as zero', async
 
 const clarificationConfig = { clarificationsEnabled: true, clarificationFlowId: flow };
 test('page payload names match corrected Power Pages titles, distinct from internal flow properties', () => {
-  const trigger = JSON.parse(fs.readFileSync('documentation/flow-snapshots/clarification-answer-trigger.with-inputs.received-2026-11-08.json', 'utf8'));
+  const trigger = JSON.parse(fs.readFileSync('flows/clarifications/snapshots/clarification-answer-trigger.with-inputs.received-2026-11-08.json', 'utf8'));
   const schema = trigger.inputs.schema;
   assert.equal(trigger.kind, 'PowerPages');
   assert.deepEqual(schema.required, ['text', 'text_1']);
   assert.equal(schema.properties.text.type, 'string');
   assert.equal(schema.properties.text_1.type, 'string');
   const pageScope = { window: {}, Object };
-  vm.runInNewContext(fs.readFileSync('My Petty Cash Requests.html', 'utf8').match(/<script>\s*([\s\S]*?)\s*<\/script>/)[1], pageScope);
+  vm.runInNewContext(fs.readFileSync('pages/my-requests/My Petty Cash Requests.html', 'utf8').match(/<script>\s*([\s\S]*?)\s*<\/script>/)[1], pageScope);
   const config = pageScope.window.PC_MODULE_CONFIG;
   assert.equal(config.clarificationInputNames.clarificationId, schema.properties.text.title);
   assert.equal(config.clarificationInputNames.answer, schema.properties.text_1.title);
@@ -324,10 +324,10 @@ test('non-JSON posting responses preserve HTTP status and operation key without 
   }
 });
 test('Finance page retains the confirmed site config while the reusable example stays disabled', () => {
-  const example = fs.readFileSync('pettycash-module-config.example.js', 'utf8');
+  const example = fs.readFileSync('shared/modules/pettycash-module-config.example.js', 'utf8');
   assert.match(example, /financeFlowId: ""/);
   assert.match(example, /financeSecurityReviewed: false/);
-  const html = fs.readFileSync('Finance Cash Management.html', 'utf8');
+  const html = fs.readFileSync('pages/finance/Finance Cash Management.html', 'utf8');
   assert.match(html, /id="pcPostCash"[^>]*disabled/);
   assert.match(html, /id="pcFinanceForm" hidden/);
   const pageScope = { window: {} }, exampleScope = { window: {} };
@@ -341,7 +341,7 @@ test('Finance page retains the confirmed site config while the reusable example 
   assert.equal(configured.calls.length, 0, 'Loading config must not post cash or call any API');
   assert.equal(harness({ config: exampleScope.window.PC_MODULE_CONFIG }).api.flowReady(), false);
   assert.equal(harness().api.flowReady(), false, 'Missing config remains disabled');
-  const context = fs.readFileSync('Petty Cash User Context.html', 'utf8');
+  const context = fs.readFileSync('shared/identity/Petty Cash User Context.html', 'utf8');
   assert.match(context, /id="pcFinanceAllowed" value="\{% if user.roles contains 'Petty Cash Finance' %\}true\{% else %\}false\{% endif %\}"/);
 });
 
@@ -456,7 +456,7 @@ test('console transport repair preserves an already pending operation, CSRF and 
   await assert.rejects(h.api.postMovement(value), /HTTP 500/);
   assert.equal(savedRows, 0);
   const pendingKey = h.api.pendingPostingKey;
-  const repair = fs.readFileSync('scripts/repair_open_finance_page.js', 'utf8');
+  const repair = fs.readFileSync('documentation/archive/finance-repair/repair_open_finance_page.js', 'utf8');
   vm.runInNewContext(repair, { window: h.root, Headers, Response });
   vm.runInNewContext(repair, { window: h.root, Headers, Response });
   assert.equal(requests.length, 1, 'Installing or repeating the repair never submits cash');

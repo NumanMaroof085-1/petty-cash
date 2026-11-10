@@ -9,7 +9,7 @@ const root = path.resolve(__dirname, '..');
 const employee = '11111111-1111-4111-8111-111111111111';
 const request = '22222222-2222-4222-8222-222222222222';
 (async () => {
-  const qa = path.join(root, 'documentation', 'qa', 'pages');
+  const qa = path.join(process.env.PC_QA_OUTPUT_ROOT || path.join(root, 'documentation', 'qa'), 'pages');
   fs.mkdirSync(qa, { recursive: true });
   const browser = await chromium.launch({ headless: true,
     executablePath: 'C:/Program Files/Google/Chrome/Application/chrome.exe' });
@@ -19,8 +19,8 @@ const request = '22222222-2222-4222-8222-222222222222';
       const errors = [];
       page.on('pageerror', error => errors.push(error.message));
       const expense = mode.startsWith('expense-');
-      let fragment = fs.readFileSync(path.join(root, expense ? 'New Petty Cash Request.html' :
-        mode === 'requests' ? 'My Petty Cash Requests.html' : 'Finance Cash Management.html'), 'utf8');
+      let fragment = fs.readFileSync(path.join(root, expense ? 'pages/new-request/New Petty Cash Request.html' :
+        mode === 'requests' ? 'pages/my-requests/My Petty Cash Requests.html' : 'pages/finance/Finance Cash Management.html'), 'utf8');
       let ledgerReads = 0;
       let profileReads = 0;
       const include = "{% include 'Petty Cash Modules' %}";
@@ -28,7 +28,7 @@ const request = '22222222-2222-4222-8222-222222222222';
       const contextInclude = "{% include 'Petty Cash User Context' %}";
       assert.equal(fragment.split(contextInclude).length - 1, 1, 'Render the context template exactly once');
       // Simulate signed-in mock Liquid output, not a real authentication engine.
-      const contextSource = fs.readFileSync(path.join(root, 'Petty Cash User Context.html'), 'utf8');
+      const contextSource = fs.readFileSync(path.join(root, 'shared/identity/Petty Cash User Context.html'), 'utf8');
       const renderedContext = contextSource.replace(/\{\{ user.id \| escape \}\}/g, employee)
         .replace(/\{\{ user.fullname \| escape \}\}/g, 'Example employee')
         .replace(/\{\{ user.emailaddress1 \| escape \}\}/g, 'employee@example.test')
@@ -37,12 +37,12 @@ const request = '22222222-2222-4222-8222-222222222222';
         .replace("{% if user.roles contains 'Petty Cash Admin' %}true{% else %}false{% endif %}", 'false');
       assert.doesNotMatch(renderedContext, /\{%|\{\{/, 'All mock context values must be rendered');
       // Simulate the documented Liquid include with the canonical local script.
-      const moduleSource = fs.readFileSync(path.join(root, 'pettycash-modules.js'), 'utf8');
+      const moduleSource = fs.readFileSync(path.join(root, 'shared/modules/pettycash-modules.js'), 'utf8');
       assert.doesNotMatch(moduleSource, /<\/script|\{%|\{\{/i, 'Source must be safe to paste into the script template');
       fragment = fragment.replace(contextInclude, () => renderedContext)
         .replace(include, () => '<script>' + moduleSource + '</script>');
       if (expense) fragment = fragment.replace("{% include 'Petty Cash Receipts' %}", () =>
-        fs.readFileSync(path.join(root, 'Petty Cash Receipts.html'), 'utf8').replace('{% raw %}', '').replace('{% endraw %}', ''));
+        fs.readFileSync(path.join(root, 'shared/receipts/Petty Cash Receipts.html'), 'utf8').replace('{% raw %}', '').replace('{% endraw %}', ''));
       assert.doesNotMatch(fragment, /\{%|\{\{/, 'Mock page must not retain Liquid placeholders');
       await page.route('https://portal.example.test/**', async route => {
         const url = new URL(route.request().url());

@@ -22,15 +22,15 @@ const requests = [makeRequest(1, 123140000, 'PCR-000128', '', 2400),
   makeRequest(2, 123140001, 'PCR-000127', 'Approved. Thank you for the receipts.', 1850),
   makeRequest(3, 123140002, 'PCR-000126', 'Please add a clear receipt for the taxi.', 650)];
 (async () => {
-  const output = path.join(root, 'documentation', 'qa', 'ui'); fs.mkdirSync(output, { recursive: true });
+  const output = path.join(process.env.PC_QA_OUTPUT_ROOT || path.join(root, 'documentation', 'qa'), 'ui'); fs.mkdirSync(output, { recursive: true });
   const browser = await chromium.launch({ headless: true, executablePath: 'C:/Program Files/Google/Chrome/Application/chrome.exe' });
   try {
-    for (const [mode, file] of [['request', 'New Petty Cash Request.html'], ['requests', 'My Petty Cash Requests.html'],
-      ['finance', 'Finance Cash Management.html'], ['admin', 'Admin Users.html']]) {
+    for (const [mode, file] of [['request', 'pages/new-request/New Petty Cash Request.html'], ['requests', 'pages/my-requests/My Petty Cash Requests.html'],
+      ['finance', 'pages/finance/Finance Cash Management.html'], ['admin', 'pages/admin/Admin Users.html']]) {
       const page = await browser.newPage({ viewport: { width: 1440, height: 1000 } });
       const calls = [], errors = []; let failRequests = false, emptyRequests = false, literalComments = false;
       page.on('pageerror', error => errors.push(error.message));
-      const context = fs.readFileSync(path.join(root, 'Petty Cash User Context.html'), 'utf8')
+      const context = fs.readFileSync(path.join(root, 'shared/identity/Petty Cash User Context.html'), 'utf8')
         .replace(/\{\{ user.id \| escape \}\}/g, actor)
         .replace(/\{\{ user.fullname \| escape \}\}/g, 'Ayesha Khan')
         .replace(/\{\{ user.emailaddress1 \| escape \}\}/g, 'ayesha@example.test')
@@ -39,9 +39,9 @@ const requests = [makeRequest(1, 123140000, 'PCR-000128', '', 2400),
         .replace("{% include 'Petty Cash User Context' %}", () => context)
         .replace("{% include 'Petty Cash Modules' %}", () =>
           '<script>window.PC_MODULE_CONFIG={financeFlowId:' + JSON.stringify(flow) + ',financeSecurityReviewed:true};</script><script>' +
-          fs.readFileSync(path.join(root, 'pettycash-modules.js'), 'utf8') + '</script>')
-        .replace("{% include 'Petty Cash Admin' %}", () => '<script>' + fs.readFileSync(path.join(root, 'pettycash-admin.js'), 'utf8') + '</script>')
-        .replace("{% include 'Petty Cash Receipts' %}", () => fs.readFileSync(path.join(root, 'Petty Cash Receipts.html'), 'utf8')
+          fs.readFileSync(path.join(root, 'shared/modules/pettycash-modules.js'), 'utf8') + '</script>')
+        .replace("{% include 'Petty Cash Admin' %}", () => '<script>' + fs.readFileSync(path.join(root, 'pages/admin/pettycash-admin.js'), 'utf8') + '</script>')
+        .replace("{% include 'Petty Cash Receipts' %}", () => fs.readFileSync(path.join(root, 'shared/receipts/Petty Cash Receipts.html'), 'utf8')
           .replace('{% raw %}', '').replace('{% endraw %}', ''));
       // Reproduce old Studio inline form hiding without allowing it to hide authorized forms.
       fragment = fragment.replace('id="pcAdminForm" hidden', 'id="pcAdminForm" hidden style="display:none"');

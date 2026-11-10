@@ -26,7 +26,7 @@ const records = [
   { hr_pettycashrequestid: '44444444-4444-4444-8444-444444444444', hr_requesttitle: 'PCR-000126', hr_transactiondate: '2026-10-29', hr_totalamount: 600, hr_approvalstatus: 123140002, hr_paymentsource: 123140001, _hr_submittedby_value: employee }
 ];
 (async () => {
-  const qa = path.join(root, 'documentation', 'qa', 'shell'); fs.mkdirSync(qa, { recursive: true });
+  const qa = path.join(process.env.PC_QA_OUTPUT_ROOT || path.join(root, 'documentation', 'qa'), 'shell'); fs.mkdirSync(qa, { recursive: true });
   const browser = await chromium.launch({ headless: true, executablePath: 'C:/Program Files/Google/Chrome/Application/chrome.exe' });
   try {
     for (const mode of ['employee', 'finance', 'admin', 'both', 'anonymous', 'empty', 'ledger-error', 'requests-error', 'isolation', 'long-name', 'fr', 'it']) {
@@ -94,7 +94,7 @@ const records = [
           assert.equal(await page.locator('#pcHomeRequests tr').count(), 3);
         }
         if (mode === 'employee') {
-          await page.addScriptTag({ content: read('pettycash-home.js') });
+          await page.addScriptTag({ content: read('pages/home/pettycash-home.js') });
           assert.equal(calls.length, 2, 'Repeated script must not initialize twice');
           gateReads = true;
           await page.locator('#pcHomeRefresh').click();
@@ -144,18 +144,18 @@ const records = [
       await page.close(); console.log('Verified shell/home: ' + mode + ', six widths, menu/keyboard/native links; mocked host and APIs only.');
     }
     // Place the same header/footer around each working module to check style and identity isolation.
-    for (const [mode, file] of [['new-request', 'New Petty Cash Request.html'], ['requests', 'My Petty Cash Requests.html'],
-      ['finance', 'Finance Cash Management.html'], ['admin', 'Admin Users.html']]) {
+    for (const [mode, file] of [['new-request', 'pages/new-request/New Petty Cash Request.html'], ['requests', 'pages/my-requests/My Petty Cash Requests.html'],
+      ['finance', 'pages/finance/Finance Cash Management.html'], ['admin', 'pages/admin/Admin Users.html']]) {
       const page = await browser.newPage({ viewport: { width: 1440, height: 1000 } });
       page.setDefaultTimeout(10000);
       const errors = [], calls = [];
       page.on('pageerror', error => errors.push(error.message));
       const partials = require('./shell_fixtures.cjs').includes();
-      partials['Petty Cash Admin'] = '<script>' + read('pettycash-admin.js') + '</script>';
-      partials['Petty Cash Receipts'] = read('Petty Cash Receipts.html').replace('{% raw %}', '').replace('{% endraw %}', '');
+      partials['Petty Cash Admin'] = '<script>' + read('pages/admin/pettycash-admin.js') + '</script>';
+      partials['Petty Cash Receipts'] = read('shared/receipts/Petty Cash Receipts.html').replace('{% raw %}', '').replace('{% endraw %}', '');
       const scope = require('./shell_fixtures.cjs').context({ finance: true, admin: true });
       const render = require('./liquid_fixture.cjs').render;
-      const html = { header: render(read('Header.html'), scope, partials), footer: render(read('Footer.html'), scope, partials), page: render(read(file), scope, partials) };
+      const html = { header: render(read('shared/shell/Header.html'), scope, partials), footer: render(read('shared/shell/Footer.html'), scope, partials), page: render(read(file), scope, partials) };
       await page.route('**/*', async route => {
         const request = route.request(), url = new URL(request.url());
         assert.equal(url.origin, 'https://portal.example.test');
@@ -165,6 +165,10 @@ const records = [
         calls.push(request.method()); assert.equal(request.method(), 'GET');
         if (url.pathname === '/_api/hr_cashtransactions') return route.fulfill({ json: { value: [] } });
         if (url.pathname === '/_api/hr_pettycashrequests') return route.fulfill({ json: { value: records } });
+        if (url.pathname === '/_api/hr_requestclarifications') {
+          assert.equal(url.searchParams.get('$filter'), '_hr_employee_value eq ' + employee);
+          return route.fulfill({ json: { value: [] } });
+        }
         if (url.pathname.startsWith('/_api/contacts(')) return route.fulfill({ json: { contactid: employee,
           _hr_department_value: records[1].hr_pettycashrequestid, _hr_reportstomanager_value: records[2].hr_pettycashrequestid } });
         if (url.pathname === '/_api/contacts') return route.fulfill({ json: { value: [{ contactid: employee, fullname: 'Ayesha Khan', emailaddress1: 'ayesha@example.test', adx_identity_username: 'ayesha', statecode: 0, hr_userrole: 123140002 }] } });

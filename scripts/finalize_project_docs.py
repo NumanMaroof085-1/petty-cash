@@ -32,7 +32,7 @@ def main():
     manifest = {"verification_date": "2026-10-12", "render_method": "User Office PDF export, bundled Poppler rasterization, all pages visually inspected", "documents": []}
     # Validate ALL targets before replacing any of them.
     for name in NAMES:
-        original = ROOT / (name + ".docx")
+        original = ROOT / "documentation" / "originals" / (name + ".docx")
         backup = ROOT / "documentation" / "backups" / "2026-10-12" / original.name
         corrected = ROOT / "documentation" / "corrected" / original.name
         pdf = corrected.with_suffix(".pdf")
@@ -55,7 +55,7 @@ def main():
         manifest["documents"].append({"name": original.name, "pages_reviewed": len(reader.pages),
             "backup_sha256": digest(backup), "corrected_sha256": digest(corrected), "pdf_sha256": digest(pdf)})
     for name in NAMES:
-        original = ROOT / (name + ".docx")
+        original = ROOT / "documentation" / "originals" / (name + ".docx")
         corrected = ROOT / "documentation" / "corrected" / original.name
         if digest(original) != digest(corrected):
             shutil.copy2(corrected, original)
