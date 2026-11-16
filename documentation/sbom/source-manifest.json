@@ -1,0 +1,126 @@
+{
+  "as_of": "2026-11-16",
+  "scope": "Current local page shared and vendor runtime files; hashes do not assert live publication.",
+  "files": [
+    {
+      "path": "pages/admin/Admin Users.html",
+      "bytes": 24957,
+      "sha256": "a8dc8f93e5b9793167900783b38f0d9db203d7a71d6782acab79513633515896"
+    },
+    {
+      "path": "pages/admin/pettycash-admin-config.example.js",
+      "bytes": 694,
+      "sha256": "9c228e9b77251d7956501e2fea998c685230e28046324c85051ae10a6d2c4542"
+    },
+    {
+      "path": "pages/admin/pettycash-admin.js",
+      "bytes": 18081,
+      "sha256": "b9ffe63ae43412794add2f93230a5a79e216377cfba41d02e5ea1327b8f7d10d"
+    },
+    {
+      "path": "pages/finance/Finance Cash Management.html",
+      "bytes": 25962,
+      "sha256": "5365f0be49d36476e932902e191afd3e3593657eae9e1d7b1f45db40829fa72d"
+    },
+    {
+      "path": "pages/home/Home.html",
+      "bytes": 126,
+      "sha256": "15a67697c3b697962f2e3f8b04bd619cfc282327404ab7dddb884962241dde1e"
+    },
+    {
+      "path": "pages/home/Petty Cash Home.html",
+      "bytes": 38598,
+      "sha256": "528aea3666ddd665597a27f14559f590248b88bd768aa494cf2d7c5fe9806c61"
+    },
+    {
+      "path": "pages/home/pettycash-home.css",
+      "bytes": 8243,
+      "sha256": "7b57293c63cb2c90ab5b3944e3ec363a4bb220da0bea42bac7af52d67662069b"
+    },
+    {
+      "path": "pages/home/pettycash-home.js",
+      "bytes": 3755,
+      "sha256": "e25b5104e9275fa09a3e3c6a368406a7fc87e5b942d8f313c3e69cbdaa4e07de"
+    },
+    {
+      "path": "pages/my-requests/My Petty Cash Requests.html",
+      "bytes": 25636,
+      "sha256": "344a85fadd53ad53ac0f720c0f90db690ba91d83d5cad73a09077da65588b852"
+    },
+    {
+      "path": "pages/new-request/New Petty Cash Request.html",
+      "bytes": 80347,
+      "sha256": "00c0d51cae19c332714dc8d2fe6998a36e0a8b6b2285b3f2ecf486b720c97ec5"
+    },
+    {
+      "path": "pages/new-request/pettycash-api.js",
+      "bytes": 51037,
+      "sha256": "6ae5a0ab7aa0bcf05b627f3f321a99f82dfa39ebbf38a42def8bc6f1c2b6d383"
+    },
+    {
+      "path": "shared/identity/Petty Cash User Context.html",
+      "bytes": 1071,
+      "sha256": "83e4a42ee1ab91fb9899ce40c9d961bf1bda8a7f725131b93a7feb0966d246d6"
+    },
+    {
+      "path": "shared/modules/pettycash-module-config.example.js",
+      "bytes": 558,
+      "sha256": "c52a3041d6b70dee6731e5f7b82a0db810a2ab65d8aab2b33b5e5d75d110e9a6"
+    },
+    {
+      "path": "shared/modules/pettycash-modules.js",
+      "bytes": 39675,
+      "sha256": "3e648898dcd687d2cbf19aa28d7a7c11bb5269fcf0d854ba6b6297045c263cbf"
+    },
+    {
+      "path": "shared/receipts/Petty Cash Receipts.html",
+      "bytes": 436448,
+      "sha256": "23c637b9598d17fd114dbd665116c133cd71772d0e898eb9c5394615c3e43e6d"
+    },
+    {
+      "path": "shared/receipts/pettycash-receipts.js",
+      "bytes": 16030,
+      "sha256": "d4d2db4a6e301fc3cf1467ab487c72582992904dbcd5817b48522782bc82d78a"
+    },
+    {
+      "path": "shared/shell/assets/industrad-engineering.png",
+      "bytes": 8537,
+      "sha256": "04352365cbfb1bec3ffe201b4e1e3befec685499e32597103390c4a22a30e87a"
+    },
+    {
+      "path": "shared/shell/Footer.html",
+      "bytes": 2616,
+      "sha256": "0dbd9d498522f8f688383d856a7277d6d669eb1f4499246ef51dc0f44b23acc2"
+    },
+    {
+      "path": "shared/shell/Header.html",
+      "bytes": 24352,
+      "sha256": "54dcf06ee29e8a42ed1da3f71031cba1828c191c13cc87d9a9c076859d0d0287"
+    },
+    {
+      "path": "shared/shell/pettycash-shell.css",
+      "bytes": 7992,
+      "sha256": "b6e905135bb38c10d0c30b64dcc9b34780117db6bd43af32de995c1c6c00eeb1"
+    },
+    {
+      "path": "shared/shell/pettycash-shell.js",
+      "bytes": 3274,
+      "sha256": "47c1f23bd21747e630f577971dea26a8bb9c96387f32ba71055bcf3bccbbc51e"
+    },
+    {
+      "path": "shared/styles/pettycash-ui.css",
+      "bytes": 20989,
+      "sha256": "121a1b7f60bd6eaa3a5a97e7465d5fdab291b5ce0c09f4fa8f408b108290f26e"
+    },
+    {
+      "path": "vendor/jspdf-4.2.1.umd.min.js",
+      "bytes": 420165,
+      "sha256": "e6551fcdc32f09d6853b2c5126d18d01d9447e0da618a41a11ebeee0f6c20d54"
+    },
+    {
+      "path": "vendor/jspdf-LICENSE.txt",
+      "bytes": 1142,
+      "sha256": "dc388ec35ff463288cdde3588a36fd4ed12a45deff053243b37309acc9ef583b"
+    }
+  ]
+}

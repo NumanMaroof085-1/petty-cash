@@ -38,17 +38,27 @@ Home includes them only for a signed-in user, once each; don't add them globally
 
 Publish Header and Footer together, since the footer styles are embedded in the
 Header. Sync/publish the site, then open a fresh tab after resolving any pending
-cash/request submission. No additional JS/CSS Web Files are required. There is no
+cash/request submission. No additional JS/CSS Web Files are required. The supplied logo needs the image
+Web File described below. There is no
 need to republish the four application pages or the existing shared templates.
 
 ## Header
 
 - White header, teal active state, shorter visible menu labels, account initial,
   compact dropdowns, mobile navigation, visible keyboard focus and skip link.
-- Retains the supplied **Mobile Header** editable snippet for the existing logo
-  and company name. Preview screenshots use a synthetic logo and “Company name”;
-  those fixtures are not published branding. Edit the existing snippet in Studio
-  or Management to change the actual company name/logo.
+- Uses the supplied Industrad Engineering PNG as the only header branding, linked
+  to the Home site marker. The old Mobile Header snippet is no longer rendered
+  in this template; it remains in the tenant for reference. No separate company
+  name is displayed. Logo width is 270px on desktop and 230px on small screens,
+  with proportional height and a width cap for narrow devices.
+- Upload [industrad-engineering.png](assets/industrad-engineering.png) as a
+  **Web File** under the site's Home page: partial URL
+  `industrad-engineering.png`, Published publishing state, correct Website and
+  PNG attachment (image/png). Confirm `/industrad-engineering.png` loads when
+  signed out as well as signed in; keep branding accessible wherever the header
+  is shown. Then replace the existing **Header** Web Template Source with the
+  complete rebuilt Header.html. Do not paste the image file into template Source.
+  This update needs one image Web File; CSS and JavaScript remain embedded.
 - Keeps `weblinks["Default"]`, managed link destinations, child links, Dashboard,
   Profile Navigation, native Search, language dropdown, and native sign-in/out
   URL substitutions. Visible labels shorten New Petty Cash Request → New request,
@@ -140,8 +150,9 @@ Original supplied templates are preserved in
 `Footer.original.html` (ignored local backups). This revision does not modify
 existing content snippets, managed navigation records, page permissions, web
 roles, tables, columns, Web API fields, site settings or native flows. The only
-new website configuration is the **Petty Cash Home** Web Template and its include
-on the existing Home page.
+website configuration from the original revision is the **Petty Cash Home** Web
+Template and its include on the existing Home page. The 10 November branding
+update additionally requires the logo image Web File described above.
 
 ## Verification and practical limits
 
@@ -163,7 +174,7 @@ The fixtures implement only a subset of Liquid and the expected Bootstrap show/
 hide contract. These checks **do not** execute Power Pages' native Liquid engine,
 output cache, actual authentication, Bootstrap bundle or tenant permissions.
 After publication, check sign-in/sign-out, managed navigation/child dropdowns,
-search, language menu, brand snippet, Home balances, role visibility and mobile
+search, language menu, logo image/Home link, Home balances, role visibility and mobile
 toggle with your real site. Existing server permissions remain the authority.
 
 The first local integration run correctly left Admin disabled when its synthetic

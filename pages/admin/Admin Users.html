@@ -234,9 +234,9 @@
     <div class="pc-card-head"><h3>New employee</h3><span class="pc-muted">* Required</span></div>
     <fieldset id="pcAdminFields" disabled>
       <div class="pc-admin-grid">
-        <div><label for="pcAdminFirstName">First name</label><input id="pcAdminFirstName" autocomplete="given-name" placeholder="First name" maxlength="50" /></div>
+        <div><label for="pcAdminFirstName">First name <span class="pc-required" aria-hidden="true">*</span></label><input id="pcAdminFirstName" autocomplete="given-name" placeholder="First name" maxlength="50" required /></div>
         <div><label for="pcAdminLastName">Last name <span class="pc-required" aria-hidden="true">*</span></label><input id="pcAdminLastName" autocomplete="family-name" placeholder="Last name" maxlength="50" required /></div>
-        <div><label for="pcAdminEmail">Email <span class="pc-required" aria-hidden="true">*</span></label><input id="pcAdminEmail" type="email" autocomplete="email" placeholder="name@company.com" maxlength="100" required /></div>
+        <div><label for="pcAdminEmail">Email <span class="pc-required" aria-hidden="true">*</span></label><input id="pcAdminEmail" type="email" autocomplete="email" placeholder="name@industrad.com" maxlength="100" pattern="[^@\s]+@[iI][nN][dD][uU][sS][tT][rR][aA][dD]\.[cC][oO][mM]" title="Use your @industrad.com email address." required aria-describedby="pcAdminEmailHelp" /><small id="pcAdminEmailHelp" class="pc-hint">@industrad.com addresses only.</small></div>
         <div><label for="pcAdminUsername">Username <span class="pc-required" aria-hidden="true">*</span></label><input id="pcAdminUsername" autocomplete="off" autocapitalize="none" spellcheck="false" placeholder="e.g. jane.doe" minlength="3" maxlength="100" required aria-describedby="pcUsernameHelp" /><small id="pcUsernameHelp" class="pc-hint">3–100 characters. Letters, digits, dots, _ or -; start with a letter or digit.</small></div>
         <div><label for="pcAdminBusinessRole">Business role <span class="pc-required" aria-hidden="true">*</span></label><select id="pcAdminBusinessRole" required><option value="">Choose a role</option></select></div>
         <div><label for="pcAdminDepartment">Department <span class="pc-required" aria-hidden="true">*</span></label><select id="pcAdminDepartment" required><option value="">Choose a department</option></select></div>

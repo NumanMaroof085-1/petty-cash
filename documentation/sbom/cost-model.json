@@ -1,0 +1,417 @@
+{
+  "as_of": "2026-11-16",
+  "currency": "USD",
+  "geography": "US public commercial reference prices",
+  "commercial_basis": "Subscription monthly equivalents generally require annual commitment; local CSP quote, taxes and exchange rate pending.",
+  "company_inputs": {
+    "employees_monthly": [
+      25,
+      30
+    ],
+    "managers_and_boss": 7,
+    "existing_licenses": "Unknown",
+    "reviewers_website_usage": "Unknown; show both approval-email-only and website-user cases."
+  },
+  "rates_monthly_usd": {
+    "pages_pack_100": 200,
+    "pages_authenticated_payg": 4,
+    "pages_anonymous_pack_500": 75,
+    "pages_anonymous_payg": 0.3,
+    "automate_process": 150,
+    "automate_premium_user": 15,
+    "power_apps_premium_user": 20,
+    "power_apps_per_app_csp_reference": 5,
+    "exchange_online_plan1": 4,
+    "business_basic_teams": 7,
+    "business_basic_no_teams": 5.4,
+    "entra_p1": 7,
+    "entra_p2": 10,
+    "database_gb_subscription": 40,
+    "file_gb_subscription": 2,
+    "log_gb_subscription": 10,
+    "database_gb_payg": 48,
+    "file_gb_payg": 2.4,
+    "log_gb_payg": 12,
+    "automate_cloud_run_payg_preview": 0.6,
+    "business_central_essentials": 80,
+    "business_central_premium": 110,
+    "business_central_team_member": 8
+  },
+  "sources": [
+    {
+      "id": "S01",
+      "title": "Power Pages pricing",
+      "url": "https://www.microsoft.com/en-us/power-platform/products/power-pages/pricing",
+      "accessed": "2026-11-16"
+    },
+    {
+      "id": "S02",
+      "title": "Power Automate pricing",
+      "url": "https://www.microsoft.com/en-us/power-platform/products/power-automate/pricing",
+      "accessed": "2026-11-16"
+    },
+    {
+      "id": "S03",
+      "title": "Power Apps pricing",
+      "url": "https://www.microsoft.com/en-us/power-platform/products/power-apps/pricing",
+      "accessed": "2026-11-16"
+    },
+    {
+      "id": "S04",
+      "title": "Power Platform licensing guidance and capacity prices",
+      "url": "https://www.microsoft.com/licensing/guidance/Power-Platform",
+      "accessed": "2026-11-16"
+    },
+    {
+      "id": "S05",
+      "title": "Pay as you go meters",
+      "url": "https://learn.microsoft.com/en-us/power-platform/admin/pay-as-you-go-meters",
+      "accessed": "2026-11-16"
+    },
+    {
+      "id": "S06",
+      "title": "Power Pages and existing license entitlements",
+      "url": "https://learn.microsoft.com/en-us/power-platform/admin/powerapps-flow-licensing-faq",
+      "accessed": "2026-11-16"
+    },
+    {
+      "id": "S07",
+      "title": "Power Pages cloud flow integration prerequisites",
+      "url": "https://learn.microsoft.com/en-us/power-pages/configure/cloud-flow-integration",
+      "accessed": "2026-11-16"
+    },
+    {
+      "id": "S08",
+      "title": "Share Process capacity with flow groups",
+      "url": "https://learn.microsoft.com/en-us/power-automate/flow-groups",
+      "accessed": "2026-11-16"
+    },
+    {
+      "id": "S09",
+      "title": "Create flow groups and rollout availability",
+      "url": "https://learn.microsoft.com/en-us/power-automate/create-flow-group",
+      "accessed": "2026-11-16"
+    },
+    {
+      "id": "S10",
+      "title": "Power Automate licensing and approval responders",
+      "url": "https://learn.microsoft.com/en-us/power-platform/admin/power-automate-licensing/faqs",
+      "accessed": "2026-11-16"
+    },
+    {
+      "id": "S11",
+      "title": "Dataverse connector classification",
+      "url": "https://learn.microsoft.com/en-us/connectors/commondataserviceforapps/",
+      "accessed": "2026-11-16"
+    },
+    {
+      "id": "S12",
+      "title": "Approvals connector classification",
+      "url": "https://learn.microsoft.com/en-us/connectors/approvals/",
+      "accessed": "2026-11-16"
+    },
+    {
+      "id": "S13",
+      "title": "Office 365 Outlook connector classification",
+      "url": "https://learn.microsoft.com/en-us/connectors/office365/",
+      "accessed": "2026-11-16"
+    },
+    {
+      "id": "S14",
+      "title": "Exchange Online pricing",
+      "url": "https://www.microsoft.com/en-us/microsoft-365/exchange/exchange-online-business-plans-and-pricing",
+      "accessed": "2026-11-16"
+    },
+    {
+      "id": "S15",
+      "title": "Microsoft 365 Business Basic pricing",
+      "url": "https://www.microsoft.com/en-us/microsoft-365/business/microsoft-365-business-basic",
+      "accessed": "2026-11-16"
+    },
+    {
+      "id": "S16",
+      "title": "Microsoft Entra ID Free",
+      "url": "https://learn.microsoft.com/en-us/azure/cost-management-billing/manage/microsoft-entra-id-free",
+      "accessed": "2026-11-16"
+    },
+    {
+      "id": "S17",
+      "title": "Microsoft Entra pricing",
+      "url": "https://www.microsoft.com/en-us/security/microsoft-entra-pricing",
+      "accessed": "2026-11-16"
+    },
+    {
+      "id": "S18",
+      "title": "Custom domains and managed certificates",
+      "url": "https://learn.microsoft.com/en-us/power-pages/admin/add-custom-domain",
+      "accessed": "2026-11-16"
+    },
+    {
+      "id": "S19",
+      "title": "Environment creation and database capacity",
+      "url": "https://learn.microsoft.com/en-us/power-platform/admin/create-environment",
+      "accessed": "2026-11-16"
+    },
+    {
+      "id": "S20",
+      "title": "Power Pages lifecycle",
+      "url": "https://learn.microsoft.com/en-us/power-pages/admin/lifecycle",
+      "accessed": "2026-11-16"
+    },
+    {
+      "id": "S21",
+      "title": "Power Apps per app CSP availability March announcement",
+      "url": "https://learn.microsoft.com/en-us/partner-center/announcements/2026-march#power-apps-per-app-sku-returning-to-csp-price-list-in-early-april",
+      "accessed": "2026-11-16"
+    },
+    {
+      "id": "S22",
+      "title": "Business Central pricing",
+      "url": "https://www.microsoft.com/en-us/dynamics-365/products/business-central/pricing",
+      "accessed": "2026-11-16"
+    },
+    {
+      "id": "S23",
+      "title": "Business Central indirect access and external users",
+      "url": "https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/developer/power-pages-on-virtual-tables-overview",
+      "accessed": "2026-11-16"
+    },
+    {
+      "id": "S24",
+      "title": "Portal Management prerequisites",
+      "url": "https://learn.microsoft.com/en-us/power-pages/configure/portal-management-app",
+      "accessed": "2026-11-16"
+    },
+    {
+      "id": "S25",
+      "title": "Approval responder prerequisites",
+      "url": "https://learn.microsoft.com/en-us/power-automate/get-started-approvals",
+      "accessed": "2026-11-16"
+    },
+    {
+      "id": "S26",
+      "title": "Managed Environment licensing",
+      "url": "https://learn.microsoft.com/en-us/power-platform/admin/managed-environment-licensing",
+      "accessed": "2026-11-16"
+    },
+    {
+      "id": "S27",
+      "title": "Portal Web API licensing",
+      "url": "https://learn.microsoft.com/en-us/power-pages/configure/web-api-overview",
+      "accessed": "2026-11-16"
+    },
+    {
+      "id": "S28",
+      "title": "Power Automate capacity license types",
+      "url": "https://learn.microsoft.com/en-us/power-platform/admin/power-automate-licensing/types",
+      "accessed": "2026-11-16"
+    },
+    {
+      "id": "S29",
+      "title": "jsPDF pinned package manifest",
+      "url": "https://registry.npmjs.org/jspdf/4.2.1",
+      "accessed": "2026-11-16"
+    },
+    {
+      "id": "S30",
+      "title": "jsPDF license",
+      "url": "https://github.com/parallax/jsPDF/blob/v4.2.1/LICENSE",
+      "accessed": "2026-11-16"
+    },
+    {
+      "id": "S31",
+      "title": "External ID billing",
+      "url": "https://learn.microsoft.com/en-us/entra/external-id/external-identities-pricing",
+      "accessed": "2026-11-16"
+    }
+  ],
+  "assumptions": {
+    "production_sites": 1,
+    "production_flows": 4,
+    "monthly_billable_users": "Include employees, Finance and Admin who actually log in; subtract only verified eligible license exemptions.",
+    "process_group_available": "Conditional, not verified in tenant. All four solution-aware flows must explicitly join one group.",
+    "per_user_automation": "Conservative alternative: all billable site users are covered for instant flows plus one separate maintainer; confirm Power Pages caller entitlement recognition with CSP.",
+    "named_maintainer_premium_allowance": 1,
+    "direct_contact_operator_power_apps_premium_allowance": 1,
+    "maintainer_and_operator_can_be_same_person": true,
+    "support_seat_allowances": "Budget allowances, not a claim that all cloud-flow makers or pure platform admins require extra paid seats.",
+    "existing_mailboxes": true,
+    "anonymous_usage_billed": 0,
+    "storage_overage_usd": 0,
+    "microsoft365_additional_seats": 0,
+    "pk_quotation_and_taxes_included": false,
+    "pk_conversion": "Multiply total USD by the company procurement exchange rate, then apply applicable tax and CSP charges. No live FX rate assumed."
+  },
+  "rows": [
+    {
+      "monthly_billable_site_users": 5,
+      "pages_subscription_monthly": 200,
+      "pages_payg_monthly": 20,
+      "grouped_subscription_monthly": 385,
+      "grouped_subscription_annual": 4620,
+      "grouped_payg_monthly": 205,
+      "grouped_payg_annual_at_constant_usage": 2460,
+      "no_group_two_process_plus_owner_premium_subscription_monthly": 535,
+      "all_four_flows_separately_process_licensed_subscription_monthly": 835,
+      "per_user_automation_subscription_monthly": 310,
+      "per_user_automation_payg_monthly": 130
+    },
+    {
+      "monthly_billable_site_users": 10,
+      "pages_subscription_monthly": 200,
+      "pages_payg_monthly": 40,
+      "grouped_subscription_monthly": 385,
+      "grouped_subscription_annual": 4620,
+      "grouped_payg_monthly": 225,
+      "grouped_payg_annual_at_constant_usage": 2700,
+      "no_group_two_process_plus_owner_premium_subscription_monthly": 535,
+      "all_four_flows_separately_process_licensed_subscription_monthly": 835,
+      "per_user_automation_subscription_monthly": 385,
+      "per_user_automation_payg_monthly": 225
+    },
+    {
+      "monthly_billable_site_users": 25,
+      "pages_subscription_monthly": 200,
+      "pages_payg_monthly": 100,
+      "grouped_subscription_monthly": 385,
+      "grouped_subscription_annual": 4620,
+      "grouped_payg_monthly": 285,
+      "grouped_payg_annual_at_constant_usage": 3420,
+      "no_group_two_process_plus_owner_premium_subscription_monthly": 535,
+      "all_four_flows_separately_process_licensed_subscription_monthly": 835,
+      "per_user_automation_subscription_monthly": 610,
+      "per_user_automation_payg_monthly": 510
+    },
+    {
+      "monthly_billable_site_users": 30,
+      "pages_subscription_monthly": 200,
+      "pages_payg_monthly": 120,
+      "grouped_subscription_monthly": 385,
+      "grouped_subscription_annual": 4620,
+      "grouped_payg_monthly": 305,
+      "grouped_payg_annual_at_constant_usage": 3660,
+      "no_group_two_process_plus_owner_premium_subscription_monthly": 535,
+      "all_four_flows_separately_process_licensed_subscription_monthly": 835,
+      "per_user_automation_subscription_monthly": 685,
+      "per_user_automation_payg_monthly": 605
+    },
+    {
+      "monthly_billable_site_users": 32,
+      "pages_subscription_monthly": 200,
+      "pages_payg_monthly": 128,
+      "grouped_subscription_monthly": 385,
+      "grouped_subscription_annual": 4620,
+      "grouped_payg_monthly": 313,
+      "grouped_payg_annual_at_constant_usage": 3756,
+      "no_group_two_process_plus_owner_premium_subscription_monthly": 535,
+      "all_four_flows_separately_process_licensed_subscription_monthly": 835,
+      "per_user_automation_subscription_monthly": 715,
+      "per_user_automation_payg_monthly": 643
+    },
+    {
+      "monthly_billable_site_users": 37,
+      "pages_subscription_monthly": 200,
+      "pages_payg_monthly": 148,
+      "grouped_subscription_monthly": 385,
+      "grouped_subscription_annual": 4620,
+      "grouped_payg_monthly": 333,
+      "grouped_payg_annual_at_constant_usage": 3996,
+      "no_group_two_process_plus_owner_premium_subscription_monthly": 535,
+      "all_four_flows_separately_process_licensed_subscription_monthly": 835,
+      "per_user_automation_subscription_monthly": 790,
+      "per_user_automation_payg_monthly": 738
+    },
+    {
+      "monthly_billable_site_users": 50,
+      "pages_subscription_monthly": 200,
+      "pages_payg_monthly": 200,
+      "grouped_subscription_monthly": 385,
+      "grouped_subscription_annual": 4620,
+      "grouped_payg_monthly": 385,
+      "grouped_payg_annual_at_constant_usage": 4620,
+      "no_group_two_process_plus_owner_premium_subscription_monthly": 535,
+      "all_four_flows_separately_process_licensed_subscription_monthly": 835,
+      "per_user_automation_subscription_monthly": 985,
+      "per_user_automation_payg_monthly": 985
+    },
+    {
+      "monthly_billable_site_users": 75,
+      "pages_subscription_monthly": 200,
+      "pages_payg_monthly": 300,
+      "grouped_subscription_monthly": 385,
+      "grouped_subscription_annual": 4620,
+      "grouped_payg_monthly": 485,
+      "grouped_payg_annual_at_constant_usage": 5820,
+      "no_group_two_process_plus_owner_premium_subscription_monthly": 535,
+      "all_four_flows_separately_process_licensed_subscription_monthly": 835,
+      "per_user_automation_subscription_monthly": 1360,
+      "per_user_automation_payg_monthly": 1460
+    },
+    {
+      "monthly_billable_site_users": 100,
+      "pages_subscription_monthly": 200,
+      "pages_payg_monthly": 400,
+      "grouped_subscription_monthly": 385,
+      "grouped_subscription_annual": 4620,
+      "grouped_payg_monthly": 585,
+      "grouped_payg_annual_at_constant_usage": 7020,
+      "no_group_two_process_plus_owner_premium_subscription_monthly": 535,
+      "all_four_flows_separately_process_licensed_subscription_monthly": 835,
+      "per_user_automation_subscription_monthly": 1735,
+      "per_user_automation_payg_monthly": 1935
+    },
+    {
+      "monthly_billable_site_users": 101,
+      "pages_subscription_monthly": 400,
+      "pages_payg_monthly": 404,
+      "grouped_subscription_monthly": 585,
+      "grouped_subscription_annual": 7020,
+      "grouped_payg_monthly": 589,
+      "grouped_payg_annual_at_constant_usage": 7068,
+      "no_group_two_process_plus_owner_premium_subscription_monthly": 735,
+      "all_four_flows_separately_process_licensed_subscription_monthly": 1035,
+      "per_user_automation_subscription_monthly": 1950,
+      "per_user_automation_payg_monthly": 1954
+    },
+    {
+      "monthly_billable_site_users": 150,
+      "pages_subscription_monthly": 400,
+      "pages_payg_monthly": 600,
+      "grouped_subscription_monthly": 585,
+      "grouped_subscription_annual": 7020,
+      "grouped_payg_monthly": 785,
+      "grouped_payg_annual_at_constant_usage": 9420,
+      "no_group_two_process_plus_owner_premium_subscription_monthly": 735,
+      "all_four_flows_separately_process_licensed_subscription_monthly": 1035,
+      "per_user_automation_subscription_monthly": 2685,
+      "per_user_automation_payg_monthly": 2885
+    },
+    {
+      "monthly_billable_site_users": 250,
+      "pages_subscription_monthly": 600,
+      "pages_payg_monthly": 1000,
+      "grouped_subscription_monthly": 785,
+      "grouped_subscription_annual": 9420,
+      "grouped_payg_monthly": 1185,
+      "grouped_payg_annual_at_constant_usage": 14220,
+      "no_group_two_process_plus_owner_premium_subscription_monthly": 935,
+      "all_four_flows_separately_process_licensed_subscription_monthly": 1235,
+      "per_user_automation_subscription_monthly": 4385,
+      "per_user_automation_payg_monthly": 4785
+    },
+    {
+      "monthly_billable_site_users": 500,
+      "pages_subscription_monthly": 1000,
+      "pages_payg_monthly": 2000,
+      "grouped_subscription_monthly": 1185,
+      "grouped_subscription_annual": 14220,
+      "grouped_payg_monthly": 2185,
+      "grouped_payg_annual_at_constant_usage": 26220,
+      "no_group_two_process_plus_owner_premium_subscription_monthly": 1335,
+      "all_four_flows_separately_process_licensed_subscription_monthly": 1635,
+      "per_user_automation_subscription_monthly": 8535,
+      "per_user_automation_payg_monthly": 9535
+    }
+  ],
+  "completeness": "Example recurring software budgets only; mailbox additions, storage, anonymous traffic, support, custom domains, tax, migration and ERP integration are separate."
+}

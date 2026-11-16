@@ -2,9 +2,10 @@ const { test } = require('node:test');
 const assert = require('node:assert/strict');
 const { fragments, read } = require('../scripts/shell_fixtures.cjs');
 
-test('header keeps managed links, native account URLs, search, languages and editable branding', () => {
+test('header keeps managed links, native account URLs, search, languages and Industrad logo branding', () => {
   const html = fragments({ finance: true, admin: true, language: 'fr', children: true });
-  assert.match(html.header, /Company name/);
+  assert.match(html.header, /src="\/industrad-engineering\.png"/);
+  assert.doesNotMatch(html.header, /Company name/);
   assert.match(html.header, /href="\/Dashboard\/"/);
   assert.match(html.header, /href="\/Finance-Cash-Management\/"/);
   assert.match(html.header, /href="\/Admin-Users\/"/);
@@ -12,7 +13,7 @@ test('header keeps managed links, native account URLs, search, languages and edi
   assert.match(html.header, /action="\/search\/"/);
   assert.match(html.header, /href="\/fr\/"/);
   assert.match(html.header, /Request history/);
-  assert.match(read('shared/shell/Header.html'), /editable snippets 'Mobile Header'/);
+  assert.match(html.header, /alt="Industrad Engineering"/);
   assert.match(read('shared/shell/Header.html'), /weblinks\["Default"\]/);
   assert.match(read('shared/shell/Header.html'), /include 'Languages Dropdown'/);
   assert.doesNotMatch(html.header, /\{%|\{\{/);

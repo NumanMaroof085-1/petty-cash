@@ -131,10 +131,11 @@
     const value = { firstName: String(input.firstName || "").trim(), lastName: String(input.lastName || "").trim(),
       email: String(input.email || "").trim().toLowerCase(), username: String(input.username || "").trim(), role: String(input.role || ""),
       departmentId: guid(input.departmentId), managerId: guid(input.managerId) };
-    if (!value.lastName || value.lastName.length > 50 || value.firstName.length > 50) {
-      throw new Error("Last name is required; each name must be at most 50 characters.");
+    if (!value.firstName || !value.lastName || value.lastName.length > 50 || value.firstName.length > 50) {
+      throw new Error("First and last name are required; each name must be at most 50 characters.");
     }
     if (value.email.length > 100 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.email)) throw new Error("Enter a valid email address of at most 100 characters.");
+    if (value.email.split("@")[1] !== "industrad.com") throw new Error("Use an email address ending in @industrad.com.");
     if (!/^[A-Za-z0-9][A-Za-z0-9._-]{2,99}$/.test(value.username)) {
       throw new Error("Enter a username of 3–100 letters, digits, dots, underscores or hyphens, starting with a letter or digit.");
     }

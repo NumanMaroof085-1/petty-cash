@@ -7,6 +7,8 @@ Start with [HANDOVER.md](handover/HANDOVER.md) and the
 |---|---|
 | `handover/` | Architecture/deployment guide, operations runbook, checklist, documentation audit, implementation log and verification reports |
 | `platform/` | Dataverse mappings and explicit Power Pages Web API field settings |
+| [integration/](integration/README.md) | Two-table column reference for Business Central mapping |
+| [sbom/](sbom/README.md) | Dated production software inventory, CycloneDX SBOM, licensing scenarios and cost model |
 | `originals/` | Three original Word documents and their historical correction record |
 | `corrected/` | Preserved earlier corrected Word/PDF pairs; these remain historical references |
 | `backups/` | Preserved original document backups, ignored by git |

@@ -1,10 +1,10 @@
 {
-  "audit_date": "2026-11-09",
+  "audit_date": "2026-11-16",
   "scope": "Local source and documentation. No native tenant, export, authentication or permission audit.",
-  "source_commit_before_documentation_changes": "5b09fe08b65b6c8512d7bcfd2199c676dd8ba638",
+  "source_commit_before_documentation_changes": "22e0941f6232bb45ff58d1fb8e357f6102be1818",
   "node_version": "v24.22.1",
   "local_checks": {
-    "documentation_links_checked": 119,
+    "documentation_links_checked": 129,
     "generated_templates_consistent": true,
     "configured_finance_page_matches_recorded_invocation": true,
     "unit_tests": 157,
@@ -59,7 +59,17 @@
     ],
     "application_changes": "Local relocation only; publishing artifacts preserved."
   },
-  "word_documents": "Original DOCX files are older references; not reissued or freshly rendered for company handover.",
+  "word_documents": "Original DOCX files remain older references; the separate 10 November two-table Business Central column dictionary is generated from current used fields, with rendering QA stored separately.",
+  "integration_table_reference": {
+    "file": "documentation/integration/Petty Cash Tables for Business Central.docx",
+    "request_columns": 18,
+    "line_item_columns": 9,
+    "rendered_document_checked": true,
+    "rendered_pages": 3,
+    "source_choice_and_unit_checks": true,
+    "native_date_behavior_confirmed": false,
+    "business_central_sync_implemented": false
+  },
   "native_exports_reviewed": false,
   "approval_fragment_review": {
     "reviewed_on": "2026-11-07",
@@ -203,8 +213,8 @@
     },
     {
       "file": "documentation/README.md",
-      "bytes": 1415,
-      "sha256": "0141470465ed15182d90e551d4155ef0c33e11cdbcaf96204f54df97a2975def",
+      "bytes": 1633,
+      "sha256": "0842d989ff8ae94850dd182dc60b4283f7bd4742fada1670de17f94f8d0f681c",
       "classification": "source_or_documentation"
     },
     {
@@ -299,8 +309,8 @@
     },
     {
       "file": "documentation/handover/IMPLEMENTATION_LOG.md",
-      "bytes": 224472,
-      "sha256": "1e480a50a06d483e3f98bc4479de033f48f45c7c5a881441724437c33fe14cf4",
+      "bytes": 232461,
+      "sha256": "6d01a7b0b895d274d335d0b8f3c14f6846758185562979d7e4e4dff7564723d7",
       "classification": "source_or_documentation"
     },
     {
@@ -314,6 +324,18 @@
       "bytes": 69669,
       "sha256": "c670e0404c81d4a714aa441c9284361717065203b720ad96c6f14a98a5d32319",
       "classification": "source_or_documentation"
+    },
+    {
+      "file": "documentation/integration/Petty Cash Tables for Business Central.docx",
+      "bytes": 42007,
+      "sha256": "22884131cb3ceec8b7f43ecfc2a137a336f7251200bbccf74b97ae97b8c5c613",
+      "classification": "integration_table_reference"
+    },
+    {
+      "file": "documentation/integration/README.md",
+      "bytes": 1186,
+      "sha256": "970ae89aceff07c4ad560ab3f5645d07e87b6cffba9018ae46f1df94f6aa6974",
+      "classification": "integration_table_reference"
     },
     {
       "file": "documentation/originals/Configuration document.docx",
@@ -355,6 +377,42 @@
       "file": "documentation/platform/WEBAPI_SITE_SETTINGS.md",
       "bytes": 17322,
       "sha256": "3d3421528f54e15b1a6fa0d0576459de41c984f089c2d71abbbf8256b045b075",
+      "classification": "source_or_documentation"
+    },
+    {
+      "file": "documentation/sbom/PRODUCTION_LICENSING_REPORT.md",
+      "bytes": 30604,
+      "sha256": "48b6346355c3796e6afe65be1ef99b8bc735282884ebe60096b7208b9f1f71ba",
+      "classification": "source_or_documentation"
+    },
+    {
+      "file": "documentation/sbom/Petty Cash Production SBOM and Licensing.docx",
+      "bytes": 52985,
+      "sha256": "0a28bcfbdf445189223b98e0ec24dee0bf952cf4e15c0d313fd537b7a55319f5",
+      "classification": "historical_word_reference"
+    },
+    {
+      "file": "documentation/sbom/README.md",
+      "bytes": 1831,
+      "sha256": "439e8581bb6fd55b48ea3669fc330e45ce62286903bc655649be5d95dbd6b2b2",
+      "classification": "source_or_documentation"
+    },
+    {
+      "file": "documentation/sbom/cost-model.json",
+      "bytes": 16780,
+      "sha256": "bcaab2a96f48e6b22af323e9ad3ba6360642731206c56edc08ac282468454d75",
+      "classification": "source_or_documentation"
+    },
+    {
+      "file": "documentation/sbom/petty-cash.cdx.json",
+      "bytes": 10019,
+      "sha256": "5d67d2426f71b3ef8b97318a3581a762478f2ce10d73e53d5c430293f4fd7706",
+      "classification": "source_or_documentation"
+    },
+    {
+      "file": "documentation/sbom/source-manifest.json",
+      "bytes": 4349,
+      "sha256": "4455af5ca6ea4515ac41b3f048abb9686076ca7ed86ee1b76010e134f5917d36",
       "classification": "source_or_documentation"
     },
     {
@@ -485,14 +543,14 @@
     },
     {
       "file": "pages/admin/ADMIN_PROFILE_SETUP.md",
-      "bytes": 7076,
-      "sha256": "bf437d74deb4f8b00d0fe64bffcc5c0fe9badb0989c87e1bee63b55764ce3955",
+      "bytes": 7516,
+      "sha256": "fc3bfaef3a10319b69052cabe6022ceee7e8b0df666ff9112b20627d368f0119",
       "classification": "source_or_documentation"
     },
     {
       "file": "pages/admin/Admin Users.html",
-      "bytes": 24657,
-      "sha256": "3d9abad36449eefc899a0bdd6cc201b3f26788367040b9177792f32aa842c077",
+      "bytes": 24957,
+      "sha256": "a8dc8f93e5b9793167900783b38f0d9db203d7a71d6782acab79513633515896",
       "classification": "source_or_documentation"
     },
     {
@@ -503,8 +561,8 @@
     },
     {
       "file": "pages/admin/pettycash-admin.js",
-      "bytes": 17927,
-      "sha256": "61fc810e89b659763b86b844c1fcdd139ea33da1dd60426c43acd35d0c353907",
+      "bytes": 18081,
+      "sha256": "b9ffe63ae43412794add2f93230a5a79e216377cfba41d02e5ea1327b8f7d10d",
       "classification": "source_or_documentation"
     },
     {
@@ -580,6 +638,12 @@
       "classification": "source_or_documentation"
     },
     {
+      "file": "scripts/build_bc_table_reference.py",
+      "bytes": 14405,
+      "sha256": "64c062fad8a2053fd04b346c96d9eabdfeccf1aa4b3092bc70f7940a1fbd3f66",
+      "classification": "source_or_documentation"
+    },
+    {
       "file": "scripts/build_home_template.cjs",
       "bytes": 1415,
       "sha256": "373cb406323f208a7c254c4901efa5093dddab37957eb2b7958b77c9e9f85e27",
@@ -595,6 +659,12 @@
       "file": "scripts/build_request_page.cjs",
       "bytes": 1049,
       "sha256": "647d2f711fd2e5cd1d70b4e8d8ca0f9f47db0ec8301954a61d6a22bce592ce52",
+      "classification": "source_or_documentation"
+    },
+    {
+      "file": "scripts/build_sbom_report.py",
+      "bytes": 50225,
+      "sha256": "5670415e92451e126b03e56166dc78913e4ac26448901d084245c8889623a6e7",
       "classification": "source_or_documentation"
     },
     {
@@ -641,8 +711,8 @@
     },
     {
       "file": "scripts/verify_admin_page.cjs",
-      "bytes": 9381,
-      "sha256": "81fc65e9544dcefcefa4f7c58e7cc64c6b42b91108cf64062d9e4481c6a6da2d",
+      "bytes": 10233,
+      "sha256": "31b683d46bd017703de5a1d72a1ded6a8cd2e57f01036c460195fd8c943f1db7",
       "classification": "source_or_documentation"
     },
     {
@@ -659,8 +729,8 @@
     },
     {
       "file": "scripts/verify_handover.cjs",
-      "bytes": 14214,
-      "sha256": "61d116a1f0d7b483a092d6ab0048a338181ba5bd1b11de7cf6bfe041742e3112",
+      "bytes": 15556,
+      "sha256": "53bc8458f896b324ebd9b9e15fe23f4a73642f0fca29bf18a236b54e4d6422d7",
       "classification": "source_or_documentation"
     },
     {
@@ -683,8 +753,8 @@
     },
     {
       "file": "scripts/verify_shell_home.cjs",
-      "bytes": 16386,
-      "sha256": "0ff6fe9855f40189d16d0ab1c64e1604f47dc812f92236e822247f3a190aa1cb",
+      "bytes": 17253,
+      "sha256": "172ea401315452435c01477ce4b77f24257f7471da282e0e38b644bd474375df",
       "classification": "source_or_documentation"
     },
     {
@@ -695,8 +765,8 @@
     },
     {
       "file": "shared/README.md",
-      "bytes": 738,
-      "sha256": "7685ce6c40109e4467d3d058a9e47310e55d800965c4c89952e17b5c2bd27d66",
+      "bytes": 860,
+      "sha256": "8687e4e7bd9afd95fdab82d5c578145d36e3487c7da44f1d3b293485151bab7d",
       "classification": "source_or_documentation"
     },
     {
@@ -749,20 +819,26 @@
     },
     {
       "file": "shared/shell/Header.html",
-      "bytes": 24147,
-      "sha256": "40ff40986a87c3ffc24ab8d202d31bde673977403f640c15d0cf66193b285fb7",
+      "bytes": 24352,
+      "sha256": "54dcf06ee29e8a42ed1da3f71031cba1828c191c13cc87d9a9c076859d0d0287",
       "classification": "source_or_documentation"
     },
     {
       "file": "shared/shell/SITE_SHELL_HOME_SETUP.md",
-      "bytes": 10941,
-      "sha256": "a4b74680f766519f7a4644656f3a8eaaae8d54d59aeaf6ff7bb6e30ead5ed501",
+      "bytes": 12005,
+      "sha256": "89dcbbe47bc5f30eeba80423cd6a40452289626e218199822eb7fe425dec6261",
+      "classification": "source_or_documentation"
+    },
+    {
+      "file": "shared/shell/assets/industrad-engineering.png",
+      "bytes": 8537,
+      "sha256": "04352365cbfb1bec3ffe201b4e1e3befec685499e32597103390c4a22a30e87a",
       "classification": "source_or_documentation"
     },
     {
       "file": "shared/shell/pettycash-shell.css",
-      "bytes": 7973,
-      "sha256": "5640cb78108a1ec0fcfe55a3416099182130658e97dfe47058353cffaf8dbddc",
+      "bytes": 7992,
+      "sha256": "b6e905135bb38c10d0c30b64dcc9b34780117db6bd43af32de995c1c6c00eeb1",
       "classification": "source_or_documentation"
     },
     {
@@ -785,8 +861,8 @@
     },
     {
       "file": "tests/pettycash-admin.test.cjs",
-      "bytes": 22831,
-      "sha256": "e12be229929f02b3182658626154cfa086e2e28f47fcec864cf8a0d51bfff079",
+      "bytes": 23393,
+      "sha256": "687d7793ca7802d761262169a7add61857a0c29be6961cc030e4c982dc63c0f6",
       "classification": "source_or_documentation"
     },
     {
@@ -809,8 +885,8 @@
     },
     {
       "file": "tests/pettycash-shell-home.test.cjs",
-      "bytes": 4541,
-      "sha256": "8c55a3d326c499095c25871991756d2c86e4c7b3131f602a41d4b10f2dc61ce6",
+      "bytes": 4662,
+      "sha256": "a993c14293219a25bd91cb12f187daeabd205406a2c6fca68c3c7b5e4d00fb02",
       "classification": "source_or_documentation"
     },
     {

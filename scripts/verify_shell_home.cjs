@@ -40,6 +40,7 @@ const records = [
       await page.route('**/*', async route => {
         const request = route.request(), url = new URL(request.url());
         assert.equal(url.origin, 'https://portal.example.test', 'No external asset or API request');
+        if (url.pathname === '/industrad-engineering.png') return route.fulfill({ contentType: 'image/png', body: fs.readFileSync(path.join(root, 'shared/shell/assets/industrad-engineering.png')) });
         if (url.pathname === '/') return route.fulfill({ contentType: 'text/html; charset=utf-8', body:
           '<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><style>' + hostCss + '</style></head><body>' +
           '<script>window.shell={getTokenDeferred:async()=>"test-token"};' + bootstrapFixture + '</script>' + html.header +
@@ -63,6 +64,10 @@ const records = [
       assert.equal(await page.evaluate(() => window.hostLoaded), true, 'Original host onload must remain registered');
       assert.equal(await page.locator('#pcSiteHeader').count(), 1);
       assert.equal(await page.locator('#pcSiteFooter').count(), 1);
+      const logo = page.locator('#pcSiteHeader .pc-brand-logo');
+      await logo.evaluate(el => el.decode());
+      assert.equal(await logo.evaluate(el => el.naturalWidth), 300);
+      assert.equal(await page.locator('#pcSiteHeader .navbar-brand').innerText(), '');
       assert.equal(await page.locator('#pcSiteHeader li.weblink > a[href="/"]').getAttribute('aria-current'), 'page');
       assert.equal(await page.locator('.skip-to-content a').getAttribute('href'), '#mainContent');
       assert.equal(await page.locator('#pcSiteHeader a[href="/Finance-Cash-Management/"]').count(), Number(finance));
@@ -159,6 +164,7 @@ const records = [
       await page.route('**/*', async route => {
         const request = route.request(), url = new URL(request.url());
         assert.equal(url.origin, 'https://portal.example.test');
+        if (url.pathname === '/industrad-engineering.png') return route.fulfill({ contentType: 'image/png', body: fs.readFileSync(path.join(root, 'shared/shell/assets/industrad-engineering.png')) });
         if (url.pathname === '/preview') return route.fulfill({ contentType: 'text/html; charset=utf-8', body:
           '<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><style>' + hostCss + '</style></head><body><script>window.shell={getTokenDeferred:async()=>"test-token"};' + bootstrapFixture + '</script>' +
           html.header + '<main id="mainContent">' + html.page + '</main>' + html.footer + '</body></html>' });

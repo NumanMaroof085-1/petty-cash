@@ -1,4 +1,4 @@
-<!-- Existing Header Web Template. Original native menus/auth/brand retained.
+<!-- Existing Header Web Template. Native menus/auth retained; Industrad logo branding.
      Generated assets: scripts/build_shell_template.cjs. -->
 <!-- PC SHELL STYLES -->
 <style data-pc-shell="v1">
@@ -9,7 +9,7 @@
 #pcSiteHeader .pc-header-inner{display:flex;align-items:center;flex-wrap:nowrap;gap:24px;width:100%;max-width:1120px;min-height:44px;margin:0 auto;padding:0}
 #pcSiteHeader .navbar-brand{float:none;flex:none;padding:0;margin:0;min-width:0;line-height:1.3;font-size:18px;font-weight:650;letter-spacing:-.4px;max-width:270px;color:#172b35}
 #pcSiteHeader .navbar-brand a,#pcSiteHeader .navbar-brand .xrm-attribute-value{display:flex;align-items:center;gap:10px;color:#172b35;text-decoration:none}
-#pcSiteHeader .navbar-brand img{object-fit:contain;width:auto;max-width:46px;max-height:36px;margin:0}
+#pcSiteHeader .navbar-brand img{display:block;object-fit:contain;width:270px;max-width:100%;height:auto;margin:0}
 #pcSiteHeader .navbar-brand :is(span,p){font:inherit;color:inherit;margin:0}
 #pcSiteHeader .navbar-collapse{flex:1 1 auto;min-width:0;width:auto!important;overflow:visible;box-shadow:none;padding:0;border:0}
 #pcSiteHeader .menu-bar{float:none;display:flex;justify-content:flex-end}
@@ -72,7 +72,7 @@
 @media(max-width:540px){
   #pcSiteHeader.navbar{padding:13px 16px;min-height:70px}
   #pcSiteHeader .navbar-brand{font-size:17px}
-  #pcSiteHeader .navbar-brand img{max-height:32px;max-width:37px}
+  #pcSiteHeader .navbar-brand img{width:230px;max-width:100%;height:auto}
   #pcSiteFooter .footer-bottom{padding:22px 20px}
   #pcSiteFooter .pc-footer-inner{align-items:flex-start;flex-direction:column;gap:12px}
   #pcSiteFooter .pc-footer-links{gap:18px}
@@ -89,7 +89,7 @@
 
 
         <div class="navbar-brand navbar-header">
-             {% editable snippets 'Mobile Header' type: 'html' %}
+             <a href="{{ sitemarkers.Home.url | default: '/' | escape }}" aria-label="Industrad home"><img class="pc-brand-logo" src="/industrad-engineering.png" width="300" height="82" alt="Industrad Engineering" fetchpriority="high" /></a>
         </div>
         <button type="button" class="navbar-toggler collapsed custom-navbar-toggler" title="{{ snippets["Header/Toggle Navigation"] | default: resx['Toggle_Navigation'] | h }}" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" onclick="setHeight();">
             <span class="visually-hidden">{{ snippets["Header/Toggle Navigation"] | default: resx['Toggle_Navigation'] | h }}</span>

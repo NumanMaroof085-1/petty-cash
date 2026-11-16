@@ -12,12 +12,12 @@ const config = { creationEnabled: true, securityReviewed: true, departmentIdColu
   contactDepartmentNavigation: 'hr_TestDepartment', contactManagerNavigation: 'hr_TestManager',
   roleValues: { Employee: 10, Manager: 20, Accounts: 30, Admin: 40 } };
 const testPassword = 'Synthetic rejected input #123';
-const input = { firstName: ' Jane ', lastName: ' Doe ', email: ' Jane@Example.Test ', username: 'jane.doe',
+const input = { firstName: ' Jane ', lastName: ' Doe ', email: ' Jane@Industrad.Com ', username: 'jane.doe',
   role: 'Employee', departmentId: department, managerId: manager };
 const person = { contactid: manager, fullname: 'Existing Manager', emailaddress1: 'manager@example.test',
   adx_identity_username: 'manager', hr_userrole: 20, statecode: 0 };
 const team = { hr_testdepartmentid: department, hr_departmentname: 'Finance', statecode: 0 };
-const saved = { contactid: contact, firstname: 'Jane', lastname: 'Doe', emailaddress1: 'jane@example.test',
+const saved = { contactid: contact, firstname: 'Jane', lastname: 'Doe', emailaddress1: 'jane@industrad.com',
   adx_identity_username: 'jane.doe', adx_identity_logonenabled: true,
   hr_userrole: 10, hr_currentbalance: 0, _hr_department_value: department, _hr_reportstomanager_value: manager };
 function harness({ overrides = {}, allowed = true, signedIn = true, fetcher, missingToken = false,
@@ -115,7 +115,7 @@ test('confirmed configuration produces exact profile-only POST and either releas
   assert.equal(result.loginProvisioned, false);
   const posts = h.calls.filter(call => call.method === 'POST');
   assert.equal(posts.length, 1);
-  assert.deepEqual(JSON.parse(posts[0].body), { firstname: 'Jane', lastname: 'Doe', emailaddress1: 'jane@example.test',
+  assert.deepEqual(JSON.parse(posts[0].body), { firstname: 'Jane', lastname: 'Doe', emailaddress1: 'jane@industrad.com',
     hr_userrole: 123140000, hr_currentbalance: 0, adx_identity_username: 'jane.doe',
     adx_identity_logonenabled: true,
     'hr_Department@odata.bind': '/hr_departmentses(' + department + ')',
@@ -143,13 +143,13 @@ test('payload preserves all fields and initializes only zero summary, ignoring a
   const h = harness();
   const value = h.api.validateInput({ ...input, hr_currentbalance: 999 });
   const payload = JSON.parse(JSON.stringify(h.api.buildPayload(value)));
-  assert.deepEqual(payload, { firstname: 'Jane', lastname: 'Doe', emailaddress1: 'jane@example.test', hr_userrole: 10, hr_currentbalance: 0,
+  assert.deepEqual(payload, { firstname: 'Jane', lastname: 'Doe', emailaddress1: 'jane@industrad.com', hr_userrole: 10, hr_currentbalance: 0,
     adx_identity_username: 'jane.doe', adx_identity_logonenabled: true,
     'hr_TestDepartment@odata.bind': '/hr_departmentses(' + department + ')',
     'hr_TestManager@odata.bind': '/contacts(' + manager + ')' });
 });
 test('invalid name, email, role or lookup blocks the create', async () => {
-  for (const change of [{ lastName: '' }, { firstName: 'x'.repeat(51) }, { email: 'invalid' }, { role: 'Owner' }, { managerId: 'not-guid' }]) {
+  for (const change of [{ firstName: '' }, { firstName: '   ' }, { lastName: '' }, { firstName: 'x'.repeat(51) }, { email: 'invalid' }, { email: 'jane@example.com' }, { email: 'jane@sub.industrad.com' }, { email: 'jane@industrad.com.example.org' }, { email: 'jane@fakeindustrad.com' }, { role: 'Owner' }, { managerId: 'not-guid' }]) {
     const h = harness();
     await assert.rejects(h.api.createProfile({ ...input, ...change }));
     assert.equal(h.calls.length, 0);
@@ -181,7 +181,7 @@ test('missing, null or nonzero initial summary fails read-back without overwriti
 });
 test('duplicate email is case-insensitive, includes inactive Contacts and follows all pages', async () => {
   const h = harness({ fetcher(url) {
-    if (url === '/_api/contacts?page=2') return { status: 200, body: { value: [{ ...person, contactid: contact, emailaddress1: 'JANE@EXAMPLE.TEST', statecode: 1 }] } };
+    if (url === '/_api/contacts?page=2') return { status: 200, body: { value: [{ ...person, contactid: contact, emailaddress1: 'JANE@INDUSTRAD.COM', statecode: 1 }] } };
     if (url.startsWith('/_api/contacts?')) return { status: 200, body: { value: [person], '@odata.nextLink': '/_api/contacts?page=2' } };
   } });
   await assert.rejects(h.api.createProfile(input), /already uses this email/);

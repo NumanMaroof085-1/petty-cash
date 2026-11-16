@@ -5,6 +5,75 @@ same change. Record exact files, functionality, schema names, permissions, site
 settings, tests, and deployment state. Never describe a proposed tenant change
 as deployed merely because local code or documentation exists.
 
+## 2026-11-16 Production SBOM and licensing assessment
+
+- Added documentation/sbom with the Word and Markdown production licensing
+  report, CycloneDX 1.6 JSON inventory, runtime source hashes, dated USD cost
+  model and example recurring budgets for 5 to 500 monthly site users.
+- Researched current official Microsoft sources, including Pages capacity and
+  PAYG, Process flow-group availability, flow owner/caller rules, Dataverse
+  storage, identity, mailbox/operator rights, CSP per-app availability and
+  optional future Business Central licensing. User supplied 25–30 employees and
+  seven reviewers; both email-only and portal-reviewer populations are priced.
+  Existing licenses are unknown; tenant capacity, flow-group availability and
+  Pakistan pricing are unverified.
+- Verified the local jsPDF 4.2.1 bundle against the SHA-512-checked pinned npm
+  package; MIT license retained. Embedded transitive versions and Microsoft
+  host assets remain explicitly incomplete in the SBOM; no CVE clearance claimed.
+- scripts/build_sbom_report.py regenerates the assessment using the dated price
+  snapshot; it does not refresh online prices. No website, flow, permissions,
+  subscription or production environment was modified or purchased.
+- Validation: CycloneDX 1.6 schema/references, company cost arithmetic and all
+  24 runtime file hashes checked. The final 12-page Word report was rendered
+  and every page visually reviewed; evidence is under
+  documentation/qa/sbom-licensing-2026-11-16. Temporary renderer and validator
+  were used only for document QA, not added to the application runtime.
+
+## 2026-11-10 Admin field restrictions and Industrad header logo
+
+- Admin Users.html now requires First name as well as Last name, and accepts
+  only the exact industrad.com email domain. pettycash-admin.js also checks
+  trimmed names and normalized email before any API call; existing Contact
+  mappings, permissions and creation/read-back behavior are retained.
+- Header.html replaces the editable Mobile Header branding output with a Home
+  link containing the user-supplied PNG, unchanged at
+  shared/shell/assets/industrad-engineering.png. Canonical shell CSS sizes the
+  logo proportionally for desktop/mobile without separate company-name text.
+- No new Dataverse columns, roles, flows, permissions or site settings. Domain
+  restriction is frontend validation, not a Dataverse server-side constraint.
+- Publish the Admin page, Petty Cash Admin template and Header template, plus
+  the PNG Web File at /industrad-engineering.png. Setup guides record details.
+  Local implementation only; tenant publication is still required.
+- Validation: 157 regression checks and generated-template/link audit passed.
+  Admin browser scenarios and shell/Home desktop/mobile scenarios (including
+  the shell around all four app pages) passed with intercepted data only.
+  Reviewed desktop/mobile logo and admin screenshots under
+  documentation/qa/admin-branding-2026-11-10; copied PNG hash matches the supplied
+  file. No native tenant acceptance is claimed.
+
+## 2026-11-10 Create two-table column reference for Business Central
+
+- User requests only Petty Cash Request and Petty Cash Line Item columns, data
+  types and purposes for Business Central source mapping.
+- Added documentation/integration/Petty Cash Tables for Business Central.docx,
+  its short index and scripts/build_bc_table_reference.py. Includes 18 request
+  fields and nine line-item fields, configured choice codes and 23 saved units.
+- Cross-checked current request/module scripts, original schema and clarification
+  tracking setup. Uses File/PDF for receipt, line-level Other Category and stored
+  Simple currency total; no historical Stationery/Maintenance categories reused.
+- Date column's exact native Date Only/User Local behavior is not in the retained
+  schema and is explicitly flagged, rather than invented. No unrelated table
+  definitions or assumed Business Central target fields included.
+- No application, native schema, permission or flow changed. This dictionary
+  does not implement ERP synchronization. Render QA is recorded separately.
+- Final delivery DOCX rendered to three pages through the packaged renderer;
+  all page PNGs visually inspected after correcting inherited title styling.
+  All 27 logical names present in the rendered PDF; choice/unit mappings checked
+  against current source. QA PDF/images/check record stay under documentation/qa.
+- Native Word export stalled, so a hash-verified official LibreOffice package
+  was temporarily extracted for rendering without system installation. Its
+  temporary image/package and download helpers were removed after verification.
+
 ## 2026-11-09 Organize local project by page, shared component and flow
 
 - Moved 66 existing files into pages, shared, flows and documentation groups.

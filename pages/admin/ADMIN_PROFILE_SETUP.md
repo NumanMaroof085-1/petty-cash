@@ -9,9 +9,13 @@ not mean the updated page/template or site settings have been deployed.
 
 ## What the page does
 
-Seven fields: optional first name, required last name, email, separate username,
+Seven fields: required first name, last name, email, separate username,
 business role, department and Reports To Manager. Names are limited to 50
-characters; email is trimmed/lowercased and limited to 100. Username is trimmed,
+characters; email is trimmed/lowercased, limited to 100 and restricted to the exact
+industrad.com domain (case-insensitive; no subdomains or lookalike suffixes).
+Both the HTML controls and JavaScript create validation enforce these rules.
+These are frontend rules, not a new Dataverse server-side domain constraint.
+Publish Admin Users.html and the Petty Cash Admin Web Template together. Username is trimmed,
 case preserved, 3–100 letters/digits/dots/underscores/hyphens, starting with a
 letter or digit. All four confirmed business-role choice values are retained.
 

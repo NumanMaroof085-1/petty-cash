@@ -71,12 +71,13 @@ const count = label => Number(testOutput.match(new RegExp('^# ' + label + ' (\\d
 assert.ok(count('tests') > 0 && count('tests') === count('pass') && count('fail') === 0, 'Unit suite did not pass');
 const files = inventory.filter(file =>
   file !== 'documentation/handover/verification.json' &&
-  (/\.(?:html|js|cjs|css|md|docx|pdf|json|txt|py|ps1)$/.test(file) || file === '.gitignore')
+  (/\.(?:html|js|cjs|css|md|docx|pdf|json|txt|py|ps1|png)$/.test(file) || file === '.gitignore')
 ).sort();
 const manifest = files.map(file => {
   const bytes = fs.readFileSync(path.join(root, file));
   return { file, bytes: bytes.length, sha256: crypto.createHash('sha256').update(bytes).digest('hex'),
-    classification: file.endsWith('.docx') ? 'historical_word_reference' : file === 'documentation/archive/retired-pages/Accounts Cash Management.html' ? 'retired_page' : 'source_or_documentation' };
+    classification: file.startsWith('documentation/integration/') ? 'integration_table_reference' :
+      file.endsWith('.docx') ? 'historical_word_reference' : file === 'documentation/archive/retired-pages/Accounts Cash Management.html' ? 'retired_page' : 'source_or_documentation' };
 });
 const head = spawnSync('git', ['rev-parse', 'HEAD'], { cwd: root, encoding: 'utf8', windowsHide: true });
 const browserResultsFile = path.join(root, 'documentation', 'qa', 'organization', 'browser-results.json');
@@ -86,6 +87,16 @@ if (organizationBrowserResults) {
   assert.ok(Array.isArray(organizationBrowserResults) && organizationBrowserResults.length === 8 &&
     organizationBrowserResults.every(result => result.exit_code === 0 && result.mocked_network === true),
     'Organization browser validation contains a failed/incomplete suite');
+}
+const integrationFile = 'documentation/integration/Petty Cash Tables for Business Central.docx';
+const integrationQaPath = path.join(root, 'documentation', 'qa', 'business-central-tables', 'render-validation.json');
+const integrationQa = fs.existsSync(integrationQaPath) ? JSON.parse(fs.readFileSync(integrationQaPath, 'utf8')) : null;
+if (integrationQa) {
+  assert.equal(crypto.createHash('sha256').update(fs.readFileSync(path.join(root, integrationFile))).digest('hex'),
+    integrationQa.sha256, 'Business Central DOCX changed after its rendered-page review');
+  assert.equal(integrationQa.pages, 3);
+  assert.equal(integrationQa.all_columns_present_in_rendered_pdf, true);
+  assert.equal(integrationQa.all_three_page_images_visually_inspected, true);
 }
 const report = {
   audit_date: auditDate,
@@ -99,7 +110,11 @@ const report = {
     'Prior mocked suites documented in setup guides. Not represented as native acceptance by this documentation audit.',
   organization: { guide: 'documentation/PROJECT_STRUCTURE.md', report: 'documentation/handover/file-organization.json',
     browser_results: organizationBrowserResults, application_changes: 'Local relocation only; publishing artifacts preserved.' },
-  word_documents: 'Original DOCX files are older references; not reissued or freshly rendered for company handover.',
+  word_documents: 'Original DOCX files remain older references; the separate 10 November two-table Business Central column dictionary is generated from current used fields, with rendering QA stored separately.',
+  integration_table_reference: { file: integrationFile, request_columns: 18, line_item_columns: 9,
+    rendered_document_checked: Boolean(integrationQa), rendered_pages: integrationQa?.pages ?? null,
+    source_choice_and_unit_checks: integrationQa?.configured_choices_and_23_units_checked_against_source ?? null,
+    native_date_behavior_confirmed: false, business_central_sync_implemented: false },
   native_exports_reviewed: false,
   approval_fragment_review: {
     reviewed_on: '2026-11-07',

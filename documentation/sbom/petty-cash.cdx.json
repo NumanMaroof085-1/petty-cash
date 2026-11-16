@@ -1,0 +1,359 @@
+{
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.6",
+  "serialNumber": "urn:uuid:eb2164d4-b41f-45cb-9fc8-bfa85c3160b2",
+  "version": 1,
+  "metadata": {
+    "timestamp": "2026-11-16T00:00:00Z",
+    "component": {
+      "type": "application",
+      "bom-ref": "petty-cash",
+      "name": "Industrad Petty Cash",
+      "version": "source-snapshot-2026-11-16"
+    },
+    "properties": [
+      {
+        "name": "industrad:scope",
+        "value": "Repository-derived first-party/runtime library and SaaS inventory. Not a native tenant export, resolved transitive dependency inventory or vulnerability scan."
+      },
+      {
+        "name": "industrad:production:status",
+        "value": "Production licensing assessment only; no deployment or purchase performed."
+      }
+    ]
+  },
+  "components": [
+    {
+      "type": "application",
+      "bom-ref": "new-request",
+      "name": "New Request client",
+      "version": "project snapshot",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "6ae5a0ab7aa0bcf05b627f3f321a99f82dfa39ebbf38a42def8bc6f1c2b6d383"
+        }
+      ],
+      "properties": [
+        {
+          "name": "industrad:source:path",
+          "value": "pages/new-request/pettycash-api.js"
+        },
+        {
+          "name": "industrad:license:status",
+          "value": "No explicit project license declared; company ownership must be confirmed."
+        }
+      ]
+    },
+    {
+      "type": "application",
+      "bom-ref": "modules",
+      "name": "Ledger Finance and clarification client",
+      "version": "finance-posting-v5",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "3e648898dcd687d2cbf19aa28d7a7c11bb5269fcf0d854ba6b6297045c263cbf"
+        }
+      ],
+      "properties": [
+        {
+          "name": "industrad:source:path",
+          "value": "shared/modules/pettycash-modules.js"
+        },
+        {
+          "name": "industrad:license:status",
+          "value": "No explicit project license declared; company ownership must be confirmed."
+        }
+      ]
+    },
+    {
+      "type": "application",
+      "bom-ref": "admin",
+      "name": "Admin profile client",
+      "version": "admin-profiles-v3",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "b9ffe63ae43412794add2f93230a5a79e216377cfba41d02e5ea1327b8f7d10d"
+        }
+      ],
+      "properties": [
+        {
+          "name": "industrad:source:path",
+          "value": "pages/admin/pettycash-admin.js"
+        },
+        {
+          "name": "industrad:license:status",
+          "value": "No explicit project license declared; company ownership must be confirmed."
+        }
+      ]
+    },
+    {
+      "type": "application",
+      "bom-ref": "receipts",
+      "name": "Receipt PDF client",
+      "version": "receipt-pdf-v1",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "d4d2db4a6e301fc3cf1467ab487c72582992904dbcd5817b48522782bc82d78a"
+        }
+      ],
+      "properties": [
+        {
+          "name": "industrad:source:path",
+          "value": "shared/receipts/pettycash-receipts.js"
+        },
+        {
+          "name": "industrad:license:status",
+          "value": "No explicit project license declared; company ownership must be confirmed."
+        }
+      ]
+    },
+    {
+      "type": "application",
+      "bom-ref": "home",
+      "name": "Home client",
+      "version": "project snapshot",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "e25b5104e9275fa09a3e3c6a368406a7fc87e5b942d8f313c3e69cbdaa4e07de"
+        }
+      ],
+      "properties": [
+        {
+          "name": "industrad:source:path",
+          "value": "pages/home/pettycash-home.js"
+        },
+        {
+          "name": "industrad:license:status",
+          "value": "No explicit project license declared; company ownership must be confirmed."
+        }
+      ]
+    },
+    {
+      "type": "application",
+      "bom-ref": "shell",
+      "name": "Header navigation client",
+      "version": "project snapshot",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "47c1f23bd21747e630f577971dea26a8bb9c96387f32ba71055bcf3bccbbc51e"
+        }
+      ],
+      "properties": [
+        {
+          "name": "industrad:source:path",
+          "value": "shared/shell/pettycash-shell.js"
+        },
+        {
+          "name": "industrad:license:status",
+          "value": "No explicit project license declared; company ownership must be confirmed."
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "jspdf",
+      "name": "jspdf",
+      "version": "4.2.1",
+      "purl": "pkg:npm/jspdf@4.2.1",
+      "scope": "required",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ],
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "e6551fcdc32f09d6853b2c5126d18d01d9447e0da618a41a11ebeee0f6c20d54"
+        }
+      ],
+      "externalReferences": [
+        {
+          "type": "distribution",
+          "url": "https://registry.npmjs.org/jspdf/-/jspdf-4.2.1.tgz"
+        },
+        {
+          "type": "license",
+          "url": "https://github.com/parallax/jsPDF/blob/v4.2.1/LICENSE"
+        }
+      ],
+      "properties": [
+        {
+          "name": "industrad:source:path",
+          "value": "vendor/jspdf-4.2.1.umd.min.js"
+        },
+        {
+          "name": "industrad:upstream:integrity",
+          "value": "sha512-YyAXyvnmjTbR4bHQRLzex3CuINCDlQnBqoSYyjJwTP2x9jDLuKDzy7aKUl0hgx3uhcl7xzg32agn5vlie6HIlQ=="
+        },
+        {
+          "name": "industrad:upstream:required_dependency_ranges",
+          "value": "@babel/runtime ^7.28.6; fflate ^0.8.1; fast-png ^6.2.0"
+        },
+        {
+          "name": "industrad:upstream:optional_dependency_ranges",
+          "value": "canvg ^3.0.11; core-js ^3.6.0; dompurify ^3.3.1; html2canvas ^1.0.0-rc.5"
+        },
+        {
+          "name": "industrad:dependency:resolution",
+          "value": "Embedded dependency versions not fully recovered from minified bundle. No npm lockfile in project; ranges are declarations, not resolved component versions."
+        }
+      ]
+    },
+    {
+      "type": "framework",
+      "bom-ref": "bootstrap-host",
+      "name": "Bootstrap host behavior",
+      "description": "Supplied by the Power Pages host; exact version and host asset inventory unverified. Not separately vendored by this repository.",
+      "properties": [
+        {
+          "name": "industrad:license:status",
+          "value": "Upstream Bootstrap is MIT; exact host artifact and notices require native inventory."
+        }
+      ]
+    }
+  ],
+  "services": [
+    {
+      "bom-ref": "power-pages",
+      "name": "Microsoft Power Pages",
+      "provider": {
+        "name": "Microsoft"
+      },
+      "description": "Hosted site and portal Web API. Live service version not exported.",
+      "properties": [
+        {
+          "name": "industrad:licensing:reference",
+          "value": "S01 S06 S07"
+        }
+      ]
+    },
+    {
+      "bom-ref": "dataverse",
+      "name": "Microsoft Dataverse",
+      "provider": {
+        "name": "Microsoft"
+      },
+      "description": "Six recorded app tables plus Power Pages and approval system tables; database file and log storage.",
+      "properties": [
+        {
+          "name": "industrad:licensing:reference",
+          "value": "S04 S11"
+        }
+      ]
+    },
+    {
+      "bom-ref": "power-automate",
+      "name": "Microsoft Power Automate",
+      "provider": {
+        "name": "Microsoft"
+      },
+      "description": "Four recorded cloud flows. No current full native solution export.",
+      "properties": [
+        {
+          "name": "industrad:licensing:reference",
+          "value": "S02 S08 S10"
+        }
+      ]
+    },
+    {
+      "bom-ref": "approvals",
+      "name": "Microsoft Standard approvals",
+      "provider": {
+        "name": "Microsoft"
+      },
+      "description": "Standard connector for manager and boss decisions.",
+      "properties": [
+        {
+          "name": "industrad:licensing:reference",
+          "value": "S12 S25"
+        }
+      ]
+    },
+    {
+      "bom-ref": "outlook",
+      "name": "Microsoft Office 365 Outlook",
+      "provider": {
+        "name": "Microsoft"
+      },
+      "description": "Recorded notification connector and supporting Exchange mailbox; native connection export pending.",
+      "properties": [
+        {
+          "name": "industrad:licensing:reference",
+          "value": "S13 S14"
+        }
+      ]
+    }
+  ],
+  "dependencies": [
+    {
+      "ref": "petty-cash",
+      "dependsOn": [
+        "new-request",
+        "modules",
+        "admin",
+        "receipts",
+        "home",
+        "shell",
+        "jspdf",
+        "bootstrap-host",
+        "power-pages",
+        "dataverse",
+        "power-automate",
+        "approvals",
+        "outlook"
+      ]
+    },
+    {
+      "ref": "receipts",
+      "dependsOn": [
+        "jspdf"
+      ]
+    },
+    {
+      "ref": "modules",
+      "dependsOn": [
+        "power-pages",
+        "dataverse",
+        "power-automate"
+      ]
+    },
+    {
+      "ref": "admin",
+      "dependsOn": [
+        "power-pages",
+        "dataverse"
+      ]
+    },
+    {
+      "ref": "power-automate",
+      "dependsOn": [
+        "dataverse",
+        "approvals",
+        "outlook"
+      ]
+    }
+  ],
+  "compositions": [
+    {
+      "aggregate": "incomplete",
+      "assemblies": [
+        "petty-cash"
+      ]
+    }
+  ],
+  "properties": [
+    {
+      "name": "industrad:upstream-license-notice",
+      "value": "Retain vendor/jspdf-LICENSE.txt and the minified bundle notice."
+    }
+  ]
+}

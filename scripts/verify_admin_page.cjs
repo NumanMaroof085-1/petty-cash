@@ -58,7 +58,7 @@ const mockConfig = { creationEnabled: true, securityReviewed: true, departmentId
           await route.fulfill({ json: { value: [{ hr_testdepartmentid: department, hr_departmentname: 'Finance', statecode: 0 }] } });
         } else if (url.pathname === '/_api/contacts(' + contact + ')') {
           const reads = calls.filter(call => call.url.includes('/_api/contacts(' + contact + ')')).length;
-          await route.fulfill({ json: { contactid: contact, firstname: 'Jane', lastname: 'Doe', emailaddress1: 'jane@example.test',
+          await route.fulfill({ json: { contactid: contact, firstname: 'Jane', lastname: 'Doe', emailaddress1: 'jane@industrad.com',
             adx_identity_username: 'jane.doe', adx_identity_logonenabled: mode !== 'verification-retry' || reads > 1,
             hr_userrole: 10, hr_currentbalance: 0, _hr_department_value: department, _hr_reportstomanager_value: manager } });
         } else throw new Error('Unexpected API request: ' + url.href);
@@ -76,7 +76,16 @@ const mockConfig = { creationEnabled: true, securityReviewed: true, departmentId
         assert.equal(await page.locator('#pcAdminManager img').count(), 0);
         await page.locator('#pcAdminFirstName').fill('Jane');
         await page.locator('#pcAdminLastName').fill('Doe');
-        await page.locator('#pcAdminEmail').fill('jane@example.test');
+        await page.locator('#pcAdminEmail').fill('jane@example.com');
+        assert.equal(await page.locator('#pcAdminEmail').evaluate(el => el.checkValidity()), false);
+        await page.getByRole('button', { name: 'Create Contact profile' }).click();
+        assert.equal(calls.filter(c => c.method === 'POST').length, 0);
+        await page.locator('#pcAdminFirstName').fill('');
+        assert.equal(await page.locator('#pcAdminFirstName').evaluate(el => el.checkValidity()), false);
+        await page.locator('#pcAdminFirstName').fill('Jane');
+        await page.locator('#pcAdminEmail').fill('Jane@INDUSTRAD.COM');
+        assert.equal(await page.locator('#pcAdminEmail').evaluate(el => el.checkValidity()), true);
+        await page.locator('#pcAdminEmail').fill('jane@industrad.com');
         await page.locator('#pcAdminUsername').fill('jane.doe');
         await page.locator('#pcAdminDepartment').selectOption(department);
         await page.locator('#pcAdminManager').selectOption(manager);

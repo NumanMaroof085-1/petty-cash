@@ -9,5 +9,7 @@
 - `styles/`: canonical common page CSS and UI refresh guide.
 
 These are local development folders. Keep the existing Liquid include names.
-Generated HTML embeds its assets; no new Web Files or tenant folders are required.
+Generated HTML embeds CSS and JavaScript. The header logo in shell/assets/
+requires one image Web File; see the shell setup guide. Local folder names do
+not require matching tenant folders.
 See [README](../README.md) for build commands and publishing destinations.
