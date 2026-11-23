@@ -1,10 +1,10 @@
 {
-  "audit_date": "2026-11-16",
+  "audit_date": "2026-11-18",
   "scope": "Local source and documentation. No native tenant, export, authentication or permission audit.",
-  "source_commit_before_documentation_changes": "22e0941f6232bb45ff58d1fb8e357f6102be1818",
+  "source_commit_before_documentation_changes": "5cc367019c8f20dd1aa15c02362083a8fba006bc",
   "node_version": "v24.22.1",
   "local_checks": {
-    "documentation_links_checked": 129,
+    "documentation_links_checked": 133,
     "generated_templates_consistent": true,
     "configured_finance_page_matches_recorded_invocation": true,
     "unit_tests": 157,
@@ -297,8 +297,8 @@
     },
     {
       "file": "documentation/handover/HANDOVER.md",
-      "bytes": 19339,
-      "sha256": "fab13b01f6103c08f93a428feb818231a23af8b15d4de87dd1c3f5fd239e16c6",
+      "bytes": 20062,
+      "sha256": "a2afb9c1963700ee30776ea8684202f61b46d0da3f1bec0a3adf4da2cd4f55bc",
       "classification": "source_or_documentation"
     },
     {
@@ -309,8 +309,8 @@
     },
     {
       "file": "documentation/handover/IMPLEMENTATION_LOG.md",
-      "bytes": 232461,
-      "sha256": "6d01a7b0b895d274d335d0b8f3c14f6846758185562979d7e4e4dff7564723d7",
+      "bytes": 234701,
+      "sha256": "afe2448776d588c8075b0f623084cc86ad0f58db861c70434272c17b19f108e5",
       "classification": "source_or_documentation"
     },
     {
@@ -326,6 +326,12 @@
       "classification": "source_or_documentation"
     },
     {
+      "file": "documentation/integration/BUSINESS_CENTRAL_APPROVAL_EXPORT.md",
+      "bytes": 15661,
+      "sha256": "e6c6f8f621a263468b8903722efb5da8d58d232d7f004a5d3c97739c07e35bb0",
+      "classification": "integration_table_reference"
+    },
+    {
       "file": "documentation/integration/Petty Cash Tables for Business Central.docx",
       "bytes": 42007,
       "sha256": "22884131cb3ceec8b7f43ecfc2a137a336f7251200bbccf74b97ae97b8c5c613",
@@ -333,8 +339,8 @@
     },
     {
       "file": "documentation/integration/README.md",
-      "bytes": 1186,
-      "sha256": "970ae89aceff07c4ad560ab3f5645d07e87b6cffba9018ae46f1df94f6aa6974",
+      "bytes": 1919,
+      "sha256": "e2f115579fd78650393f0a1e19d38dcfc65933204a7e24738598300e95b3a01b",
       "classification": "integration_table_reference"
     },
     {
@@ -429,8 +435,8 @@
     },
     {
       "file": "flows/approval/MANAGER_APPROVAL_FLOW.md",
-      "bytes": 36544,
-      "sha256": "44b5aaa1bd75a4129e8fed8a4b235502197993c3e6994bc0fb649c56fb18ca04",
+      "bytes": 37387,
+      "sha256": "76b3b4862a2bb3445c0c1be122cfdb1355d28ebe4c77d74153afe1386153137e",
       "classification": "source_or_documentation"
     },
     {

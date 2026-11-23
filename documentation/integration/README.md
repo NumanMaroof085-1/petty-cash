@@ -1,4 +1,16 @@
-# Business Central source table reference
+# Business Central integration documentation
+
+[Approval export plan](BUSINESS_CENTRAL_APPROVAL_EXPORT.md) records the user's
+18 November proposal to write BC data on each final approval path before marking
+the Request Approved. It includes all 16 supplied target labels, provisional
+source mappings, multiple-item handling, duplicate/retry behavior and open
+decisions. Native integration and target/API metadata are not yet confirmed.
+The user confirms one BC row per product item and one equivalent BC action in
+each final approval branch. Attachment Link uses the supplied direct Dataverse
+file-download URL; the formula is recorded, while BC-user download access is
+still untested. Amount/Description meanings and target uniqueness remain open.
+
+## Source table reference
 
 [Petty Cash Tables for Business Central.docx](<Petty Cash Tables for Business Central.docx>)
 contains only the two requested table definitions: Petty Cash Request and Petty

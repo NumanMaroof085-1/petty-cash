@@ -46,7 +46,7 @@ function fixture(items = [{ name: '', quantity: '1', price: '' }]) {
     shell: { getTokenDeferred: async () => 'token' }, async fetch(url) {
       calls.push(url); return { ok: true, status: 200, headers: { get() {} },
         async text() { return JSON.stringify({ _hr_department_value: '22222222-2222-4222-8222-222222222222',
-          _hr_reportstomanager_value: '33333333-3333-4333-8333-333333333333' }); } };
+          _hr_reportstomanager_value: '33333333-3333-4333-8333-333333333333', hr_branch: 123140000 }); } };
     } });
   vm.runInContext(source, context);
   const evaluate = code => vm.runInContext(code, context);

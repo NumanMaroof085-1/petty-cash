@@ -60,7 +60,7 @@ const mockConfig = { creationEnabled: true, securityReviewed: true, departmentId
           const reads = calls.filter(call => call.url.includes('/_api/contacts(' + contact + ')')).length;
           await route.fulfill({ json: { contactid: contact, firstname: 'Jane', lastname: 'Doe', emailaddress1: 'jane@industrad.com',
             adx_identity_username: 'jane.doe', adx_identity_logonenabled: mode !== 'verification-retry' || reads > 1,
-            hr_userrole: 10, hr_currentbalance: 0, _hr_department_value: department, _hr_reportstomanager_value: manager } });
+            hr_userrole: 10, hr_branch: 123140001, hr_currentbalance: 0, _hr_department_value: department, _hr_reportstomanager_value: manager } });
         } else throw new Error('Unexpected API request: ' + url.href);
       });
       await page.goto('https://portal.example.test/preview');
@@ -68,7 +68,7 @@ const mockConfig = { creationEnabled: true, securityReviewed: true, departmentId
       assert.equal(await page.locator('#portalUserId').count(), 1);
       assert.equal(await page.evaluate(() => window.PettyCashAdmin.version), 'admin-profiles-v3');
       if (mode !== 'legacy-html') {
-        assert.equal(await page.locator('#pcAdminForm input, #pcAdminForm select').count(), 7);
+        assert.equal(await page.locator('#pcAdminForm input, #pcAdminForm select').count(), 8);
         assert.equal(await page.locator('input[type="password"]').count(), 0);
       }
       if (writeMode) {
@@ -87,6 +87,10 @@ const mockConfig = { creationEnabled: true, securityReviewed: true, departmentId
         assert.equal(await page.locator('#pcAdminEmail').evaluate(el => el.checkValidity()), true);
         await page.locator('#pcAdminEmail').fill('jane@industrad.com');
         await page.locator('#pcAdminUsername').fill('jane.doe');
+        const branch = page.getByLabel('Branch', { exact: true });
+        assert.deepEqual(await branch.locator('option').allTextContents(), ['Choose a branch', 'Lahore', 'Karachi']);
+        assert.equal(await branch.evaluate(select => select.validity.valueMissing), true);
+        await branch.selectOption({ label: 'Karachi' });
         await page.locator('#pcAdminDepartment').selectOption(department);
         await page.locator('#pcAdminManager').selectOption(manager);
         if (mode === 'enabled') await page.screenshot({ path: path.join(qa, 'admin-desktop.png'), fullPage: true });
@@ -106,9 +110,10 @@ const mockConfig = { creationEnabled: true, securityReviewed: true, departmentId
         assert.doesNotMatch(await page.locator('#pcAdminMessage').textContent(), /Unexpected server details/);
         assert.equal(calls.filter(call => call.method === 'POST').length, 1);
         assert.deepEqual(Object.keys(payload).sort(), ['firstname', 'lastname', 'emailaddress1', 'adx_identity_username',
-          'adx_identity_logonenabled', 'hr_userrole', 'hr_currentbalance', 'hr_TestDepartment@odata.bind', 'hr_TestManager@odata.bind'].sort());
+          'adx_identity_logonenabled', 'hr_userrole', 'hr_branch', 'hr_currentbalance', 'hr_TestDepartment@odata.bind', 'hr_TestManager@odata.bind'].sort());
         assert.doesNotMatch(JSON.stringify(payload), /password|securitystamp/i);
         assert.equal(payload.hr_currentbalance, 0);
+        assert.equal(payload.hr_branch, 123140001);
       } else {
         await page.waitForFunction(() => !document.querySelector('#pcAdminMessage').textContent.includes('Checking administrator'));
         assert.equal(await page.locator('#pcAdminCreate').isDisabled(), true);

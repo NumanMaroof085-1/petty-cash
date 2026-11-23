@@ -1,5 +1,17 @@
 # Manager approval flow: user-created configuration
 
+**18 November integration proposal:** the user is adding Business Central writes
+before the Approved status update on the manager-only and final boss-approved
+paths. The supplied 16 target labels, proposed mapping and outstanding item/link/
+failure decisions are recorded in
+[Business Central approval export](../../documentation/integration/BUSINESS_CENTRAL_APPROVAL_EXPORT.md).
+The user confirms per-product rows and one BC action in each final branch;
+Attachment Link is the supplied protected Dataverse file API URL, with actual
+BC-user access still untested. Product-loop wiring and native BC metadata remain pending.
+This is planned/in progress by user report; no native BC action export or
+successful integration run has been supplied. Earlier diagnostics below remain
+historical evidence and are not a current native-flow definition.
+
 **Current 9 November blocker:** user reports Condition_-_10k greater() fails on
 a Boolean operand. Correct its one designer row to left full Boolean routing
 expression / is equal to / right Expression true; preserve Ready for Boss OR

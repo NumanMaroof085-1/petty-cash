@@ -12,7 +12,7 @@ const ids = {
 const schema = {
   hr_pettycashrequests: ['hr_pettycashrequestid', 'hr_requesttitle', 'hr_totalamount',
     'hr_purpose', 'hr_transactiondate', 'hr_paymentsource', 'hr_paymentmethod',
-    'hr_approvalstatus', 'hr_erpsyncstatus',
+    'hr_approvalstatus', 'hr_erpsyncstatus', 'hr_branch',
     '_hr_submittedby_value', '_hr_department_value', '_hr_assignedmanager_value'],
   hr_pettycashlineitems: ['hr_pettycashlineitemid', 'hr_itemname', 'hr_quantity',
     'hr_unit', 'hr_unitprice', 'hr_totalprice', 'hr_category', 'hr_othercategory', '_hr_parentrequest_value']
@@ -104,7 +104,8 @@ function harness(options = {}) {
         if (options.delayProfile && id === ids.employee) await options.delayProfile;
         return response(200, id === ids.employee ? {
           contactid: id, _hr_department_value: options.noDepartment ? null : ids.department,
-          _hr_reportstomanager_value: options.noManager ? null : ids.manager
+          _hr_reportstomanager_value: options.noManager ? null : ids.manager,
+          hr_branch: options.branch === undefined ? 123140000 : options.branch
         } : { contactid: id });
       }
       if (init.method === 'GET' && set === 'hr_departmentses') {
@@ -272,6 +273,26 @@ test('a missing manager on the employee profile still blocks all request writes'
   await h.submit();
   assert.ok(h.calls.every(c => c.method === 'GET'));
   assert.match(h.messages.at(-1), /no assigned manager/);
+});
+
+test('a new request stores and verifies the Choice value from the Contact', async () => {
+  for (const branch of [123140000, 123140001]) {
+    const h = harness({ branch });
+    await h.submit();
+    assert.equal(h.calls.find(call => call.method === 'POST').body.hr_branch, branch);
+    assert.ok(h.calls.some(call => call.method === 'GET' &&
+      call.url.includes('hr_pettycashrequests(') && call.url.includes('hr_branch')));
+    assert.match(h.messages.at(-1), /Success!/);
+  }
+});
+
+test('a missing or unsupported Contact branch blocks every request write', async () => {
+  for (const branch of [null, 123140002]) {
+    const h = harness({ branch });
+    await h.submit();
+    assert.ok(h.calls.every(call => call.method === 'GET'));
+    assert.match(h.messages.at(-1), /no valid branch/);
+  }
 });
 
 test('Contact association 403 retains every bind and permits a full retry after definite rejection', async () => {

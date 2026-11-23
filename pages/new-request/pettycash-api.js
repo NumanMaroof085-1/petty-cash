@@ -28,6 +28,10 @@
       "Others": []
     },
     choices: {
+      branch: {
+        "Lahore": 123140000,
+        "Karachi": 123140001
+      },
       paymentMethod: {
         "Cash": 123140000,
         "Card / Online": 123140001,
@@ -80,6 +84,7 @@
         paymentSource: "hr_paymentsource",
         paymentMethod: "hr_paymentmethod",
         approvalStatus: "hr_approvalstatus",
+        branch: "hr_branch",
         erpSyncStatus: "hr_erpsyncstatus",
         submittedBy: "hr_submittedby",
         department: "hr_department",
@@ -100,7 +105,8 @@
       contacts: {
         id: "contactid",
         department: "hr_department",
-        manager: "hr_reportstomanager"
+        manager: "hr_reportstomanager",
+        branch: "hr_branch"
       },
       departments: { name: "hr_departmentname" } // Confirmed text/name column; not the GUID key.
     },
@@ -153,7 +159,8 @@
   let userContext = {
     contactId: "",
     departmentId: null,
-    managerId: null
+    managerId: null,
+    branch: null
   };
 
   // =========================================================================
@@ -563,7 +570,7 @@
     const res = await callWebAPI({
       method: "GET",
       url: "/_api/" + DATAVERSE_CONFIG.entitySets.contacts + "(" + contactId + ")" +
-        "?$select=" + [lookupValue(c.department), lookupValue(c.manager)].join(",")
+        "?$select=" + [lookupValue(c.department), lookupValue(c.manager), c.branch].join(",")
     });
     const profile = res.data || {};
     const departmentId = normalizeGuid(profile[lookupValue(c.department)]);
@@ -574,7 +581,11 @@
     if (!managerId) {
       throw new Error("Your employee profile has no assigned manager. Ask your administrator to update it before submitting.");
     }
-    userContext = { contactId, departmentId, managerId };
+    const branch = profile[c.branch];
+    if (!Object.values(DATAVERSE_CONFIG.choices.branch).includes(branch)) {
+      throw new Error("Your employee profile has no valid branch. Ask your administrator to update it before submitting.");
+    }
+    userContext = { contactId, departmentId, managerId, branch };
     return userContext;
   }
 
@@ -726,6 +737,7 @@
       [c.paymentSource]: mappedChoice("paymentSource", formData.paymentSource),
       [c.paymentMethod]: mappedChoice("paymentMethod", formData.paymentMethod),
       [c.approvalStatus]: mappedChoice("approvalStatus", "Pending"),
+      [c.branch]: context.branch,
       [c.erpSyncStatus]: mappedChoice("erpSyncStatus", "Not Synced"),
       [n.submittedBy + "@odata.bind"]: "/" + sets.contacts + "(" + context.contactId + ")",
       [n.department + "@odata.bind"]: "/" + sets.departments + "(" + context.departmentId + ")",
@@ -915,11 +927,11 @@
       if (formFingerprint(getFormData()) !== fingerprint) {
         throw new Error("The form changed while the receipt was being prepared. Review the form and submit again.");
       }
-      setLoadingState(true, "Checking your employee profile...");
-      stage = "loading your employee profile";
-      const context = await ensureCurrentUserContext();
       mappedChoice("category", formData.category);
       if (!pendingSubmission) {
+        setLoadingState(true, "Checking your employee profile...");
+        stage = "loading your employee profile";
+        const context = await loadCurrentUserContext();
         const title = generateRequestTitle();
         const payload = buildHeaderPayload(formData, title, context);
         stage = "checking table configuration";
@@ -1041,7 +1053,7 @@
           lookupValue(c.requests.submittedBy), lookupValue(c.requests.department), lookupValue(c.requests.assignedManager)]),
       lineItems: Object.values(c.lineItems).filter(column => column !== c.lineItems.parentRequest)
         .concat([n.parentRequest, lookupValue(c.lineItems.parentRequest)]),
-      contacts: [c.contacts.id, lookupValue(c.contacts.department), lookupValue(c.contacts.manager)],
+      contacts: [c.contacts.id, lookupValue(c.contacts.department), lookupValue(c.contacts.manager), c.contacts.branch],
       departments: [c.departments.name]
     };
     return Object.entries(fields).flatMap(([key, columns]) => [

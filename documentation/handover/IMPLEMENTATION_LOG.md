@@ -5,6 +5,37 @@ same change. Record exact files, functionality, schema names, permissions, site
 settings, tests, and deployment state. Never describe a proposed tenant change
 as deployed merely because local code or documentation exists.
 
+## 2026-11-18 Proposed Business Central approval export
+
+- Recorded the user's plan to add BC actions before the Approved status update
+  on both final approval paths, plus the 16 target display labels supplied in
+  the screenshot. Added integration/BUSINESS_CENTRAL_APPROVAL_EXPORT.md and linked
+  it from the integration index, handover and manager-approval guide.
+- Documented provisional Dataverse sources, one-row-per-product recommendation,
+  Amount/Description ambiguity, source GUID uniqueness, attachment accessibility,
+  existing hr_erpsyncstatus values and partial-write recovery. Final request-level
+  financial actions must not be multiplied by a product export loop.
+- Asked for row granularity, meaning of the two BC actions and attachment-link
+  destination. Target API metadata, native action definitions, success evidence
+  and failure-policy confirmation remain pending. No new Dataverse fields,
+  flows, website code, connections, permissions or BC records were created.
+- Preserved the two-table source dictionary and dated licensing report; this
+  update records an integration proposal, not a completed deployment.
+- Follow-up decisions confirmed by the user: one BC row per product item and
+  one equivalent BC Create action in each final approval branch. Recorded the
+  exact concat expression for the direct Dataverse receipt `$value` URL. No
+  SharePoint copy or BC attachment upload is part of the confirmed design.
+- Distinguished the correct API route shape from actual browser download
+  usability: OAuth/Dataverse access and the intended BC user's session remain
+  untested. Existing flow-owner credentials are not embedded in the link.
+  Amount/Description mappings, target source-key uniqueness, API metadata and
+  partial-write/failure behavior remain pending; no native export success claimed.
+- Added manager-name and formatted Department-name expressions using the
+  recorded action names. Noted that Get_Review_Request must include
+  _hr_department_value in its selected columns; the prior documented selection
+  omitted Department. BC name/code type and returned annotations remain subject
+  to native confirmation. This is guidance, not a flow edit by the assistant.
+
 ## 2026-11-16 Production SBOM and licensing assessment
 
 - Added documentation/sbom with the Word and Markdown production licensing

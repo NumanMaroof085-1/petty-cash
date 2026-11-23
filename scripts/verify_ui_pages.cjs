@@ -103,6 +103,7 @@ const requests = [makeRequest(1, 123140000, 'PCR-000128', '', 2400),
         assert.equal(await page.locator('#pcAdminForm').isVisible(), true);
         await page.locator('#pcAdminFirstName').fill('Hamza'); await page.locator('#pcAdminLastName').fill('Ali');
         await page.locator('#pcAdminEmail').fill('hamza@example.test'); await page.locator('#pcAdminUsername').fill('hamza.ali');
+        await page.locator('#pcAdminBranch').selectOption({ label: 'Lahore' });
         await page.locator('#pcAdminDepartment').selectOption(department); await page.locator('#pcAdminManager').selectOption(manager);
       } else {
         await page.waitForFunction(() => document.querySelector('#pcRequestCount').textContent === '3');

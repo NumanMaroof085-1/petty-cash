@@ -9,8 +9,9 @@ not mean the updated page/template or site settings have been deployed.
 
 ## What the page does
 
-Seven fields: required first name, last name, email, separate username,
-business role, department and Reports To Manager. Names are limited to 50
+Eight fields: required first name, last name, email, separate username,
+business role, branch, department and Reports To Manager. Branch uses the shared
+Dataverse Choice values Lahore (123140000) and Karachi (123140001). Names are limited to 50
 characters; email is trimmed/lowercased, limited to 100 and restricted to the exact
 industrad.com domain (case-insensitive; no subdomains or lookalike suffixes).
 Both the HTML controls and JavaScript create validation enforce these rules.
@@ -20,7 +21,7 @@ case preserved, 3–100 letters/digits/dots/underscores/hyphens, starting with a
 letter or digit. All four confirmed business-role choice values are retained.
 
 One complete Contact POST writes firstname, lastname, emailaddress1,
-adx_identity_username, adx_identity_logonenabled=true, hr_userrole,
+adx_identity_username, adx_identity_logonenabled=true, hr_userrole, hr_branch,
 hr_currentbalance=0 and both exact lookup binds hr_Department/hr_ReportsToManager.
 The login flag alone does NOT provision a password or verify sign-in. The
 Department table is hr_departments, set hr_departmentses, GUID hr_departmentsid;
@@ -58,7 +59,7 @@ Current Contact API field union (preserve extra independently validated public
 fields required elsewhere, never wildcard or secret fields):
 
 ```text
-_hr_department_value,_hr_reportstomanager_value,adx_identity_logonenabled,adx_identity_username,contactid,emailaddress1,firstname,fullname,hr_Department,hr_ReportsToManager,hr_currentbalance,hr_userrole,lastname,statecode
+_hr_department_value,_hr_reportstomanager_value,adx_identity_logonenabled,adx_identity_username,contactid,emailaddress1,firstname,fullname,hr_Department,hr_ReportsToManager,hr_branch,hr_currentbalance,hr_userrole,lastname,statecode
 ```
 
 Remove ONLY adx_identity_newpassword from the previously tested union; hash and
@@ -68,6 +69,8 @@ profiles, including the Create-only input exception while the Admin profile has
 default Read; removing an exception without review could restore default access.
 No password-column permission or authorization-model change is needed. These
 are user-admin deployment instructions, not assistant-applied tenant changes.
+If Contact columns have explicit permissions, give the Admin role Create and
+Read access to hr_branch and give employees Read access to their own branch.
 
 ## Publish both matching artifacts
 
@@ -76,13 +79,13 @@ are user-admin deployment instructions, not assistant-applied tenant changes.
 2. Replace existing Admin Users page HTML with complete **pages/admin/Admin Users.html**.
    Keep the existing route, page restriction and one User Context include.
    Config must occur before the Admin template include; do not load either twice.
-3. Save/sync/Preview and reload. Authorized admins should see seven usable fields
+3. Save/sync/Preview and reload. Authorized admins should see eight usable fields
    and the profile-only readiness message. The script rejects old password-form
    HTML with an explicit paired-deployment error instead of acting on it.
 4. Check window.PettyCashAdmin.version returns **admin-profiles-v3**. Optionally
    await PettyCashAdmin.checkSetup(): profileOnly=true, passwordSetupRequired=true,
    loginProvisioned=false; it reads only and does not verify server write rights.
-5. Create a unique test profile once and verify username, zero summary and lookup
+5. Create a unique test profile once and verify branch, username, zero summary and lookup
    values. If the result is uncertain, inspect Contacts before another attempt;
    don't recreate the account or automatically patch it.
 

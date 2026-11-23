@@ -13,13 +13,13 @@ const config = { creationEnabled: true, securityReviewed: true, departmentIdColu
   roleValues: { Employee: 10, Manager: 20, Accounts: 30, Admin: 40 } };
 const testPassword = 'Synthetic rejected input #123';
 const input = { firstName: ' Jane ', lastName: ' Doe ', email: ' Jane@Industrad.Com ', username: 'jane.doe',
-  role: 'Employee', departmentId: department, managerId: manager };
+  role: 'Employee', branch: '123140000', departmentId: department, managerId: manager };
 const person = { contactid: manager, fullname: 'Existing Manager', emailaddress1: 'manager@example.test',
   adx_identity_username: 'manager', hr_userrole: 20, statecode: 0 };
 const team = { hr_testdepartmentid: department, hr_departmentname: 'Finance', statecode: 0 };
 const saved = { contactid: contact, firstname: 'Jane', lastname: 'Doe', emailaddress1: 'jane@industrad.com',
   adx_identity_username: 'jane.doe', adx_identity_logonenabled: true,
-  hr_userrole: 10, hr_currentbalance: 0, _hr_department_value: department, _hr_reportstomanager_value: manager };
+  hr_userrole: 10, hr_branch: 123140000, hr_currentbalance: 0, _hr_department_value: department, _hr_reportstomanager_value: manager };
 function harness({ overrides = {}, allowed = true, signedIn = true, fetcher, missingToken = false,
   origin = 'https://portal.example.test' } = {}) {
   const calls = [];
@@ -45,13 +45,14 @@ function harness({ overrides = {}, allowed = true, signedIn = true, fetcher, mis
   vm.runInNewContext(script, { window: root, URL, Number, Object, Array, String, Set, Promise });
   return { api: root.PettyCashAdmin, calls };
 }
-test('admin page has seven profile fields, no password/balance input, and matching reviewed configuration', () => {
+test('admin page has eight profile fields, including required Branch, and matching reviewed configuration', () => {
   const html = fs.readFileSync('pages/admin/Admin Users.html', 'utf8');
   assert.equal(html.split("{% include 'Petty Cash User Context' %}").length - 1, 1);
   assert.equal(html.split("{% include 'Petty Cash Admin' %}").length - 1, 1);
   assert.ok(html.indexOf("{% include 'Petty Cash User Context' %}") < html.indexOf("{% include 'Petty Cash Admin' %}"));
   assert.doesNotMatch(html, /id="portalUserId"|adx_identity_|hr_currentbalance/);
-  assert.equal((html.match(/<(?:input|select)\b/g) || []).length, 7);
+  assert.equal((html.match(/<(?:input|select)\b/g) || []).length, 8);
+  assert.match(html, /<select id="pcAdminBranch" required><option value="">Choose a branch<\/option>/);
   assert.doesNotMatch(html, /type="password"|pcAdminPassword|pcAdminConfirmPassword/);
   assert.match(html, /id="pcAdminUsername"/);
   assert.match(html, /Change Password/);
@@ -116,7 +117,7 @@ test('confirmed configuration produces exact profile-only POST and either releas
   const posts = h.calls.filter(call => call.method === 'POST');
   assert.equal(posts.length, 1);
   assert.deepEqual(JSON.parse(posts[0].body), { firstname: 'Jane', lastname: 'Doe', emailaddress1: 'jane@industrad.com',
-    hr_userrole: 123140000, hr_currentbalance: 0, adx_identity_username: 'jane.doe',
+    hr_userrole: 123140000, hr_branch: 123140000, hr_currentbalance: 0, adx_identity_username: 'jane.doe',
     adx_identity_logonenabled: true,
     'hr_Department@odata.bind': '/hr_departmentses(' + department + ')',
     'hr_ReportsToManager@odata.bind': '/contacts(' + manager + ')' });
@@ -143,7 +144,7 @@ test('payload preserves all fields and initializes only zero summary, ignoring a
   const h = harness();
   const value = h.api.validateInput({ ...input, hr_currentbalance: 999 });
   const payload = JSON.parse(JSON.stringify(h.api.buildPayload(value)));
-  assert.deepEqual(payload, { firstname: 'Jane', lastname: 'Doe', emailaddress1: 'jane@industrad.com', hr_userrole: 10, hr_currentbalance: 0,
+  assert.deepEqual(payload, { firstname: 'Jane', lastname: 'Doe', emailaddress1: 'jane@industrad.com', hr_userrole: 10, hr_branch: 123140000, hr_currentbalance: 0,
     adx_identity_username: 'jane.doe', adx_identity_logonenabled: true,
     'hr_TestDepartment@odata.bind': '/hr_departmentses(' + department + ')',
     'hr_TestManager@odata.bind': '/contacts(' + manager + ')' });
@@ -166,6 +167,31 @@ test('success performs one POST with CSRF and read-back, and never claims login 
   assert.ok(h.calls.some(call => call.url.startsWith('/_api/contacts(' + contact + ')')));
   assert.ok(h.calls.every(call => !/password|hash|cashtransaction/i.test(call.url)));
   assert.ok(h.calls.every(call => ['GET', 'POST'].includes(call.method)));
+});
+test('registration saves Karachi as a numeric Choice and requires a valid branch', async () => {
+  for (const branch of [undefined, '', '123140002']) {
+    const blocked = harness();
+    await assert.rejects(blocked.api.createProfile({ ...input, branch }), /Choose an employee branch/);
+    assert.equal(blocked.calls.length, 0);
+  }
+  const h = harness({ fetcher(url) {
+    if (url.startsWith('/_api/contacts(')) return { status: 200, body: { ...saved, hr_branch: 123140001 } };
+  } });
+  await h.api.createProfile({ ...input, branch: '123140001' });
+  assert.equal(JSON.parse(h.calls.find(call => call.method === 'POST').body).hr_branch, 123140001);
+  assert.ok(h.calls.some(call => call.url.startsWith('/_api/contacts(') && call.url.includes('hr_branch')));
+});
+test('a missing or different saved branch fails read-back and an unchanged retry does not repeat the POST', async () => {
+  let storedBranch;
+  const h = harness({ fetcher(url) {
+    if (url.startsWith('/_api/contacts(')) return { status: 200, body: { ...saved, hr_branch: storedBranch } };
+  } });
+  await assert.rejects(h.api.createProfile(input), /did not retain/);
+  storedBranch = 123140001;
+  await assert.rejects(h.api.createProfile(input), /did not retain/);
+  storedBranch = 123140000;
+  assert.equal((await h.api.createProfile(input)).profileCreated, true);
+  assert.equal(h.calls.filter(call => call.method === 'POST').length, 1);
 });
 test('missing, null or nonzero initial summary fails read-back without overwriting a balance', async () => {
   for (const initial of [undefined, null, 12]) {

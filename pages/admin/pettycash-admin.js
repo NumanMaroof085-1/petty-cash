@@ -11,6 +11,10 @@
     departmentIdColumn: "", contactDepartmentNavigation: "",
     contactManagerNavigation: "", roleValues: {} }, root.PC_ADMIN_CONFIG || {});
   const roles = ["Employee", "Manager", "Accounts", "Admin"];
+  const branches = [
+    { value: 123140000, label: "Lahore" },
+    { value: 123140001, label: "Karachi" }
+  ];
   const version = "admin-profiles-v3";
   const contactColumns = "contactid,fullname,emailaddress1,adx_identity_username,hr_userrole,statecode";
   const guidPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
@@ -128,9 +132,11 @@
     if (Object.keys(input).some(key => /password|securitystamp/i.test(key))) {
       throw new Error("This form creates profiles only. Set passwords separately using Portal Management Change Password.");
     }
+    const branch = branches.find(option => String(option.value) === String(input.branch));
+    if (!branch) throw new Error("Choose an employee branch.");
     const value = { firstName: String(input.firstName || "").trim(), lastName: String(input.lastName || "").trim(),
       email: String(input.email || "").trim().toLowerCase(), username: String(input.username || "").trim(), role: String(input.role || ""),
-      departmentId: guid(input.departmentId), managerId: guid(input.managerId) };
+      departmentId: guid(input.departmentId), managerId: guid(input.managerId), branch: branch.value };
     if (!value.firstName || !value.lastName || value.lastName.length > 50 || value.firstName.length > 50) {
       throw new Error("First and last name are required; each name must be at most 50 characters.");
     }
@@ -144,7 +150,7 @@
   }
   function buildPayload(value) {
     return { firstname: value.firstName, lastname: value.lastName, emailaddress1: value.email,
-      hr_userrole: config.roleValues[value.role], hr_currentbalance: 0,
+      hr_userrole: config.roleValues[value.role], hr_branch: value.branch, hr_currentbalance: 0,
       adx_identity_username: value.username, adx_identity_logonenabled: true,
       [config.contactDepartmentNavigation + "@odata.bind"]: "/hr_departmentses(" + value.departmentId + ")",
       [config.contactManagerNavigation + "@odata.bind"]: "/contacts(" + value.managerId + ")" };
@@ -158,12 +164,12 @@
   }
   async function verify(state) {
     const result = await api("/_api/contacts(" + state.id + ")?$select=" +
-      "contactid,firstname,lastname,emailaddress1,adx_identity_username,adx_identity_logonenabled,hr_userrole,hr_currentbalance,_hr_department_value,_hr_reportstomanager_value");
+      "contactid,firstname,lastname,emailaddress1,adx_identity_username,adx_identity_logonenabled,hr_userrole,hr_branch,hr_currentbalance,_hr_department_value,_hr_reportstomanager_value");
     const actual = result.body || {}, value = state.value;
     const matches = guid(actual.contactid) === state.id && (actual.firstname || "") === value.firstName &&
       actual.lastname === value.lastName && String(actual.emailaddress1 || "").toLowerCase() === value.email &&
       actual.adx_identity_username === value.username && actual.adx_identity_logonenabled === true &&
-      actual.hr_userrole === config.roleValues[value.role] && actual.hr_currentbalance === 0 &&
+      actual.hr_userrole === config.roleValues[value.role] && actual.hr_branch === value.branch && actual.hr_currentbalance === 0 &&
       guid(actual._hr_department_value) === value.departmentId &&
       guid(actual._hr_reportstomanager_value) === value.managerId;
     if (!matches) throw new Error("The saved Contact did not retain every submitted field. Inspect Contact " + state.id + ".");
@@ -232,7 +238,7 @@
   function formValue() {
     return { firstName: element("pcAdminFirstName").value, lastName: element("pcAdminLastName").value,
       email: element("pcAdminEmail").value, username: element("pcAdminUsername").value,
-      role: element("pcAdminBusinessRole").value,
+      role: element("pcAdminBusinessRole").value, branch: element("pcAdminBranch").value,
       departmentId: element("pcAdminDepartment").value, managerId: element("pcAdminManager").value };
   }
   async function initialize() {
@@ -243,10 +249,13 @@
       if (element("pcAdminPassword") || element("pcAdminConfirmPassword")) {
         throw new Error("Old Admin page HTML detected. Publish Admin Users.html and the Petty Cash Admin template together; password fields are no longer supported.");
       }
+      const branch = element("pcAdminBranch");
+      if (!branch) throw new Error("The Branch field is missing. Publish the updated Admin Users.html.");
       form.hidden = false;
       form.style.display = "block";
       const data = await loadOptions();
       options(element("pcAdminBusinessRole"), roles.map(role => ({ value: role, label: role })));
+      options(branch, [{ value: "", label: "Choose a branch" }, ...branches]);
       options(element("pcAdminDepartment"), [{ value: "", label: "Choose a department" },
         ...data.departments.map(row => ({ value: guid(row[config.departmentIdColumn]), label: String(row.hr_departmentname || "Unnamed department") }))]);
       options(element("pcAdminManager"), [{ value: "", label: "Choose a manager" },

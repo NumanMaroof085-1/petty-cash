@@ -1,5 +1,16 @@
 # Petty Cash Project Handover
 
+**18 November Business Central addition:** the user is preparing BC writes on
+the two final approval routes before the Approved status update. Target labels
+and provisional mapping are in the
+[BC approval export plan](../integration/BUSINESS_CENTRAL_APPROVAL_EXPORT.md).
+The user confirms one BC row per product and one BC action in each final branch.
+Attachment Link uses the supplied Dataverse file-column API URL; its BC-user
+authentication/access remains untested. Amount/Description mapping, target API,
+uniqueness and export failure policy remain open. No native implementation or successful BC sync is
+confirmed; do not treat the source dictionary or a populated sync status as proof
+that ERP records were written.
+
 **Current navigation and runtime note, 9 November 2026:** files are grouped by
 page/component/flow; see the [root README](../../README.md) and
 [folder guide](../PROJECT_STRUCTURE.md). Manager clarification/answer/automatic
