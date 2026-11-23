@@ -87,7 +87,7 @@ const mockConfig = { creationEnabled: true, securityReviewed: true, departmentId
         assert.equal(await page.locator('#pcAdminEmail').evaluate(el => el.checkValidity()), true);
         await page.locator('#pcAdminEmail').fill('jane@industrad.com');
         await page.locator('#pcAdminUsername').fill('jane.doe');
-        const branch = page.getByLabel('Branch', { exact: true });
+        const branch = page.getByRole('combobox', { name: 'Branch', exact: true });
         assert.deepEqual(await branch.locator('option').allTextContents(), ['Choose a branch', 'Lahore', 'Karachi']);
         assert.equal(await branch.evaluate(select => select.validity.valueMissing), true);
         await branch.selectOption({ label: 'Karachi' });
